@@ -1,0 +1,24 @@
+helpticket:
+    using_permissions: true
+    notify_delay: 300
+
+mysql:
+    server:
+        address: localhost
+        port: 8889
+
+    database:
+        name: kingdoms
+        username: root
+        password: root
+        table_prefix: helpticket_
+
+############################################################
+# +------------------------------------------------------+ #
+# |                  Permission Nodes                    | #
+# +------------------------------------------------------+ #
+############################################################
+
+#   helpticket.help - required to request assistance (open, comment, view[own])
+#   helpticket.admin - required to delete helprequests (inheirt's helpticket.mod)
+#   helpticket.mod - required for answering tickets (inheirt's helpticket.ticket), (open, comment, view, warp, [un]assign, close)
