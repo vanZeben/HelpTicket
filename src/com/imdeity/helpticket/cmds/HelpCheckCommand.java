@@ -32,6 +32,8 @@ public class HelpCheckCommand implements CommandExecutor {
                 "Assigns a Ticket"));
         output.add(ChatTools.formatCommand("", "/check", "close [id]",
                 "Completes a Ticket"));
+        output.add(ChatTools.formatCommand("", "/check", "search [name]",
+                "Shows all Tickets submitted by a player."));
 
     }
 
@@ -68,6 +70,8 @@ public class HelpCheckCommand implements CommandExecutor {
             assignCommand(player, split);
         } else if (split[0].equalsIgnoreCase("close")) {
             closeCommand(player, split);
+        } else if (split[0].equalsIgnoreCase("search")) {
+            searchCommand(player, split);
         }
     }
 
@@ -92,7 +96,7 @@ public class HelpCheckCommand implements CommandExecutor {
 
             if (ticket.isOpen()) {
                 player.teleport(ticket.getLocation(plugin.getWorld(ticket
-                    .getWorld())));
+                        .getWorld())));
                 ticket.setAssignee(player.getName());
                 SQLTicket.updateTicket(ticket, "assignee");
             }
@@ -112,6 +116,13 @@ public class HelpCheckCommand implements CommandExecutor {
             for (String line : out) {
                 player.sendMessage(line);
             }
+
+            plugin.informPlayer(
+                    ticket.getOwner(),
+                    "<white>"
+                            + ticket.getAssignee()
+                            + " <gray>is checking into your Ticket <yellow>[ID #"
+                            + ticket.getID() + "]");
         } else {
             help(player);
         }
@@ -137,6 +148,12 @@ public class HelpCheckCommand implements CommandExecutor {
                                     + SQLTicket
                                             .updateTicket(ticket, "assignee"),
                             "HelpTicket", player);
+                    plugin.informPlayer(
+                            ticket.getOwner(),
+                            "<white>"
+                                    + ticket.getAssignee()
+                                    + " <gray>has been assigned to your Ticket <yellow>[ID #"
+                                    + ticket.getID() + "]");
                 } else {
                     warn(player, "You cannot assign a non-staff to a ticket.");
                 }
@@ -148,7 +165,6 @@ public class HelpCheckCommand implements CommandExecutor {
     }
 
     public void closeCommand(Player player, String[] split) {
-
         if (split.length == 2) {
             int id = 0;
 
@@ -160,14 +176,19 @@ public class HelpCheckCommand implements CommandExecutor {
 
             Ticket ticket = SQLTicket.getSpecificTicket(id);
             if (ticket != null) {
-                ticket.setStatus(false);
-                ChatTools
-                        .formatAndSend(
-                                "<option>"
-                                        + SQLTicket.updateTicket(ticket,
-                                                "status"), "HelpTicket",
-                                player);
-
+                if (ticket.getAssignee().equalsIgnoreCase(player.getName())) {
+                    ticket.setStatus(false);
+                    ChatTools.formatAndSend(
+                            "<option>"
+                                    + SQLTicket.updateTicket(ticket, "status"),
+                            "HelpTicket", player);
+                    plugin.informPlayer(ticket.getOwner(),
+                            "<white>" + player.getName()
+                                    + " <gray>closed your Ticket <yellow>[ID #"
+                                    + ticket.getID() + "]");
+                } else {
+                    warn(player, "You need to be assigned to the ticket to close it.");
+                }
             } else
                 help(player);
         } else {
@@ -175,6 +196,23 @@ public class HelpCheckCommand implements CommandExecutor {
         }
     }
 
+    public void searchCommand(Player player, String[] split) {
+        if (split.length == 2) {
+            
+            String name = (split[1]);
+            ArrayList<Ticket> ticket = SQLTicket.getPlayersTickets(name);
+            if (!ticket.isEmpty()) {
+                for (Ticket t : ticket) {
+                    player.sendMessage(t.getSentence(true));
+                }
+                
+            } else
+               ChatTools.formatAndSend("<option><white>"+name+"<gray> hasn't submitted any tickets.", "HelpTicket", player);
+        } else {
+            help(player);
+        }
+    }
+    
     private void warn(Player player, String msg) {
         ChatTools.formatAndSend("<option><red>" + msg, "HelpTicket", player);
     }

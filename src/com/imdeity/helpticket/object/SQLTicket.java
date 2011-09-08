@@ -169,6 +169,59 @@ public class SQLTicket {
 
         return tickets;
     }
+    
+    public static ArrayList<Ticket> getPlayersTickets(String playerName) {
+        String sql = "";
+        ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+        
+        int id = 0;
+        String owner = "";
+        String world = null;
+        double x = 0.0;
+        double y = 0.0;
+        double z = 0.0;
+        float pitch = 0.0f;
+        float yaw = 0.0f;
+        String title = "";
+        String assignee = "";
+        ArrayList<String> log = new ArrayList<String>();
+        boolean status = false;
+
+        sql = "SELECT * FROM " + MySQLConnector.tableName("data")
+                + " WHERE `owner` = '" + playerName + "';";
+
+        HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
+        for (int i = 1; i <= out.size(); i++) {
+            try {
+                id = Integer.parseInt(out.get(i).get(0));
+                owner = out.get(i).get(1);
+                world = out.get(i).get(2);
+                x = Double.parseDouble(out.get(i).get(3));
+                y = Double.parseDouble(out.get(i).get(4));
+                z = Double.parseDouble(out.get(i).get(5));
+                pitch = Float.parseFloat(out.get(i).get(6));
+                yaw = Float.parseFloat(out.get(i).get(7));
+                title = out.get(i).get(8);
+                assignee = out.get(i).get(9);
+                status = Boolean.parseBoolean(out.get(i).get(10));
+                if (out.get(i).get(11) != null) {
+                    Scanner in = new Scanner(out.get(i).get(11));
+                    in.useDelimiter("//|");
+                    while (in.hasNext())
+                        log.add(in.next());
+                }
+                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
+                        assignee, status));
+            } catch (NumberFormatException ex) {
+                System.out
+                        .println("[HelpTicket] Input Mismatch on id of " + id);
+                ex.printStackTrace();
+                return null;
+            }
+        }
+
+        return tickets;
+    }
 
     public static ArrayList<Ticket> getAllOpenTickets() {
         String sql = "";

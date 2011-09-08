@@ -32,6 +32,8 @@ public class HelpTicketPlayerListener extends PlayerListener {
                         + SQLTicket.getPlayersOpenTickets(player.getName())
                                 .size() + " tickets open.", "HelpTicket",
                         player);
+            
+            // TODO show closed petitions (log.add(".oOo.Closed")
         } else {
             if (SQLTicket.getAllOpenTickets().size() == 1)
                 ChatTools
@@ -44,6 +46,7 @@ public class HelpTicketPlayerListener extends PlayerListener {
                         + SQLTicket.getAllOpenTickets()
                                 .size() + " tickets open.", "HelpTicket",
                         player);
+            plugin.addToStaff(player);
         }
 
     }
@@ -52,7 +55,7 @@ public class HelpTicketPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (plugin.isStaff(player)) {
-            HelpTicket.staff.remove(player);
+            plugin.removeFromStaff(player);
         }
     }
 

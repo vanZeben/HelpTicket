@@ -66,7 +66,7 @@ public class HelpTicketCommand implements CommandExecutor {
         } else if (split[0].equalsIgnoreCase("comment")) {
             
         } else if (split[0].equalsIgnoreCase("close")) {
-
+            closeCommand(player, split);
         } else if (split[0].equalsIgnoreCase("help")
                 || split[0].equalsIgnoreCase("?")) {
             for (String s : output) {
@@ -96,6 +96,8 @@ public class HelpTicketCommand implements CommandExecutor {
                 "<option>Your Ticket has been submitted. You can check it with \"/ticket view "
                         + SQLTicket.getNewestTicketID(player.getName()) + "\"",
                 "HelpTicket", player);
+        
+        HelpTicket.informStaff("<white>" + player.getName() + " <gray> opened Ticket #<yellow>"+SQLTicket.getNewestTicketID(player.getName()));
     }
 
     public void viewCommand(Player player, String[] split) {
@@ -134,6 +136,34 @@ public class HelpTicketCommand implements CommandExecutor {
         player.sendMessage(ChatTools.formatSitTitle("Your Open Tickets"));
         for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
             player.sendMessage(t.getSentence(true));
+        }
+    }
+    
+    public void closeCommand(Player player, String[] split) {
+
+        if (split.length == 2) {
+            int id = 0;
+
+            try {
+                id = Integer.parseInt(split[1]);
+            } catch (NumberFormatException ex) {
+                invalid(player);
+            }
+
+            Ticket ticket = SQLTicket.getSpecificTicket(id);
+            if (ticket != null) {
+                ticket.setStatus(false);
+                ChatTools
+                        .formatAndSend(
+                                "<option>"
+                                        + SQLTicket.updateTicket(ticket,
+                                                "status"), "HelpTicket",
+                                player);
+                HelpTicket.informStaff("<white>" + player.getName() + " <gray> closed Ticket #<yellow>"+ticket.getID());
+            } else
+                help(player);
+        } else {
+            help(player);
         }
     }
 

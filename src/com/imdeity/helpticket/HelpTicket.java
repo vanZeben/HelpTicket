@@ -15,6 +15,7 @@ import com.imdeity.helpticket.cmds.HelpCheckCommand;
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
 import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.event.HelpTicketPlayerListener;
+import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.FileMgmt;
 import com.imdeity.helpticket.utils.StringMgmt;
 
@@ -33,19 +34,20 @@ public class HelpTicket extends JavaPlugin {
     public static ArrayList<Player> staff = new ArrayList<Player>();
     private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(
             this);
+    private static int taskId = -1;
 
     public void onEnable() {
 
         try {
             this.loadSettings();
-//            this.loadDatabase();
+            this.loadDatabase();
         } catch (IOException e) {
             out("Error:" + e.getMessage() + ", Disabling Plugin.");
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
+        this.toggleTimerTask();
         this.checkPlugins();
         this.setupEvents();
         this.setupCommands();
@@ -54,7 +56,7 @@ public class HelpTicket extends JavaPlugin {
     }
 
     public void onDisable() {
-
+        this.toggleTimerTask();
         out("Disabled");
     }
 
@@ -85,7 +87,7 @@ public class HelpTicket extends JavaPlugin {
         this.getServer()
                 .getPluginManager()
                 .registerEvent(Event.Type.PLAYER_QUIT, playerListener,
-                        Priority.Normal, this);
+                        Priority.Low, this);
     }
 
     public void loadDatabase() {
@@ -98,6 +100,14 @@ public class HelpTicket extends JavaPlugin {
         logger.info("[" + pdfFile.getName() + "] " + message);
     }
 
+    public void toggleTimerTask() {
+        if (taskId != -1) {
+            getServer().getScheduler().cancelTask(taskId); 
+        } else {
+            taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * 10)); 
+        }
+    }
+    
     public void loadSettings() throws IOException {
         FileMgmt.checkFolders(new String[] {getRootFolder()});
         HelpTicketSettings.loadConfig(
@@ -113,24 +123,35 @@ public class HelpTicket extends JavaPlugin {
             return "";
     }
 
-    public Player[] getOnlinePlayers() {
-        return this.getServer().getOnlinePlayers();
+    public void informPlayer(String playerName, String msg) {
+        Player player = getServer().getPlayer(playerName);
+        if (player != null && player.isOnline())
+            ChatTools.formatAndSend("<option>"+msg, "HelpTicket", player);
+        return;
     }
 
-    public void setOnlineStaff() {
-        for (Player p : getOnlinePlayers())
-            if (isStaff(p)) {
-                HelpTicket.staff.add(p);
-            }
-    }
-
-    public ArrayList<Player> getOnlineStaff() {
+    public static ArrayList<Player> getOnlineStaff() {
         return HelpTicket.staff;
+    }
+    
+    public void addToStaff(Player player) {
+        HelpTicket.staff.add(player);
+    }
+    
+    public void removeFromStaff(Player player) {
+        HelpTicket.staff.remove(player);
+    }
+    
+    public static void informStaff(String msg) {
+        for (Player player : getOnlineStaff()) {
+            ChatTools.formatAndSend("<option>"+msg, "HelpTicket", player);
+        }
     }
     
     public boolean isStaff(Player player) {
         if (HelpTicket.Permissions.has(player, "helpticket.mod")
-         || HelpTicket.Permissions.has(player, "helpticket.admin")) {
+         || HelpTicket.Permissions.has(player, "helpticket.admin")
+         || player.isOp()) {
             return true;
         }
         return false;
@@ -138,7 +159,8 @@ public class HelpTicket extends JavaPlugin {
     
     public boolean isStaff(String playerName) {
         if (HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.mod")
-         || HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.admin")) {
+         || HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.admin")
+         || this.getServer().getPlayer(playerName).isOp()) {
             return true;
         }
         return false;
