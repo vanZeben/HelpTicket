@@ -13,7 +13,7 @@ public class Ticket {
 
     private int id = 0;
     private String owner = "";
-    private String title = "";
+    private String info = "";
     private String world = null;
     private double x = 0.0;
     private double y = 0.0;
@@ -23,47 +23,50 @@ public class Ticket {
     private String assignee = "";
     private ArrayList<String> log = new ArrayList<String>();
     private boolean status = false;
+    private boolean hasRead = false;
 
     public Ticket(int id, String owner, String world, double x, double y,
-            double z, float pitch, float yaw, String title, String assignee,
-            boolean status) {
+            double z, float pitch, float yaw, String info, String assignee,
+            boolean status, boolean hasRead) {
         setID(id);
-        setTitle(title);
+        setInfo(info);
         setOwner(owner);
         setLocation(world, x, y, z, pitch, yaw);
-        setTitle(title);
+        setInfo(info);
         setAssignee(assignee);
         setStatus(status);
+        setHasRead(hasRead);
     }
 
     public Ticket(String owner, String world, double x, double y, double z,
-            float pitch, float yaw, String title, String assignee,
-            boolean status) {
-        setTitle(title);
+            float pitch, float yaw, String info, String assignee,
+            boolean status, boolean hasRead) {
+        setInfo(info);
         setOwner(owner);
         setLocation(world, x, y, z, pitch, yaw);
-        setTitle(title);
+        setInfo(info);
         setAssignee(assignee);
         setStatus(status);
+        setHasRead(hasRead);
     }
 
     public Ticket() {
     }
 
-    public String getTitle() {
-        return title;
+    public String getInfo() {
+        return info;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public String getSentence(boolean check) {
         String out = "";
         if (check) {
-            out = StringMgmt.maxLength(title, 20);
+            out = StringMgmt.maxLength(info, 30);
         } else {
-            out = title;
+            out = info;
         }
         return ChatTools.Gold
                 + "#"
@@ -79,7 +82,7 @@ public class Ticket {
     public String getHeader() {
 
         return ChatTools.Gold + "#" + this.id + " " + ChatTools.White
-                + this.owner + ": " + ChatTools.Gold + this.title;
+                + this.owner + ": " + ChatTools.Gold + this.info;
     }
 
     public int getID() {
@@ -164,5 +167,13 @@ public class Ticket {
 
     public float getYaw() {
         return this.yaw;
+    }
+
+    public boolean getHasRead() {
+        return hasRead;
+    }
+
+    public void setHasRead(boolean hasRead) {
+        this.hasRead = hasRead;
     }
 }

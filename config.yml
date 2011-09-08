@@ -1,6 +1,6 @@
 helpticket:
     using_permissions: true
-    notify_delay: 300
+    notify_delay: 20
 
 mysql:
     server:
@@ -20,5 +20,4 @@ mysql:
 ############################################################
 
 #   helpticket.help - required to request assistance (open, comment, view[own])
-#   helpticket.admin - required to delete helprequests (inheirt's helpticket.mod)
 #   helpticket.mod - required for answering tickets (inheirt's helpticket.ticket), (open, comment, view, warp, [un]assign, close)

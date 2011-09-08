@@ -20,10 +20,11 @@ public class SQLTicket {
         double z = 0.0;
         float pitch = 0.0f;
         float yaw = 0.0f;
-        String title = "";
+        String info = "";
         String assignee = "";
         ArrayList<String> log = new ArrayList<String>();
         boolean status = false;
+        boolean hasRead = false;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `id` = '" + id + "';";
@@ -41,26 +42,19 @@ public class SQLTicket {
             z = Double.parseDouble(out.get(1).get(5));
             pitch = Float.parseFloat(out.get(1).get(6));
             yaw = Float.parseFloat(out.get(1).get(7));
-            title = out.get(1).get(8);
+            info = out.get(1).get(8);
             assignee = out.get(1).get(9);
-            if (Integer.parseInt(out.get(1).get(10)) == 1) {
-                status = false;
-            } else
-                status = true;
-            if (out.get(1).get(11) != null) {
-                Scanner in = new Scanner(out.get(1).get(11));
-                in.useDelimiter("//|");
-                while (in.hasNext())
-                    log.add(in.next());
-            }
+            status = (Integer.parseInt(out.get(1).get(10))==1?false:true);
+            hasRead = (Integer.parseInt(out.get(1).get(11))==1?false:true);
+            
         } catch (NumberFormatException ex) {
             System.out.println("[HelpTicket] Input Mismatch on id of " + id);
             ex.printStackTrace();
             return null;
         }
 
-        return new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
-                assignee, status);
+        return new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
+                assignee, status, hasRead);
     }
     
     public static Ticket getSpecificTicket(int instanceId, String playerName) {
@@ -74,10 +68,11 @@ public class SQLTicket {
         double z = 0.0;
         float pitch = 0.0f;
         float yaw = 0.0f;
-        String title = "";
+        String info = "";
         String assignee = "";
         ArrayList<String> log = new ArrayList<String>();
         boolean status = false;
+        boolean hasRead = false;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `id` = '" + id + "' && `owner` = '"+playerName+"';";
@@ -95,26 +90,19 @@ public class SQLTicket {
             z = Double.parseDouble(out.get(1).get(5));
             pitch = Float.parseFloat(out.get(1).get(6));
             yaw = Float.parseFloat(out.get(1).get(7));
-            title = out.get(1).get(8);
+            info = out.get(1).get(8);
             assignee = out.get(1).get(9);
-            if (Integer.parseInt(out.get(1).get(10)) == 1) {
-                status = false;
-            } else
-                status = true;
-            if (out.get(1).get(11) != null) {
-                Scanner in = new Scanner(out.get(1).get(11));
-                in.useDelimiter("//|");
-                while (in.hasNext())
-                    log.add(in.next());
-            }
+            status = (Integer.parseInt(out.get(1).get(10))==1?false:true);
+            hasRead = (Integer.parseInt(out.get(1).get(11))==1?false:true);
+            
         } catch (NumberFormatException ex) {
             System.out.println("[HelpTicket] Input Mismatch on id of " + id);
             ex.printStackTrace();
             return null;
         }
 
-        return new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
-                assignee, status);
+        return new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
+                assignee, status, hasRead);
     }
 
     public static ArrayList<Ticket> getPlayersOpenTickets(String playerName) {
@@ -129,10 +117,11 @@ public class SQLTicket {
         double z = 0.0;
         float pitch = 0.0f;
         float yaw = 0.0f;
-        String title = "";
+        String info = "";
         String assignee = "";
         ArrayList<String> log = new ArrayList<String>();
         boolean status = false;
+        boolean hasRead = false;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `owner` = '" + playerName + "' && `status` = '0';";
@@ -148,17 +137,13 @@ public class SQLTicket {
                 z = Double.parseDouble(out.get(i).get(5));
                 pitch = Float.parseFloat(out.get(i).get(6));
                 yaw = Float.parseFloat(out.get(i).get(7));
-                title = out.get(i).get(8);
+                info = out.get(i).get(8);
                 assignee = out.get(i).get(9);
                 status = Boolean.parseBoolean(out.get(i).get(10));
-                if (out.get(i).get(11) != null) {
-                    Scanner in = new Scanner(out.get(i).get(11));
-                    in.useDelimiter("//|");
-                    while (in.hasNext())
-                        log.add(in.next());
-                }
-                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
-                        assignee, status));
+                status = (Integer.parseInt(out.get(1).get(10))==1?false:true);
+                hasRead = (Integer.parseInt(out.get(1).get(11))==1?false:true);
+                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
+                        assignee, status, hasRead));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -182,10 +167,11 @@ public class SQLTicket {
         double z = 0.0;
         float pitch = 0.0f;
         float yaw = 0.0f;
-        String title = "";
+        String info = "";
         String assignee = "";
         ArrayList<String> log = new ArrayList<String>();
         boolean status = false;
+        boolean hasRead = false;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `owner` = '" + playerName + "';";
@@ -201,17 +187,12 @@ public class SQLTicket {
                 z = Double.parseDouble(out.get(i).get(5));
                 pitch = Float.parseFloat(out.get(i).get(6));
                 yaw = Float.parseFloat(out.get(i).get(7));
-                title = out.get(i).get(8);
+                info = out.get(i).get(8);
                 assignee = out.get(i).get(9);
                 status = Boolean.parseBoolean(out.get(i).get(10));
-                if (out.get(i).get(11) != null) {
-                    Scanner in = new Scanner(out.get(i).get(11));
-                    in.useDelimiter("//|");
-                    while (in.hasNext())
-                        log.add(in.next());
-                }
-                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
-                        assignee, status));
+                hasRead = Boolean.parseBoolean(out.get(i).get(11));
+                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
+                        assignee, status, hasRead));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -235,10 +216,11 @@ public class SQLTicket {
         double z = 0.0;
         float pitch = 0.0f;
         float yaw = 0.0f;
-        String title = "";
+        String info = "";
         String assignee = "";
         ArrayList<String> log = new ArrayList<String>();
         boolean status = false;
+        boolean hasRead = false;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `status` = '0';";
@@ -254,17 +236,12 @@ public class SQLTicket {
                 z = Double.parseDouble(out.get(i).get(5));
                 pitch = Float.parseFloat(out.get(i).get(6));
                 yaw = Float.parseFloat(out.get(i).get(7));
-                title = out.get(i).get(8);
+                info = out.get(i).get(8);
                 assignee = out.get(i).get(9);
-                status = Boolean.parseBoolean(out.get(i).get(10));
-                if (out.get(i).get(11) != null) {
-                    Scanner in = new Scanner(out.get(i).get(11));
-                    in.useDelimiter("//|");
-                    while (in.hasNext())
-                        log.add(in.next());
-                }
-                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, title,
-                        assignee, status));
+                status = (Integer.parseInt(out.get(1).get(10))==1?false:true);
+                hasRead = (Integer.parseInt(out.get(1).get(11))==1?false:true);
+                tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
+                        assignee, status, hasRead));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -305,11 +282,11 @@ public class SQLTicket {
         sql = "INSERT INTO " + MySQLConnector.tableName("data") + " ("
                 + "`owner`," + " `world`," + " `x_coord`," + " `y_coord`,"
                 + " `z_coord`," + " `pitch`," + " `yaw`," + " `status`,"
-                + " `title`" + ") VALUES (?,?,?,?,?,?,?,?,?);";
+                + " `info`" + ") VALUES (?,?,?,?,?,?,?,?,?);";
 
         HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(),
                 ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(),
-                ticket.getYaw(), 0, ticket.getTitle());
+                ticket.getYaw(), 0, ticket.getInfo());
         return true;
     }
 

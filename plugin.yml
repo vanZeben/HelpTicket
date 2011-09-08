@@ -6,7 +6,3 @@ description: This plugin is used for players to log problems, requests and compl
 commands:
   ticket:
         aliases: [pe, t]
-  helpticket:
-        aliases: []
-  check:
-        aliases: []

@@ -11,7 +11,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
-import com.imdeity.helpticket.cmds.HelpCheckCommand;
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
 import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.event.HelpTicketPlayerListener;
@@ -76,7 +75,6 @@ public class HelpTicket extends JavaPlugin {
 
     public void setupCommands() {
         getCommand("ticket").setExecutor(new HelpTicketCommand(this));
-        getCommand("check").setExecutor(new HelpCheckCommand(this));
     }
 
     public void setupEvents() {
@@ -104,7 +102,7 @@ public class HelpTicket extends JavaPlugin {
         if (taskId != -1) {
             getServer().getScheduler().cancelTask(taskId); 
         } else {
-            taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * 10)); 
+            taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * HelpTicketSettings.getNotificationTimer())); 
         }
     }
     
@@ -149,6 +147,9 @@ public class HelpTicket extends JavaPlugin {
     }
     
     public boolean isStaff(Player player) {
+        if (player == null) {
+            return false;
+        }
         if (HelpTicket.Permissions.has(player, "helpticket.mod")
          || HelpTicket.Permissions.has(player, "helpticket.admin")
          || player.isOp()) {
@@ -158,6 +159,9 @@ public class HelpTicket extends JavaPlugin {
     }
     
     public boolean isStaff(String playerName) {
+        if (this.getServer().getPlayer(playerName) == null) {
+            return false;
+        }
         if (HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.mod")
          || HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.admin")
          || this.getServer().getPlayer(playerName).isOp()) {
