@@ -289,7 +289,7 @@ public class SQLTicket {
         sql = "INSERT INTO " + MySQLConnector.tableName("data") + " ("
                 + "`owner`," + " `world`," + " `x_coord`," + " `y_coord`,"
                 + " `z_coord`," + " `pitch`," + " `yaw`," + " `status`,"
-                + " `info`" + ") VALUES (?,?,?,?,?,?,?,?,?);";
+                + " `info`, " + " `creation_time`" + ") VALUES (?,?,?,?,?,?,?,?,?, NOW());";
 
         HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(),
                 ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(),

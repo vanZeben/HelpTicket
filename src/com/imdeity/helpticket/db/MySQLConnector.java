@@ -62,6 +62,7 @@ public class MySQLConnector {
                 + "`assignee` VARCHAR(40) NULL DEFAULT NULL ,"
                 + "`status` INT(1) NOT NULL DEFAULT '0',"
                 + "`has_read` INT(1) NOT NULL DEFAULT '0',"
+                + "`creation_time` DATETIME NOT NULL,"
                 + "PRIMARY KEY (`id`)," + "INDEX (`owner`))"
                 + " ENGINE = MYISAM;");
 
@@ -131,7 +132,6 @@ public class MySQLConnector {
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            ex.printStackTrace();
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());

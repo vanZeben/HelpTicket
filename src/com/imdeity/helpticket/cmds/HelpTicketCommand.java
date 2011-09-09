@@ -124,7 +124,7 @@ public class HelpTicketCommand implements CommandExecutor {
                 "HelpTicket", player);
 
         HelpTicket.informStaff("<white>" + player.getName()
-                + " <gray> opened Ticket #<yellow>"
+                + "<gray> opened Ticket <yellow>#"
                 + SQLTicket.getNewestTicketID(player.getName()));
     }
 
