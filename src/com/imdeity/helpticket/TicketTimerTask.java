@@ -24,12 +24,12 @@ public class TicketTimerTask extends TimerTask{
        
        for(Player player : staff) {
            int size = SQLTicket.getAllOpenTickets().size();
-           if (size == 1) {
+           if (size == 0) { } else if (size == 1) {
                ChatTools.formatAndSend("<option>There is <yellow>" + size + " <gray>open ticket.", "HelpTicket", player);
-               ChatTools.formatAndSend("<option>Please attend to it with \"/check\".", "HelpTicket", player);
+               ChatTools.formatAndSend("<option>Please attend to it with \"/ticket\".", "HelpTicket", player);
            } else {
                ChatTools.formatAndSend("<option>There are <yellow>" + size + " <gray>open tickets.", "HelpTicket", player);
-               ChatTools.formatAndSend("<option>Please attend to them with \"/check\".", "HelpTicket", player);
+               ChatTools.formatAndSend("<option>Please attend to them with \"/ticket\".", "HelpTicket", player);
            }
            
        }

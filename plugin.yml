@@ -1,8 +1,8 @@
 name: HelpTicket
 main: com.imdeity.helpticket.HelpTicket
-version: 0.01
+version: 0.02
 author: vanZeben
 description: This plugin is used for players to log problems, requests and complaints.
 commands:
   ticket:
-        aliases: [pe, t]
+        aliases: [pe]

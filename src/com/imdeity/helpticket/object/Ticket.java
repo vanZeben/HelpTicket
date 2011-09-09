@@ -24,10 +24,11 @@ public class Ticket {
     private ArrayList<String[]> log = new ArrayList<String[]>();
     private boolean status = false;
     private boolean hasRead = false;
+    private int priority = 0;
 
     public Ticket(int id, String owner, String world, double x, double y,
             double z, float pitch, float yaw, String info, String assignee,
-            boolean status, boolean hasRead) {
+            boolean status, boolean hasRead, int priority) {
         setID(id);
         setInfo(info);
         setOwner(owner);
@@ -36,11 +37,12 @@ public class Ticket {
         setAssignee(assignee);
         setStatus(status);
         setHasRead(hasRead);
+        setPriority(priority);
     }
 
     public Ticket(String owner, String world, double x, double y, double z,
             float pitch, float yaw, String info, String assignee,
-            boolean status, boolean hasRead) {
+            boolean status, boolean hasRead, int priority) {
         setInfo(info);
         setOwner(owner);
         setLocation(world, x, y, z, pitch, yaw);
@@ -48,6 +50,7 @@ public class Ticket {
         setAssignee(assignee);
         setStatus(status);
         setHasRead(hasRead);
+        setPriority(priority);
     }
 
     public Ticket() {
@@ -68,15 +71,35 @@ public class Ticket {
         } else {
             out = info;
         }
-        return ChatTools.Gold
-                + "#"
-                + this.id
-                + " "
+        String tmp = "";
+        switch (priority) {
+        case 0:
+            tmp = "<darkblue>#" + this.id;
+            break;
+        case 1:
+            tmp = "<blue>#" + this.id;
+            break;
+        case 2:
+            tmp = "<yellow>#" + this.id;
+            break;
+        case 3:
+            tmp = "<red>#" + this.id;
+            break;
+        case 4:
+            tmp = "<darkred>#" + this.id;
+            break;
+        }
+        tmp += " "
                 + ChatTools.White
                 + this.owner
                 + (assignee != null ? ChatTools.Green + " -> "
-                        + ChatTools.White + this.assignee : "") + ": "
-                + ChatTools.LightGray + out +(log.isEmpty()? "" : ChatTools.Gray+" (" + log.size() + (log.size() == 1? " Comment)":" Comments)"));
+                        + ChatTools.White + this.assignee : "")
+                + ": "
+                + ChatTools.LightGray
+                + out
+                + (log.isEmpty() ? "" : ChatTools.Gray + " (" + log.size()
+                        + (log.size() == 1 ? " Comment)" : " Comments)"));
+        return tmp;
     }
 
     public String getHeader() {
@@ -84,7 +107,7 @@ public class Ticket {
         return ChatTools.Gold + "#" + this.id + " " + ChatTools.White
                 + this.owner + ": " + ChatTools.Gold + this.info;
     }
-    
+
     public int getID() {
         return this.id;
     }
@@ -125,7 +148,7 @@ public class Ticket {
         String moderator = (player != null ? player : "(Console)");
         if (message.isEmpty())
             return;
-        String[] tmp = {moderator, message};
+        String[] tmp = { moderator, message };
         log.add(tmp);
     }
 
@@ -177,5 +200,30 @@ public class Ticket {
 
     public void setHasRead(boolean hasRead) {
         this.hasRead = hasRead;
+    }
+
+    public String getPriority() {
+        switch (priority) {
+        case 0:
+            return "lowest";
+        case 1:
+            return "low";
+        case 2:
+            return "medium";
+        case 3:
+            return "high";
+        case 4:
+            return "highest";
+        }
+        return "";
+    }
+
+    public int getRawPriority() {
+
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

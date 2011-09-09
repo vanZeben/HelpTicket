@@ -57,13 +57,13 @@ public class MySQLConnector {
                 + "`world` VARCHAR(16) NOT NULL ,"
                 + "`x_coord` DOUBLE NOT NULL ," + "`y_coord` DOUBLE NOT NULL ,"
                 + "`z_coord` DOUBLE NOT NULL ," + "`pitch` FLOAT NOT NULL ,"
-                + "`yaw` FLOAT NOT NULL ,"
-                + "`info` VARCHAR(256) NOT NULL ,"
+                + "`yaw` FLOAT NOT NULL ," + "`info` VARCHAR(256) NOT NULL ,"
                 + "`assignee` VARCHAR(40) NULL DEFAULT NULL ,"
                 + "`status` INT(1) NOT NULL DEFAULT '0',"
                 + "`has_read` INT(1) NOT NULL DEFAULT '0',"
                 + "`creation_time` DATETIME NOT NULL,"
-                + "PRIMARY KEY (`id`)," + "INDEX (`owner`))"
+                + "`priority` INT(1) NOT NULL DEFAULT '0',"
+                + "PRIMARY KEY (`id`)," + "INDEX (`owner`),  INDEX (`priority`))"
                 + " ENGINE = MYISAM;");
 
         Write("CREATE TABLE IF NOT EXISTS " + tableName("comments") + " ("
@@ -71,8 +71,8 @@ public class MySQLConnector {
                 + "`ticket_id` INT( 16 ) NOT NULL DEFAULT '0',"
                 + "`owner` VARCHAR( 16 ) NOT NULL ,"
                 + "`commenter` VARCHAR( 16 ) NOT NULL ,"
-                + "`comment` TEXT NOT NULL," + "PRIMARY KEY (`id`)," + "INDEX (`ticket_id`)"
-                + ") ENGINE = MYISAM;");
+                + "`comment` TEXT NOT NULL," + "PRIMARY KEY (`id`),"
+                + "INDEX (`ticket_id`)" + ") ENGINE = MYISAM;");
     }
 
     // check if its closed

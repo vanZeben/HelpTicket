@@ -36,7 +36,10 @@ public class HelpTicketCommand implements CommandExecutor {
                 "assign [id] [player]",
                 "Assigns a ticket to the specified player."));
         output.add(ChatTools.formatCommand("Moderator", "/ticket",
+                "priority [id] [level]", "Sets the priority of a ticket"));
+        output.add(ChatTools.formatCommand("Moderator", "/ticket",
                 "search [name]", "Searches a players past tickets"));
+
     }
 
     public HelpTicketCommand(HelpTicket instance) {
@@ -98,6 +101,13 @@ public class HelpTicketCommand implements CommandExecutor {
                 warn(player,
                         "You need to be at least a moderator to preform this action");
             }
+        } else if (split[0].equalsIgnoreCase("priority")) {
+            if (plugin.isStaff(player)) {
+                priorityCommand(player, split);
+            } else {
+                warn(player,
+                        "You need to be at least a moderator to preform this action");
+            }
         }
     }
 
@@ -114,7 +124,7 @@ public class HelpTicketCommand implements CommandExecutor {
         Ticket t = new Ticket(player.getName(), player.getWorld().getName(),
                 player.getLocation().getX(), player.getLocation().getY(),
                 player.getLocation().getZ(), player.getLocation().getPitch(),
-                player.getLocation().getYaw(), message, "", true, false);
+                player.getLocation().getYaw(), message, "", true, false, 0);
 
         SQLTicket.newTicket(t);
 
@@ -158,6 +168,10 @@ public class HelpTicketCommand implements CommandExecutor {
             out.add(ChatTools.formatSitTitle(ticket.getOwner()));
             out.add(ChatTools.formatSituation("ID Number", "" + ticket.getID(),
                     ""));
+            if (ticket.getRawPriority() != -1) {
+                out.add(ChatTools.formatSituation("Priority",
+                        ticket.getPriority(), ""));
+            }
             if (ticket.getAssignee() != null) {
                 out.add(ChatTools.formatSituation("Assigned To",
                         ticket.getAssignee(), ""));
@@ -187,15 +201,25 @@ public class HelpTicketCommand implements CommandExecutor {
     public void viewAllCommand(Player player, String[] split) {
         if (!plugin.isStaff(player)) {
             player.sendMessage(ChatTools.formatSitTitle("Your Open Tickets"));
+            ChatTools
+                    .formatAndSend(
+                            "[<darkblue>lowest<white>, <blue>low<white>, <yellow>medium<white>, <red>high<white>, <darkred>highest<white>]",
+                            "", player);
             for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
                 SQLTicket.getComments(t);
-                player.sendMessage(t.getSentence(true));
+                t.setPriority(SQLTicket.getPriority(t));
+                ChatTools.formatAndSend((t.getSentence(true)), "", player);
             }
         } else {
             player.sendMessage(ChatTools.formatSitTitle("Open Tickets"));
+            ChatTools
+                    .formatAndSend(
+                            "[<darkblue>lowest<white>, <blue>low<white>, <yellow>medium<white>, <red>high<white>, <darkred>highest<white>]",
+                            "", player);
             for (Ticket t : SQLTicket.getAllOpenTickets()) {
                 SQLTicket.getComments(t);
-                player.sendMessage(t.getSentence(true));
+                t.setPriority(SQLTicket.getPriority(t));
+                ChatTools.formatAndSend((t.getSentence(true)), "", player);
             }
         }
         help(player);
@@ -213,29 +237,28 @@ public class HelpTicketCommand implements CommandExecutor {
 
             Ticket ticket = SQLTicket.getSpecificTicket(id);
             if (ticket != null) {
-                if (plugin.isStaff(player)) {
-                    if (ticket.getAssignee() != null
-                            && ticket.getAssignee().equalsIgnoreCase(
-                                    player.getName())) {
-                        ticket.addLog(player.getName(), "Closed the ticket ");
-                        ticket.setStatus(false);
-                        SQLTicket.updateTicket(ticket, "log", player.getName());
-                        ChatTools
-                                .formatAndSend(
-                                        "<option>"
-                                                + SQLTicket.updateTicket(
-                                                        ticket, "status"),
-                                        "HelpTicket", player);
-                        plugin.informPlayer(ticket.getOwner(), "<white>"
-                                + player.getName()
-                                + " <gray>closed your Ticket <yellow>[ID #"
-                                + ticket.getID() + "]");
-                    } else {
-                        warn(player,
-                                "You need to be assigned to the ticket to close it.");
-                    }
+                if (plugin.isStaff(player)
+                        && !ticket.getOwner()
+                                .equalsIgnoreCase(player.getName())) {
+
+                    ticket.addLog(player.getName(), "Closed the ticket ");
+                    ticket.setStatus(false);
+                    SQLTicket.updateTicket(ticket, "log", player.getName());
+                    SQLTicket.updateTicket(ticket, "priorityclose",
+                            player.getName());
+                    ChatTools.formatAndSend(
+                            "<option>"
+                                    + SQLTicket.updateTicket(ticket, "status"),
+                            "HelpTicket", player);
+                    plugin.informPlayer(ticket.getOwner(),
+                            "<white>" + player.getName()
+                                    + " <gray>closed your Ticket <yellow>[ID #"
+                                    + ticket.getID() + "]");
+
                 } else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
                     ticket.setStatus(false);
+                    SQLTicket.updateTicket(ticket, "priorityclose",
+                            player.getName());
                     ChatTools.formatAndSend(
                             "<option>"
                                     + SQLTicket.updateTicket(ticket, "status"),
@@ -245,7 +268,9 @@ public class HelpTicketCommand implements CommandExecutor {
                             + ticket.getID());
                 }
                 if (ticket.isOpen()) {
-                    if (!plugin.getServer().getPlayer(ticket.getOwner()).isOnline())
+                    Player tmp = plugin.getServer()
+                            .getPlayer(ticket.getOwner());
+                    if (tmp != null && !tmp.isOnline())
                         SQLTicket.updateTicket(ticket, "read");
                 }
             } else
@@ -286,7 +311,7 @@ public class HelpTicketCommand implements CommandExecutor {
                         plugin.informPlayer(ticket.getOwner(), "<white>"
                                 + player.getName()
                                 + " <gray>closed your Ticket <yellow>[ID #"
-                                + ticket.getID() + "]");
+                                + ticket.getID() + "] - " + comment);
                     } else {
                         warn(player,
                                 "You need to be assigned to the ticket to close it.");
@@ -302,7 +327,9 @@ public class HelpTicketCommand implements CommandExecutor {
                             + ticket.getID());
                 }
                 if (ticket.isOpen()) {
-                    if (!plugin.getServer().getPlayer(ticket.getOwner()).isOnline())
+                    Player tmp = plugin.getServer()
+                            .getPlayer(ticket.getOwner());
+                    if (tmp != null && !tmp.isOnline())
                         SQLTicket.updateTicket(ticket, "read");
                 }
             } else
@@ -338,6 +365,10 @@ public class HelpTicketCommand implements CommandExecutor {
                 out.add(ChatTools.formatSitTitle(ticket.getOwner()));
                 out.add(ChatTools.formatSituation("ID Number",
                         "" + ticket.getID(), ""));
+                if (ticket.getRawPriority() != -1) {
+                    out.add(ChatTools.formatSituation("Priority",
+                            ticket.getPriority(), ""));
+                }
                 if (ticket.getAssignee() != null) {
                     out.add(ChatTools.formatSituation("Assigned To",
                             ticket.getAssignee(), ""));
@@ -380,6 +411,7 @@ public class HelpTicketCommand implements CommandExecutor {
     public void assignCommand(Player player, String[] split) {
         if (split.length == 3) {
             int id = 0;
+            String assignee = split[2];
 
             try {
                 id = Integer.parseInt(split[1]);
@@ -388,8 +420,8 @@ public class HelpTicketCommand implements CommandExecutor {
             }
 
             Ticket ticket = SQLTicket.getSpecificTicket(id);
-            if (ticket != null) {
-                String assignee = split[2];
+            if (ticket != null && assignee != null) {
+
                 ticket.setAssignee(assignee);
 
                 ChatTools
@@ -405,7 +437,9 @@ public class HelpTicketCommand implements CommandExecutor {
                                 + " <gray>has been assigned to your Ticket <yellow>[ID #"
                                 + ticket.getID() + "]");
                 if (ticket.isOpen()) {
-                    if (!plugin.getServer().getPlayer(ticket.getOwner()).isOnline())
+                    Player tmp = plugin.getServer()
+                            .getPlayer(ticket.getOwner());
+                    if (tmp != null && !tmp.isOnline())
                         SQLTicket.updateTicket(ticket, "read");
                 }
             } else
@@ -480,7 +514,55 @@ public class HelpTicketCommand implements CommandExecutor {
                             player);
                 }
                 if (ticket.isOpen()) {
-                    if (!plugin.getServer().getPlayer(ticket.getOwner()).isOnline())
+                    Player tmp = plugin.getServer()
+                            .getPlayer(ticket.getOwner());
+                    if (tmp != null && !tmp.isOnline())
+                        SQLTicket.updateTicket(ticket, "notread");
+                }
+            }
+
+        }
+    }
+
+    public void priorityCommand(Player player, String[] split) {
+        if (split.length == 3) {
+            int id = 0;
+            int priority = 0;
+            try {
+                id = Integer.parseInt(split[1]);
+                priority = Integer.parseInt(split[2]);
+            } catch (NumberFormatException ex) {
+                invalid(player);
+            }
+            if (priority > 4 || priority < 0) {
+                ChatTools.formatAndSend(
+                        "<option><red>Priority can only be 0-4", "HelpTicket",
+                        player);
+                return;
+            }
+            Ticket ticket = SQLTicket.getSpecificTicket(id);
+            if (ticket != null) {
+                if (plugin.isStaff(player)) {
+
+                    ticket.setPriority(priority);
+                    ChatTools.formatAndSend(
+                            "<option>"
+                                    + SQLTicket.updateTicket(ticket,
+                                            "priority", player.getName()),
+                            "HelpTicket", player);
+                    plugin.informPlayer(
+                            ticket.getOwner(),
+                            "<white>" + player.getName()
+                                    + " <gray>set your ticket to "
+                                    + ticket.getPriority()
+                                    + " priority. <yellow>[ID #"
+                                    + ticket.getID() + "]");
+
+                }
+                if (ticket.isOpen()) {
+                    Player tmp = plugin.getServer()
+                            .getPlayer(ticket.getOwner());
+                    if (tmp != null && !!tmp.isOnline())
                         SQLTicket.updateTicket(ticket, "notread");
                 }
             }

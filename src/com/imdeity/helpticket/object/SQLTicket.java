@@ -23,6 +23,7 @@ public class SQLTicket {
         String assignee = "";
         boolean status = false;
         boolean hasRead = false;
+        int priority;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `id` = '" + id + "';";
@@ -44,7 +45,7 @@ public class SQLTicket {
             assignee = out.get(1).get(9);
             status = (Integer.parseInt(out.get(1).get(10)) == 1 ? false : true);
             hasRead = (Integer.parseInt(out.get(1).get(11)) == 1 ? false : true);
-
+            priority = Integer.parseInt(out.get(1).get(13));
         } catch (NumberFormatException ex) {
             System.out.println("[HelpTicket] Input Mismatch on id of " + id);
             ex.printStackTrace();
@@ -52,7 +53,7 @@ public class SQLTicket {
         }
 
         Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
-                assignee, status, hasRead);
+                assignee, status, hasRead, priority);
         getComments(tmp);
         return tmp;
     }
@@ -72,6 +73,7 @@ public class SQLTicket {
         String assignee = "";
         boolean status = false;
         boolean hasRead = false;
+        int priority;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `id` = '" + id + "' && `owner` = '" + playerName
@@ -94,7 +96,7 @@ public class SQLTicket {
             assignee = out.get(1).get(9);
             status = (Integer.parseInt(out.get(1).get(10)) == 1 ? false : true);
             hasRead = (Integer.parseInt(out.get(1).get(11)) == 1 ? false : true);
-
+            priority = Integer.parseInt(out.get(1).get(13));
         } catch (NumberFormatException ex) {
             System.out.println("[HelpTicket] Input Mismatch on id of " + id);
             ex.printStackTrace();
@@ -102,7 +104,7 @@ public class SQLTicket {
         }
 
         Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
-                assignee, status, hasRead);
+                assignee, status, hasRead, priority);
         getComments(tmp);
         return tmp;
     }
@@ -123,6 +125,7 @@ public class SQLTicket {
         String assignee = "";
         boolean status = false;
         boolean hasRead = false;
+        int priority;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `owner` = '" + playerName + "' && `status` = '0';";
@@ -140,13 +143,13 @@ public class SQLTicket {
                 yaw = Float.parseFloat(out.get(i).get(7));
                 info = out.get(i).get(8);
                 assignee = out.get(i).get(9);
-                status = Boolean.parseBoolean(out.get(i).get(10));
                 status = (Integer.parseInt(out.get(1).get(10)) == 1 ? false
                         : true);
                 hasRead = (Integer.parseInt(out.get(1).get(11)) == 1 ? false
                         : true);
+                priority = Integer.parseInt(out.get(1).get(13));
                 tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-                        info, assignee, status, hasRead));
+                        info, assignee, status, hasRead, priority));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -174,6 +177,7 @@ public class SQLTicket {
         String assignee = "";
         boolean status = false;
         boolean hasRead = false;
+        int priority;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `owner` = '" + playerName + "';";
@@ -191,10 +195,13 @@ public class SQLTicket {
                 yaw = Float.parseFloat(out.get(i).get(7));
                 info = out.get(i).get(8);
                 assignee = out.get(i).get(9);
-                status = Boolean.parseBoolean(out.get(i).get(10));
-                hasRead = Boolean.parseBoolean(out.get(i).get(11));
+                status = (Integer.parseInt(out.get(1).get(10)) == 1 ? false
+                        : true);
+                hasRead = (Integer.parseInt(out.get(1).get(11)) == 1 ? false
+                        : true);
+                priority = Integer.parseInt(out.get(1).get(13));
                 tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-                        info, assignee, status, hasRead));
+                        info, assignee, status, hasRead, priority));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -222,6 +229,7 @@ public class SQLTicket {
         String assignee = "";
         boolean status = false;
         boolean hasRead = false;
+        int priority;
 
         sql = "SELECT * FROM " + MySQLConnector.tableName("data")
                 + " WHERE `status` = '0';";
@@ -243,8 +251,9 @@ public class SQLTicket {
                         : true);
                 hasRead = (Integer.parseInt(out.get(1).get(11)) == 1 ? false
                         : true);
+                priority = Integer.parseInt(out.get(1).get(13));
                 tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-                        info, assignee, status, hasRead));
+                        info, assignee, status, hasRead, priority));
             } catch (NumberFormatException ex) {
                 System.out
                         .println("[HelpTicket] Input Mismatch on id of " + id);
@@ -289,7 +298,8 @@ public class SQLTicket {
         sql = "INSERT INTO " + MySQLConnector.tableName("data") + " ("
                 + "`owner`," + " `world`," + " `x_coord`," + " `y_coord`,"
                 + " `z_coord`," + " `pitch`," + " `yaw`," + " `status`,"
-                + " `info`, " + " `creation_time`" + ") VALUES (?,?,?,?,?,?,?,?,?, NOW());";
+                + " `info`, " + " `creation_time`,"
+                + "`priority` ) VALUES (?,?,?,?,?,?,?,?,?, NOW(), 0);";
 
         HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(),
                 ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(),
@@ -325,12 +335,23 @@ public class SQLTicket {
                 return "Nothing was changed.";
         } else if (variable[0].equalsIgnoreCase("read")) {
             sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-                    + "`has_read` = '0' WHERE `id` = "+ ticket.getID() +";";
+                    + "`has_read` = '0' WHERE `id` = " + ticket.getID() + ";";
             HelpTicket.database.Write(sql);
             return "";
         } else if (variable[0].equalsIgnoreCase("notread")) {
             sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-                    + "`has_read` = '1' WHERE `id` = "+ ticket.getID() +";";
+                    + "`has_read` = '1' WHERE `id` = " + ticket.getID() + ";";
+            HelpTicket.database.Write(sql);
+            return "";
+        } else if (variable[0].equalsIgnoreCase("priority")) {
+            sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+                    + "`priority` = '" + ticket.getRawPriority()
+                    + "' WHERE `id` = " + ticket.getID() + ";";
+            HelpTicket.database.Write(sql);
+            return "Priority was set to " + ticket.getPriority();
+        } else if (variable[0].equalsIgnoreCase("priorityclose")) {
+            sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+                    + "`priority` = '-1' WHERE `id` = " + ticket.getID() + ";";
             HelpTicket.database.Write(sql);
             return "";
         }
@@ -349,12 +370,23 @@ public class SQLTicket {
             ticket.addLog(query.get(i).get(3), query.get(i).get(4));
         }
     }
-    
+
+    public static int getPriority(Ticket ticket) {
+        String sql = "";
+
+        sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE"
+                + "`id` = '" + ticket.getID() + "';";
+        HashMap<Integer, ArrayList<String>> query = HelpTicket.database
+                .Read(sql);
+
+        return Integer.parseInt(query.get(1).get(13));
+    }
+
     public static void setHasRead(Ticket ticket) {
         String sql = "";
 
-        sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-                + " WHERE" + "`id` = '" + ticket.getID() + "';";
+        sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE"
+                + "`id` = '" + ticket.getID() + "';";
         HashMap<Integer, ArrayList<String>> query = HelpTicket.database
                 .Read(sql);
 
