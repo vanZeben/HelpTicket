@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.imdeity.helpticket.HelpTicket;
 import com.imdeity.helpticket.object.SQLTicket;
+import com.imdeity.helpticket.object.Ticket;
 import com.imdeity.helpticket.utils.ChatTools;
 
 public class HelpTicketPlayerListener extends PlayerListener {
@@ -32,8 +33,6 @@ public class HelpTicketPlayerListener extends PlayerListener {
                         + SQLTicket.getPlayersOpenTickets(player.getName())
                                 .size() + " tickets open.", "HelpTicket",
                         player);
-            
-            // TODO show closed petitions (log.add(".oOo.Closed")
         } else {
             if (SQLTicket.getAllOpenTickets().size() == 1)
                 ChatTools
@@ -47,6 +46,14 @@ public class HelpTicketPlayerListener extends PlayerListener {
                                 .size() + " tickets open.", "HelpTicket",
                         player);
             plugin.addToStaff(player);
+        }
+        for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
+            SQLTicket.setHasRead(t);
+            if (!t.getHasRead()) {
+                ChatTools.formatAndSend("<option>Ticket "
+                        + t.getID() + " has been updated.", "HelpTicket",
+                        player);
+            }
         }
 
     }

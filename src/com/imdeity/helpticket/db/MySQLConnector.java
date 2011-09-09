@@ -65,12 +65,12 @@ public class MySQLConnector {
                 + "PRIMARY KEY (`id`)," + "INDEX (`owner`))"
                 + " ENGINE = MYISAM;");
 
-        Write("CREATE TABLE  `kingdoms`.`helpticket_comments` ("
+        Write("CREATE TABLE IF NOT EXISTS " + tableName("comments") + " ("
                 + "`id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT ,"
                 + "`ticket_id` INT( 16 ) NOT NULL DEFAULT '0',"
                 + "`owner` VARCHAR( 16 ) NOT NULL ,"
                 + "`commenter` VARCHAR( 16 ) NOT NULL ,"
-                + "`comment` TEXT NOT NULL, INDEX (`ticket_id`)"
+                + "`comment` TEXT NOT NULL," + "PRIMARY KEY (`id`)," + "INDEX (`ticket_id`)"
                 + ") ENGINE = MYISAM;");
     }
 
@@ -131,6 +131,7 @@ public class MySQLConnector {
             stmt.executeUpdate();
             return true;
         } catch (SQLException ex) {
+            ex.printStackTrace();
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());

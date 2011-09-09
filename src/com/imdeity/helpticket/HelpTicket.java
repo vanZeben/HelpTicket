@@ -147,6 +147,7 @@ public class HelpTicket extends JavaPlugin {
     }
     
     public boolean isStaff(Player player) {
+        
         if (player == null) {
             return false;
         }

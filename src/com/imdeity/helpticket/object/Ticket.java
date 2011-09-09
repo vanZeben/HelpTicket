@@ -21,7 +21,7 @@ public class Ticket {
     private float pitch = 0.0f;
     private float yaw = 0.0f;
     private String assignee = "";
-    private ArrayList<String> log = new ArrayList<String>();
+    private ArrayList<String[]> log = new ArrayList<String[]>();
     private boolean status = false;
     private boolean hasRead = false;
 
@@ -76,7 +76,7 @@ public class Ticket {
                 + this.owner
                 + (assignee != null ? ChatTools.Green + " -> "
                         + ChatTools.White + this.assignee : "") + ": "
-                + ChatTools.LightGray + out;
+                + ChatTools.LightGray + out +(log.isEmpty()? "" : ChatTools.Gray+" (" + log.size() + (log.size() == 1? " Comment)":" Comments)"));
     }
 
     public String getHeader() {
@@ -84,7 +84,7 @@ public class Ticket {
         return ChatTools.Gold + "#" + this.id + " " + ChatTools.White
                 + this.owner + ": " + ChatTools.Gold + this.info;
     }
-
+    
     public int getID() {
         return this.id;
     }
@@ -117,14 +117,16 @@ public class Ticket {
         world = player.getWorld().getName();
     }
 
-    public ArrayList<String> getLog() {
+    public ArrayList<String[]> getLog() {
         return log;
     }
 
-    public void addLog(Player player, String message) {
-        String moderator = (player != null ? player.getName() : "(Console)");
-
-        log.add((message.equals("") ? "" : moderator + ": " + message));
+    public void addLog(String player, String message) {
+        String moderator = (player != null ? player : "(Console)");
+        if (message.isEmpty())
+            return;
+        String[] tmp = {moderator, message};
+        log.add(tmp);
     }
 
     public Boolean isOpen() {

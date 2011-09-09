@@ -261,7 +261,17 @@ public class ChatTools {
             out += Rose + requirement + ": ";
         out += Blue + command;
         if (help.length() > 0)
-            out += " " + LightGray + " : " + help;
+            out += LightGray + ": " + help;
+        return out;
+    }
+    
+    public static String formatComment(String requirement, String command, String help) {
+        String out = "  ";
+        if (requirement.length() > 0)
+            out += Rose + "=> " + requirement;
+        out += Blue + command;
+        if (help.length() > 0)
+            out += LightGray + ": " + help;
         return out;
     }
 }
