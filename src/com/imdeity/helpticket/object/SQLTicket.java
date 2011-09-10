@@ -299,7 +299,7 @@ public class SQLTicket {
                 + "`owner`," + " `world`," + " `x_coord`," + " `y_coord`,"
                 + " `z_coord`," + " `pitch`," + " `yaw`," + " `status`,"
                 + " `info`, " + " `creation_time`,"
-                + "`priority` ) VALUES (?,?,?,?,?,?,?,?,?, NOW(), 0);";
+                + "`priority` ) VALUES (?,?,?,?,?,?,?,?,?, NOW(), 2);";
 
         HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(),
                 ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(),
