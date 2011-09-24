@@ -295,27 +295,19 @@ public class HelpTicketCommand implements CommandExecutor {
             Ticket ticket = SQLTicket.getSpecificTicket(id);
             if (ticket != null) {
                 if (plugin.isStaff(player)) {
-                    if (ticket.getAssignee() != null
-                            && ticket.getAssignee().equalsIgnoreCase(
-                                    player.getName())) {
-                        ticket.addLog(player.getName(), "Closed the ticket - "
-                                + comment);
-                        ticket.setStatus(false);
-                        SQLTicket.updateTicket(ticket, "log", player.getName());
-                        ChatTools
-                                .formatAndSend(
-                                        "<option>"
-                                                + SQLTicket.updateTicket(
-                                                        ticket, "status"),
-                                        "HelpTicket", player);
-                        plugin.informPlayer(ticket.getOwner(), "<white>"
-                                + player.getName()
-                                + " <gray>closed your Ticket <yellow>[ID #"
-                                + ticket.getID() + "] - " + comment);
-                    } else {
-                        warn(player,
-                                "You need to be assigned to the ticket to close it.");
-                    }
+                    ticket.addLog(player.getName(), "Closed the ticket - "
+                            + comment);
+                    ticket.setStatus(false);
+                    SQLTicket.updateTicket(ticket, "log", player.getName());
+                    ChatTools.formatAndSend(
+                            "<option>"
+                                    + SQLTicket.updateTicket(ticket, "status"),
+                            "HelpTicket", player);
+                    plugin.informPlayer(ticket.getOwner(),
+                            "<white>" + player.getName()
+                                    + " <gray>closed your Ticket <yellow>[ID #"
+                                    + ticket.getID() + "] - " + comment);
+
                 } else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
                     ticket.setStatus(false);
                     ChatTools.formatAndSend(
