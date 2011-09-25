@@ -77,6 +77,8 @@ public class HelpTicketCommand implements CommandExecutor {
             commentCommand(player, split);
         } else if (split[0].equalsIgnoreCase("close")) {
             closeCommand(player, split);
+        } else if (split[0].equalsIgnoreCase("reopen")) {
+            reopenCommand(player, split);
         } else if (split[0].equalsIgnoreCase("help")
                 || split[0].equalsIgnoreCase("?")) {
             for (String s : output) {
