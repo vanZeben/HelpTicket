@@ -81,7 +81,7 @@ public class HelpTicket extends JavaPlugin {
         this.getServer()
                 .getPluginManager()
                 .registerEvent(Event.Type.PLAYER_JOIN, playerListener,
-                        Priority.High, this);
+                        Priority.Normal, this);
         this.getServer()
                 .getPluginManager()
                 .registerEvent(Event.Type.PLAYER_QUIT, playerListener,

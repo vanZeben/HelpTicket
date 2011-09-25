@@ -80,33 +80,33 @@ public class HelpTicketCommand implements CommandExecutor {
             for (String s : output) {
                 ChatTools.formatAndSend(s, "", player);
             }
-        } else if (split[0].equalsIgnoreCase("port")) {
+        } else if (split[0].equalsIgnoreCase("port") || split[0].equalsIgnoreCase("warp") || split[0].equalsIgnoreCase("tp")) {
             if (plugin.isStaff(player)) {
                 portCommand(player, split);
             } else {
                 warn(player,
-                        "You need to be at least a moderator to preform this action");
+                        "You need to be at least a moderator to perform this action");
             }
         } else if (split[0].equalsIgnoreCase("assign")) {
             if (plugin.isStaff(player)) {
                 assignCommand(player, split);
             } else {
                 warn(player,
-                        "You need to be at least a moderator to preform this action");
+                        "You need to be at least a moderator to perform this action");
             }
         } else if (split[0].equalsIgnoreCase("search")) {
             if (plugin.isStaff(player)) {
                 searchCommand(player, split);
             } else {
                 warn(player,
-                        "You need to be at least a moderator to preform this action");
+                        "You need to be at least a moderator to perform this action");
             }
         } else if (split[0].equalsIgnoreCase("priority")) {
             if (plugin.isStaff(player)) {
                 priorityCommand(player, split);
             } else {
                 warn(player,
-                        "You need to be at least a moderator to preform this action");
+                        "You need to be at least a moderator to perform this action");
             }
         }
     }
@@ -255,6 +255,11 @@ public class HelpTicketCommand implements CommandExecutor {
                                     + " <gray>closed your Ticket <yellow>[ID #"
                                     + ticket.getID() + "]");
 
+                    // Inform staff of close
+                    HelpTicket.informStaff("<white>" + player.getName()
+                            + " <gray>closed Ticket <yellow>[ID #"
+                            + ticket.getID() + "]");
+                    
                 } else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
                     ticket.setStatus(false);
                     SQLTicket.updateTicket(ticket, "priorityclose",
@@ -308,6 +313,10 @@ public class HelpTicketCommand implements CommandExecutor {
                                     + " <gray>closed your Ticket <yellow>[ID #"
                                     + ticket.getID() + "] - " + comment);
 
+                    // Inform staff of close
+                    HelpTicket.informStaff("<white>" + player.getName()
+                            + " <gray>closed Ticket <yellow>[ID #"
+                            + ticket.getID() + "] - " + comment);
                 } else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
                     ticket.setStatus(false);
                     ChatTools.formatAndSend(
