@@ -30,8 +30,10 @@ public class HelpTicketCommand implements CommandExecutor {
                 "comment [id] [message]", "Comments on a Ticket"));
         output.add(ChatTools.formatCommand("", "/ticket", "close [id]",
                 "Closes a Ticket"));
+        output.add(ChatTools.formatCommand("Moderator", "/ticket", "reopen [id]",
+                "Reopen a closed ticket"));
         output.add(ChatTools.formatCommand("Moderator", "/ticket", "port [id]",
-                "Teleport a ticket"));
+                "Teleport to a ticket"));
         output.add(ChatTools.formatCommand("Moderator", "/ticket",
                 "assign [id] [player]",
                 "Assigns a ticket to the specified player."));
@@ -340,6 +342,42 @@ public class HelpTicketCommand implements CommandExecutor {
         }
     }
 
+    
+    // Reopen a ticket
+    public void reopenCommand(Player player, String[] split) {
+        if (split.length == 2) {
+            int id = 0;
+
+            try {
+                id = Integer.parseInt(split[1]);
+            } catch (NumberFormatException ex) {
+                invalid(player);
+            }
+
+            Ticket ticket = SQLTicket.getSpecificTicket(id);
+            if (ticket != null) {
+                if (plugin.isStaff(player)) {
+
+                    ticket.addLog(player.getName(), "Re-opened ticket");
+                    ticket.setStatus(true);
+                    SQLTicket.updateTicket(ticket, "log", player.getName());
+                    SQLTicket.updateTicket(ticket, "reopen",
+                            player.getName());
+                    plugin.informPlayer(ticket.getOwner(),
+                            "<white>" + player.getName()
+                                    + " <gray>Reopened your Ticket <yellow>[ID #"
+                                    + ticket.getID() + "]");
+                    
+                } else {
+                	plugin.informPlayer(player.getName(), "Only staff can reopen tickets");
+                }
+            } else
+                help(player);
+        } else {
+            help(player);
+        }
+    }
+    
     public void portCommand(Player player, String[] split) {
         if (split.length == 2) {
             int id = 0;

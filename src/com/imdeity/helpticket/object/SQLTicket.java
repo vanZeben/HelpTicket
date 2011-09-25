@@ -354,6 +354,11 @@ public class SQLTicket {
                     + "`priority` = '-1' WHERE `id` = " + ticket.getID() + ";";
             HelpTicket.database.Write(sql);
             return "";
+        } else if (variable[0].equalsIgnoreCase("reopen")) {
+            sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+                    + "`priority` = 2, `status` = 1 WHERE `id` = " + ticket.getID() + ";";
+            HelpTicket.database.Write(sql);
+            return "Reopened Ticket #" + ticket.getID();
         }
         return "Nothing was changed.";
     }
