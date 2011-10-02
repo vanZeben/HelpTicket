@@ -321,7 +321,9 @@ public class SQLTicket {
                     + " SET  `status` =  '" + (ticket.isOpen() ? 0 : 1)
                     + "' WHERE `id` = '" + ticket.getID() + "';";
             HelpTicket.database.Write(sql);
-            return "Closed Ticket #" + ticket.getID();
+
+            return !ticket.isOpen() ? "Closed Ticket #" + ticket.getID()
+                    : "Re-opened Ticket #" + ticket.getID();
         } else if (variable[0].equalsIgnoreCase("log")) {
             sql = "INSERT INTO " + MySQLConnector.tableName("comments") + " ("
                     + "`ticket_id`," + " `owner`," + " `commenter`,"
@@ -354,11 +356,6 @@ public class SQLTicket {
                     + "`priority` = '-1' WHERE `id` = " + ticket.getID() + ";";
             HelpTicket.database.Write(sql);
             return "";
-        } else if (variable[0].equalsIgnoreCase("reopen")) {
-            sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-                    + "`priority` = 2, `status` = 1 WHERE `id` = " + ticket.getID() + ";";
-            HelpTicket.database.Write(sql);
-            return "Reopened Ticket #" + ticket.getID();
         }
         return "Nothing was changed.";
     }

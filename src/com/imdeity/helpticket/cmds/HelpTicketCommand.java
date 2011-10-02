@@ -77,8 +77,6 @@ public class HelpTicketCommand implements CommandExecutor {
             commentCommand(player, split);
         } else if (split[0].equalsIgnoreCase("close")) {
             closeCommand(player, split);
-        } else if (split[0].equalsIgnoreCase("reopen")) {
-            reopenCommand(player, split);
         } else if (split[0].equalsIgnoreCase("help")
                 || split[0].equalsIgnoreCase("?")) {
             for (String s : output) {
@@ -343,8 +341,7 @@ public class HelpTicketCommand implements CommandExecutor {
             help(player);
         }
     }
-
-    
+   
     // Reopen a ticket
     public void reopenCommand(Player player, String[] split) {
         if (split.length == 2) {
@@ -363,15 +360,21 @@ public class HelpTicketCommand implements CommandExecutor {
                     ticket.addLog(player.getName(), "Re-opened ticket");
                     ticket.setStatus(true);
                     SQLTicket.updateTicket(ticket, "log", player.getName());
-                    SQLTicket.updateTicket(ticket, "reopen",
-                            player.getName());
-                    plugin.informPlayer(ticket.getOwner(),
-                            "<white>" + player.getName()
-                                    + " <gray>Reopened your Ticket <yellow>[ID #"
-                                    + ticket.getID() + "]");
-                    
+                    ChatTools.formatAndSend(
+                            "<option>"
+                                    + SQLTicket.updateTicket(ticket, "status"),
+                            "HelpTicket", player);
+                    HelpTicket.informStaff("<white>" + player.getName()
+                            + " <gray> re-opened Ticket #<yellow>"
+                            + ticket.getID());
+                    if (ticket.isOpen()) {
+                        Player tmp = plugin.getServer()
+                                .getPlayer(ticket.getOwner());
+                        if (tmp != null && !tmp.isOnline())
+                            SQLTicket.updateTicket(ticket, "notread");
+                    }
                 } else {
-                	plugin.informPlayer(player.getName(), "Only staff can reopen tickets");
+                    plugin.informPlayer(player.getName(), "Only staff can reopen tickets");
                 }
             } else
                 help(player);
