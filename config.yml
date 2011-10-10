@@ -21,3 +21,4 @@ mysql:
 
 #   helpticket.help - required to request assistance (open, comment, view[own])
 #   helpticket.mod - required for answering tickets (inheirt's helpticket.ticket), (open, comment, view, warp, [un]assign, close)
+#   helpticket.admin - same as mod
