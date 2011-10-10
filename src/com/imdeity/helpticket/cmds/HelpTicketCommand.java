@@ -245,6 +245,8 @@ public class HelpTicketCommand implements CommandExecutor {
                         && !ticket.getOwner()
                                 .equalsIgnoreCase(player.getName())) {
 
+                    ticket.setAssignee(player.getName());
+                    SQLTicket.updateTicket(ticket, "assignee");
                     ticket.addLog(player.getName(), "Closed the ticket ");
                     ticket.setStatus(false);
                     SQLTicket.updateTicket(ticket, "log", player.getName());
