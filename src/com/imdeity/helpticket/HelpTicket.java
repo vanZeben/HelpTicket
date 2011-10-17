@@ -9,6 +9,9 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 import java.util.logging.Logger;
 
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
@@ -18,25 +21,27 @@ import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.FileMgmt;
 import com.imdeity.helpticket.utils.StringMgmt;
 
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class HelpTicket extends JavaPlugin {
 
     public static final Logger logger = Logger.getLogger("minecraft");
-    public static PermissionHandler Permissions = null;
+    public static PermissionsEx Permissions = null;
     public static MySQLConnector database = null;
 
     public static ArrayList<Player> staff = new ArrayList<Player>();
     private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(
             this);
     private static int taskId = -1;
+    private boolean error = false;
 
     public void onEnable() {
 
+        this.checkPlugins();
+        if (error) {
+            out("Permissions system not detected. Resorting to Op Only.");
+        }
         try {
             this.loadSettings();
             this.loadDatabase();
@@ -47,10 +52,8 @@ public class HelpTicket extends JavaPlugin {
             return;
         }
         this.toggleTimerTask();
-        this.checkPlugins();
         this.setupEvents();
         this.setupCommands();
-
         out("Enabled");
     }
 
@@ -64,8 +67,8 @@ public class HelpTicket extends JavaPlugin {
         Plugin test;
         test = getServer().getPluginManager().getPlugin("Permissions");
         if (test != null) {
-            Permissions tmp = (Permissions) test;
-            Permissions = tmp.getHandler();
+            PermissionsEx tmp = (PermissionsEx) test;
+            Permissions = tmp;
             if (HelpTicketSettings.isUsingPermissions())
                 using.add("Permissions");
         }
@@ -147,14 +150,18 @@ public class HelpTicket extends JavaPlugin {
     }
     
     public boolean isStaff(Player player) {
-        
         if (player == null) {
             return false;
         }
-        if (HelpTicket.Permissions.has(player, "helpticket.mod")
-         || HelpTicket.Permissions.has(player, "helpticket.admin")
-         || player.isOp()) {
-            return true;
+        if (HelpTicketSettings.isUsingPermissions()) {
+            if (PermissionsEx.has(player, "helpticket.mod")
+                    || PermissionsEx.has(player, "helpticket.admin")
+                    || player.isOp()) {
+                return true;
+            }
+        } else {
+            if (player.isOp())
+                return true;
         }
         return false;
     }
@@ -163,10 +170,16 @@ public class HelpTicket extends JavaPlugin {
         if (this.getServer().getPlayer(playerName) == null) {
             return false;
         }
-        if (HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.mod")
-         || HelpTicket.Permissions.has(this.getServer().getPlayer(playerName), "helpticket.admin")
-         || this.getServer().getPlayer(playerName).isOp()) {
-            return true;
+        if (HelpTicketSettings.isUsingPermissions()) {
+            
+            if (PermissionsEx.has(this.getServer().getPlayer(playerName), "helpticket.mod")
+                    || PermissionsEx.has(this.getServer().getPlayer(playerName), "helpticket.admin")
+                    || this.getServer().getPlayer(playerName).isOp()) {
+                return true;
+            }
+        } else {
+            if ((this.getServer().getPlayer(playerName)).isOp())
+                return true;
         }
         return false;
     }

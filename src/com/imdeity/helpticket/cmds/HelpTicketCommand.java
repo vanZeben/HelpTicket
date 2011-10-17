@@ -8,7 +8,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 import com.imdeity.helpticket.HelpTicket;
+import com.imdeity.helpticket.HelpTicketSettings;
 import com.imdeity.helpticket.object.SQLTicket;
 import com.imdeity.helpticket.object.Ticket;
 import com.imdeity.helpticket.utils.ChatTools;
@@ -53,8 +56,12 @@ public class HelpTicketCommand implements CommandExecutor {
             String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (HelpTicket.Permissions.has(player, "helpticket.help")
-                    || player.isOp()) {
+            if (HelpTicketSettings.isUsingPermissions()) {
+                if (PermissionsEx.has(player, "helpticket.help")
+                        || player.isOp()) {
+                    parseCommand(player, args);
+                }
+            } else {
                 parseCommand(player, args);
             }
         } else {
