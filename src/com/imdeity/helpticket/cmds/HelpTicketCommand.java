@@ -33,8 +33,8 @@ public class HelpTicketCommand implements CommandExecutor {
                 "comment [id] [message]", "Comments on a Ticket"));
         output.add(ChatTools.formatCommand("", "/ticket", "close [id]",
                 "Closes a Ticket"));
-        output.add(ChatTools.formatCommand("Moderator", "/ticket", "reopen [id]",
-                "Reopen a closed ticket"));
+        output.add(ChatTools.formatCommand("Moderator", "/ticket",
+                "reopen [id]", "Reopen a closed ticket"));
         output.add(ChatTools.formatCommand("Moderator", "/ticket", "port [id]",
                 "Teleport to a ticket"));
         output.add(ChatTools.formatCommand("Moderator", "/ticket",
@@ -91,7 +91,9 @@ public class HelpTicketCommand implements CommandExecutor {
             for (String s : output) {
                 ChatTools.formatAndSend(s, "", player);
             }
-        } else if (split[0].equalsIgnoreCase("port") || split[0].equalsIgnoreCase("warp") || split[0].equalsIgnoreCase("tp")) {
+        } else if (split[0].equalsIgnoreCase("port")
+                || split[0].equalsIgnoreCase("warp")
+                || split[0].equalsIgnoreCase("tp")) {
             if (plugin.isStaff(player)) {
                 portCommand(player, split);
             } else {
@@ -272,7 +274,7 @@ public class HelpTicketCommand implements CommandExecutor {
                     HelpTicket.informStaff("<white>" + player.getName()
                             + " <gray>closed Ticket <yellow>[ID #"
                             + ticket.getID() + "]");
-                    
+
                 } else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
                     ticket.setStatus(false);
                     SQLTicket.updateTicket(ticket, "priorityclose",
@@ -352,7 +354,7 @@ public class HelpTicketCommand implements CommandExecutor {
             help(player);
         }
     }
-   
+
     // Reopen a ticket
     public void reopenCommand(Player player, String[] split) {
         if (split.length == 2) {
@@ -379,13 +381,14 @@ public class HelpTicketCommand implements CommandExecutor {
                             + " <gray> re-opened Ticket #<yellow>"
                             + ticket.getID());
                     if (ticket.isOpen()) {
-                        Player tmp = plugin.getServer()
-                                .getPlayer(ticket.getOwner());
+                        Player tmp = plugin.getServer().getPlayer(
+                                ticket.getOwner());
                         if (tmp != null && !tmp.isOnline())
                             SQLTicket.updateTicket(ticket, "notread");
                     }
                 } else {
-                    plugin.informPlayer(player.getName(), "Only staff can reopen tickets");
+                    plugin.informPlayer(player.getName(),
+                            "Only staff can reopen tickets");
                 }
             } else
                 help(player);
@@ -393,7 +396,7 @@ public class HelpTicketCommand implements CommandExecutor {
             help(player);
         }
     }
-    
+
     public void portCommand(Player player, String[] split) {
         if (split.length == 2) {
             int id = 0;

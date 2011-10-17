@@ -38,10 +38,7 @@ public class HelpTicket extends JavaPlugin {
 
     public void onEnable() {
 
-        this.checkPlugins();
-        if (error) {
-            out("Permissions system not detected. Resorting to Op Only.");
-        }
+        
         try {
             this.loadSettings();
             this.loadDatabase();
@@ -50,6 +47,10 @@ public class HelpTicket extends JavaPlugin {
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+        this.checkPlugins();
+        if (error) {
+            out("Permissions system not detected. Resorting to Op Only.");
         }
         this.toggleTimerTask();
         this.setupEvents();
@@ -65,12 +66,14 @@ public class HelpTicket extends JavaPlugin {
     private void checkPlugins() {
         List<String> using = new ArrayList<String>();
         Plugin test;
-        test = getServer().getPluginManager().getPlugin("Permissions");
+        test = getServer().getPluginManager().getPlugin("PermissionsEx");
         if (test != null) {
             PermissionsEx tmp = (PermissionsEx) test;
             Permissions = tmp;
             if (HelpTicketSettings.isUsingPermissions())
                 using.add("Permissions");
+        } else {
+            error = true;
         }
         if (using.size() > 0)
             out("Using: " + StringMgmt.join(using, ", "));
