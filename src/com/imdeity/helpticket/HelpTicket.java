@@ -10,8 +10,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import java.util.logging.Logger;
 
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
@@ -27,7 +25,6 @@ import java.util.List;
 public class HelpTicket extends JavaPlugin {
 
     public static final Logger logger = Logger.getLogger("minecraft");
-    public static PermissionsEx Permissions = null;
     public static MySQLConnector database = null;
 
     public static ArrayList<Player> staff = new ArrayList<Player>();
@@ -48,10 +45,6 @@ public class HelpTicket extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        this.checkPlugins();
-        if (error) {
-            out("Permissions system not detected. Resorting to Op Only.");
-        }
         this.toggleTimerTask();
         this.setupEvents();
         this.setupCommands();
@@ -61,22 +54,6 @@ public class HelpTicket extends JavaPlugin {
     public void onDisable() {
         this.toggleTimerTask();
         out("Disabled");
-    }
-
-    private void checkPlugins() {
-        List<String> using = new ArrayList<String>();
-        Plugin test;
-        test = getServer().getPluginManager().getPlugin("PermissionsEx");
-        if (test != null) {
-            PermissionsEx tmp = (PermissionsEx) test;
-            Permissions = tmp;
-            if (HelpTicketSettings.isUsingPermissions())
-                using.add("Permissions");
-        } else {
-            error = true;
-        }
-        if (using.size() > 0)
-            out("Using: " + StringMgmt.join(using, ", "));
     }
 
     public void setupCommands() {
@@ -157,8 +134,8 @@ public class HelpTicket extends JavaPlugin {
             return false;
         }
         if (HelpTicketSettings.isUsingPermissions()) {
-            if (PermissionsEx.has(player, "helpticket.mod")
-                    || PermissionsEx.has(player, "helpticket.admin")
+            if (player.hasPermission("helpticket.mod")
+                    || player.hasPermission("helpticket.admin")
                     || player.isOp()) {
                 return true;
             }
@@ -175,8 +152,8 @@ public class HelpTicket extends JavaPlugin {
         }
         if (HelpTicketSettings.isUsingPermissions()) {
             
-            if (PermissionsEx.has(this.getServer().getPlayer(playerName), "helpticket.mod")
-                    || PermissionsEx.has(this.getServer().getPlayer(playerName), "helpticket.admin")
+            if (this.getServer().getPlayer(playerName).hasPermission("helpticket.mod")
+                    || this.getServer().getPlayer(playerName).hasPermission("helpticket.admin")
                     || this.getServer().getPlayer(playerName).isOp()) {
                 return true;
             }
