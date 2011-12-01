@@ -8,8 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import com.imdeity.helpticket.HelpTicket;
 import com.imdeity.helpticket.HelpTicketSettings;
 import com.imdeity.helpticket.object.SQLTicket;
