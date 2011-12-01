@@ -57,7 +57,7 @@ public class HelpTicketCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (HelpTicketSettings.isUsingPermissions()) {
-                if (PermissionsEx.has(player, "helpticket.help")
+                if (player.hasPermission("helpticket.help")
                         || player.isOp()) {
                     parseCommand(player, args);
                 }
