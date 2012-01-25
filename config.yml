@@ -6,7 +6,6 @@ mysql:
     server:
         address: localhost
         port: 3306
-
     database:
         name: kingdoms
         username: root

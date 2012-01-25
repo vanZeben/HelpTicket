@@ -1,26 +1,21 @@
 package com.imdeity.helpticket;
 
-import java.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
 
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
 import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.event.HelpTicketPlayerListener;
 import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.FileMgmt;
-import com.imdeity.helpticket.utils.StringMgmt;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HelpTicket extends JavaPlugin {
 
@@ -31,10 +26,8 @@ public class HelpTicket extends JavaPlugin {
     private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(
             this);
     private static int taskId = -1;
-    private boolean error = false;
 
     public void onEnable() {
-
         
         try {
             this.loadSettings();
