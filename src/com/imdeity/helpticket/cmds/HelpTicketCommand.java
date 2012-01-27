@@ -514,7 +514,9 @@ public class HelpTicketCommand implements CommandExecutor {
                 player.sendMessage(ChatTools
                         .formatSitTitle(name + "'s Tickets"));
                 for (Ticket t : ticket) {
-                    player.sendMessage(t.getSentence(true));
+                	 SQLTicket.getComments(t);
+                     t.setPriority(SQLTicket.getPriority(t));
+                     ChatTools.formatAndSend((t.getSentence(true)), "", player);
                 }
 
             } else

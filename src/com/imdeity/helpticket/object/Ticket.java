@@ -74,19 +74,22 @@ public class Ticket {
         String tmp = "";
         switch (priority) {
         case 0:
-            tmp = "<darkblue>#" + this.id;
+            tmp += "<darkblue>#" + this.id;
             break;
         case 1:
-            tmp = "<blue>#" + this.id;
+            tmp += "<blue>#" + this.id;
             break;
         case 2:
-            tmp = "<yellow>#" + this.id;
+            tmp += "<yellow>#" + this.id;
             break;
         case 3:
-            tmp = "<red>#" + this.id;
+            tmp += "<red>#" + this.id;
             break;
         case 4:
-            tmp = "<darkred>#" + this.id;
+            tmp += "<darkred>#" + this.id;
+            break;
+        default:
+            tmp += "#" + this.id;
             break;
         }
         tmp += " "
