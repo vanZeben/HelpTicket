@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,14 +70,7 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void setupEvents() {
-		this.getServer()
-				.getPluginManager()
-				.registerEvent(Event.Type.PLAYER_JOIN, playerListener,
-						Priority.Normal, this);
-		this.getServer()
-				.getPluginManager()
-				.registerEvent(Event.Type.PLAYER_QUIT, playerListener,
-						Priority.Low, this);
+		this.getServer().getPluginManager().registerEvents(playerListener, this);
 	}
 
 	public void loadDatabase() {

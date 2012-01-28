@@ -267,9 +267,8 @@ public class HelpTicketCommand implements CommandExecutor {
 							+ "]");
 
 					// Inform staff of close
-					HelpTicket.informStaff("<white>" + player.getName()
-							+ " <gray>closed Ticket <yellow>[ID #"
-							+ ticket.getID() + "]");
+					HelpTicket.informStaff("" + player.getName()
+							+ " closed Ticket [ID #" + ticket.getID() + "]");
 
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
 					ticket.setStatus(false);

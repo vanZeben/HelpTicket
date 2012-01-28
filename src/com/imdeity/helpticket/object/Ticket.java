@@ -95,7 +95,7 @@ public class Ticket {
 		tmp += "<darkgray>]<white> "
 				+ this.owner
 				+ (assignee != null ? "<green> -> <white>" + this.assignee : "")
-				+ "<darkgray>: "
+				+ "<gray>: "
 				+ out
 				+ (log.isEmpty() ? "" : "<darkgray> (" + log.size()
 						+ (log.size() == 1 ? " Comment)" : " Comments)"));
@@ -103,7 +103,6 @@ public class Ticket {
 	}
 
 	public String getHeader() {
-
 		return ChatTools.Gold + "#" + this.id + " " + ChatTools.White
 				+ this.owner + ": " + ChatTools.Gold + this.info;
 	}
