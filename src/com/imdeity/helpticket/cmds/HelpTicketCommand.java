@@ -45,7 +45,8 @@ public class HelpTicketCommand implements CommandExecutor {
 					"assign [id] [player]",
 					"Assigns a ticket to the specified player."));
 			output.add(ChatTools.formatCommand("Moderator", "/ticket",
-					"priority [id] [level]", "Sets the priority of a ticket"));
+					"set-priority [id] [level]",
+					"Sets the priority of a ticket"));
 			output.add(ChatTools.formatCommand("Moderator", "/ticket",
 					"search [name]", "Searches a players past tickets"));
 		}
@@ -112,7 +113,7 @@ public class HelpTicketCommand implements CommandExecutor {
 				ChatTools.formatAndSend(plugin.language.getHeader()
 						+ plugin.language.getNotStaffMessage(), player);
 			}
-		} else if (split[0].equalsIgnoreCase("priority")) {
+		} else if (split[0].equalsIgnoreCase("set-priority")) {
 			if (plugin.isStaff(player)) {
 				priorityCommand(player, split);
 			} else {
@@ -181,7 +182,6 @@ public class HelpTicketCommand implements CommandExecutor {
 				}
 			} else {
 				ticket = SQLTicket.getSpecificTicket(id);
-
 				if (ticket == null) {
 					ChatTools.formatAndSend(
 							plugin.language.getHeader()
@@ -191,13 +191,12 @@ public class HelpTicketCommand implements CommandExecutor {
 					return;
 				}
 			}
-
 			for (String line : ticket.preformReplace(plugin.language
 					.getTicketFullInfo())) {
 				ChatTools.formatAndSend(line, player);
 			}
 			if (ticket.isOpen())
-				ticket.setHasRead(false);
+				ticket.setHasRead(true);
 		} else {
 			help(player);
 		}
@@ -262,6 +261,12 @@ public class HelpTicketCommand implements CommandExecutor {
 									player.getName()))) {
 						plugin.informStaff(s);
 					}
+					if (ticket.isOpen()) {
+						Player tmp = plugin.getServer().getPlayer(
+								ticket.getOwner());
+						if (tmp != null && !tmp.isOnline())
+							ticket.setHasRead(false);
+					}
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
 					ticket.setStatus(false);
 					ticket.setPriorityClose();
@@ -275,12 +280,6 @@ public class HelpTicketCommand implements CommandExecutor {
 									player.getName()))) {
 						plugin.informStaff(s);
 					}
-				}
-				if (ticket.isOpen()) {
-					Player tmp = plugin.getServer()
-							.getPlayer(ticket.getOwner());
-					if (tmp != null && !tmp.isOnline())
-						ticket.setHasRead(false);
 				}
 			} else
 				help(player);
@@ -322,6 +321,12 @@ public class HelpTicketCommand implements CommandExecutor {
 							.replaceAll("%player", player.getName()))) {
 						plugin.informPlayer(ticket.getOwner(), s);
 					}
+					if (ticket.isOpen()) {
+						Player tmp = plugin.getServer().getPlayer(
+								ticket.getOwner());
+						if (tmp != null && !tmp.isOnline())
+							ticket.setHasRead(false);
+					}
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
 					ticket.addLog(
 							player.getName(),
@@ -341,12 +346,6 @@ public class HelpTicketCommand implements CommandExecutor {
 							.replaceAll("%player", player.getName()))) {
 						plugin.informStaff(s);
 					}
-				}
-				if (ticket.isOpen()) {
-					Player tmp = plugin.getServer()
-							.getPlayer(ticket.getOwner());
-					if (tmp != null && !tmp.isOnline())
-						ticket.setHasRead(false);
 				}
 			} else
 				help(player);
@@ -545,6 +544,12 @@ public class HelpTicketCommand implements CommandExecutor {
 							.replaceAll("%comment", comment))) {
 						plugin.informStaff(line);
 					}
+					if (ticket.isOpen()) {
+						Player tmp = plugin.getServer().getPlayer(
+								ticket.getOwner());
+						if (tmp != null && !tmp.isOnline())
+							ticket.setHasRead(false);
+					}
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
 					ticket.addLog(player.getName(), comment);
 					for (String line : ticket.preformReplace(plugin.language
@@ -553,12 +558,6 @@ public class HelpTicketCommand implements CommandExecutor {
 							.replaceAll("%comment", comment))) {
 						plugin.informStaff(line);
 					}
-				}
-				if (ticket.isOpen()) {
-					Player tmp = plugin.getServer()
-							.getPlayer(ticket.getOwner());
-					if (tmp != null && !tmp.isOnline())
-						ticket.setHasRead(false);
 				}
 			}
 

@@ -13,61 +13,48 @@ import com.imdeity.helpticket.object.Ticket;
 import com.imdeity.helpticket.utils.ChatTools;
 
 public class HelpTicketPlayerListener implements Listener {
-    private final HelpTicket plugin;
+	private final HelpTicket plugin;
 
-    public HelpTicketPlayerListener(HelpTicket instance) {
-        plugin = instance;
-    }
+	public HelpTicketPlayerListener(HelpTicket instance) {
+		plugin = instance;
+	}
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void playerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (!plugin.isStaff(player)) {
-        	int playerOpenTickets = SQLTicket.getPlayersOpenTickets(player.getName()).size();
-            if (playerOpenTickets == 1) {
-                ChatTools
-                        .formatAndSend(
-                                "<option> You have "
-                                        + SQLTicket.getPlayersOpenTickets(
-                                                player.getName()).size()
-                                        + " ticket open.", "HelpTicket", player);
-            } else if (playerOpenTickets > 1) {
-                ChatTools.formatAndSend("<option> You have "
-                        + SQLTicket.getPlayersOpenTickets(player.getName())
-                                .size() + " tickets open.", "HelpTicket",
-                        player);
-            }
-        } else {
-            if (SQLTicket.getAllOpenTickets().size() == 1) {
-                ChatTools
-                        .formatAndSend(
-                                "<option>There is "
-                                        + SQLTicket.getAllOpenTickets().size()
-                                        + " ticket open.", "HelpTicket", player);
-            } else {
-                ChatTools.formatAndSend("<option>There are "
-                        + SQLTicket.getAllOpenTickets()
-                                .size() + " tickets open.", "HelpTicket",
-                        player);
-            }
-            plugin.addToStaff(player);
-        }
-        for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
-            SQLTicket.setHasRead(t);
-            if (!t.getHasRead()) {
-                ChatTools.formatAndSend("<option>Ticket "
-                        + t.getID() + " has been updated.", "HelpTicket",
-                        player);
-            }
-        }
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void playerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.isStaff(player)) {
+			int size = SQLTicket.getAllOpenTickets().size();
+			if (size == 0) {
+			} else if (size == 1) {
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getAutoStaffMessageSingular()
+								.replaceAll("%numTickets", "" + size), player);
+			} else {
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getAutoStaffMessagePlural()
+								.replaceAll("%numTickets", "" + size), player);
+			}
+			plugin.addToStaff(player);
+		}
+		for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
+			if (!t.getHasRead()) {
+				for (String line : t.preformReplace(plugin.language
+						.getUpdateMessage())) {
+					ChatTools.formatAndSend(plugin.language.getHeader() + line,
+							player);
+				}
 
-    }
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void playerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if (plugin.isStaff(player)) {
-            plugin.removeFromStaff(player);
-        }
-    }
+			}
+		}
+
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void playerQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.isStaff(player)) {
+			plugin.removeFromStaff(player);
+		}
+	}
 
 }

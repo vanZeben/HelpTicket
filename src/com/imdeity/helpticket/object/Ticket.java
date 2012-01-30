@@ -31,29 +31,37 @@ public class Ticket {
 	public Ticket(int id, String owner, String world, double x, double y,
 			double z, float pitch, float yaw, String info, String assignee,
 			boolean status, boolean hasRead, int priority) {
-		setID(id);
-		setInfo(info);
-		setOwner(owner);
-		setLocation(world, x, y, z, pitch, yaw);
-		setInfo(info);
-		setAssignee(assignee);
-		setStatus(status);
-		setHasRead(hasRead);
-		setPriority(priority);
+		this.id = id;
+		this.info = info;
+		this.owner = owner;
+		this.world = world;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.pitch = pitch;
+		this.yaw = yaw;
+		this.assignee = assignee;
+		this.status = status;
+		this.hasRead = hasRead;
+		this.priority = priority;
 		this.getLogFromDB();
 	}
 
 	public Ticket(String owner, String world, double x, double y, double z,
 			float pitch, float yaw, String info, String assignee,
 			boolean status, boolean hasRead, int priority) {
-		setInfo(info);
-		setOwner(owner);
-		setLocation(world, x, y, z, pitch, yaw);
-		setInfo(info);
-		setAssignee(assignee);
-		setStatus(status);
-		setHasRead(hasRead);
-		setPriority(priority);
+		this.info = info;
+		this.owner = owner;
+		this.world = world;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.pitch = pitch;
+		this.yaw = yaw;
+		this.assignee = assignee;
+		this.status = status;
+		this.hasRead = hasRead;
+		this.priority = priority;
 		this.getLogFromDB();
 	}
 

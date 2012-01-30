@@ -21,12 +21,12 @@ public class Language {
 		if (!lang.contains("auto_staff_message.singular")) {
 			lang.set(
 					"auto_staff_message.singular",
-					"&7There is &e %numTicket &7open ticket. &7Please attend to it with &e\"/ticket\".");
+					"&7There is &e%numTickets &7open ticket. &7Please attend to it with &e\"/ticket\".");
 		}
 		if (!lang.contains("auto_staff_message.plural")) {
 			lang.set(
 					"auto_staff_message.plural",
-					"&7There are &e %numTicket &7open tickets. &7Please attend to them with &e\"/ticket\".");
+					"&7There are &e%numTickets &7open tickets. &7Please attend to them with &e\"/ticket\".");
 		}
 		if (!lang.contains("not_staff")) {
 			lang.set("not_staff",
@@ -214,12 +214,16 @@ public class Language {
 					"&b%player &fcommented on ticket %ticketId - %comment");
 		}
 		if (!lang.contains("help.help")) {
-			lang.getString("help.help", "&eUse \"/ticket ?\" for help");
+			lang.set("help.help", "&eUse \"/ticket ?\" for help");
 		}
 		if (!lang.contains("help.invalid")) {
-			lang.getString("help.invalid",
+			lang.set("help.invalid",
 					"&eInvalid syntax! Use \"/ticket ?\" for help");
 		}
+		if (!lang.contains("ticket.updated")) {
+			lang.set("ticket.updated", "&fTicket %ticketId has been updated.");
+		}
+
 		this.save();
 	}
 
@@ -243,14 +247,14 @@ public class Language {
 		return lang
 				.getString(
 						"auto_staff_message.singular",
-						"&7There is &e %numTicket &7open ticket. &7Please attend to it with &e\"/ticket\".");
+						"&7There is &e %numTickets &7open ticket. &7Please attend to it with &e\"/ticket\".");
 	}
 
 	public String getAutoStaffMessagePlural() {
 		return lang
 				.getString(
 						"auto_staff_message.plural",
-						"&7There are &e %numTicket &7open tickets. &7Please attend to them with &e\"/ticket\".");
+						"&7There are &e %numTickets &7open tickets. &7Please attend to them with &e\"/ticket\".");
 	}
 
 	public String getNotStaffMessage() {
@@ -564,5 +568,10 @@ public class Language {
 	public String getHelpInvalid() {
 		return lang.getString("help.invalid",
 				"&eInvalid syntax! Use \"/ticket ?\" for help");
+	}
+
+	public String getUpdateMessage() {
+		return lang.getString("ticket.updated",
+				"&fTicket %ticketId has been updated.");
 	}
 }
