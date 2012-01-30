@@ -19,20 +19,14 @@ public class Language {
 			lang.set("mail_sender", "HelpTicketUpdate ");
 		}
 		if (!lang.contains("auto_staff_message.singular")) {
-			lang.set("auto_staff_message.singular",
-					"&7There is &e %numTicket &7open ticket.");
+			lang.set(
+					"auto_staff_message.singular",
+					"&7There is &e %numTicket &7open ticket. &7Please attend to it with &e\"/ticket\".");
 		}
 		if (!lang.contains("auto_staff_message.plural")) {
-			lang.set("auto_staff_message.plural",
-					"&7There are &e %numTicket &7open tickets.");
-		}
-		if (!lang.contains("auto_staff_message.attend.singular")) {
-			lang.set("auto_staff_message.attend.singular",
-					"&7Please attend to it with &e\"/ticket\".");
-		}
-		if (!lang.contains("auto_staff_message.attend.plural")) {
-			lang.set("auto_staff_message.attend.plural",
-					"&7Please attend to them with &e\"/ticket\".");
+			lang.set(
+					"auto_staff_message.plural",
+					"&7There are &e %numTicket &7open tickets. &7Please attend to them with &e\"/ticket\".");
 		}
 		if (!lang.contains("not_staff")) {
 			lang.set("not_staff",
@@ -53,49 +47,52 @@ public class Language {
 		if (!lang.contains("ticket.short_info")) {
 			lang.set(
 					"ticket.short_info",
-					"&7[%ticketId] &f%ticketOwner -> %ticketAssignee&f: &7%ticketShortMessage &7[%ticketNumberComments]");
+					"%ticketPriorityColor[%ticketId] &f%ticketOwner -> %ticketAssignee&f: &7%ticketShortMessage &7[%ticketNumberComments]");
 		}
-		if (!lang.contains("ticket.full_info.header")) {
+		if (!lang.contains("ticket.full_info.order")) {
+			lang.set(
+					"ticket.full_info.order",
+					"%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");
+		}
+		if (!lang.contains("ticket.full_info.header_line")) {
 
-			lang.set("ticket.full_info.header", "&c--[Ticket Information]--");
+			lang.set("ticket.full_info.header_line",
+					"&c--[Ticket Information]--");
 		}
-		if (!lang.contains("ticket.full_info.id")) {
-			lang.set("ticket.full_info.id", "&3Id: &b%ticketId");
+		if (!lang.contains("ticket.full_info.id_line")) {
+			lang.set("ticket.full_info.id_line", "&3Id: &b%ticketId");
 		}
-		if (!lang.contains("ticket.full_info.owner")) {
-			lang.set("ticket.full_info.owner", "&3Owner: &b%ticketOwner");
+		if (!lang.contains("ticket.full_info.owner_line")) {
+			lang.set("ticket.full_info.owner_line", "&3Owner: &b%ticketOwner");
 		}
-		if (!lang.contains("ticket.full_info.assignee")) {
-			lang.set("ticket.full_info.assignee",
+		if (!lang.contains("ticket.full_info.assignee_line")) {
+			lang.set("ticket.full_info.assignee_line",
 					"&3Assigned To: &b%ticketAssignee");
 		}
-		if (!lang.contains("ticket.full_info.priority")) {
-			lang.set("ticket.full_info.priority",
+		if (!lang.contains("ticket.full_info.priority_line")) {
+			lang.set("ticket.full_info.priority_line",
 					"&3Priority: &b%ticketPriority");
 		}
-		if (!lang.contains("ticket.full_info.message")) {
-			lang.set("ticket.full_info.message",
+		if (!lang.contains("ticket.full_info.message_line")) {
+			lang.set("ticket.full_info.message_line",
 					"&3Situation: &b%ticketLongMessage");
 		}
-		if (!lang.contains("ticket.full_info.status")) {
-			lang.set("ticket.full_info.status", "&3Status: &b%ticketStatus");
+		if (!lang.contains("ticket.full_info.status_line")) {
+			lang.set("ticket.full_info.status_line",
+					"&3Status: &b%ticketStatus");
 		}
-		if (!lang.contains("ticket.full_info.comments.header")) {
-			lang.set("ticket.full_info.comments.header", "&3Comments:");
+		if (!lang.contains("ticket.full_info.comments.comment_header")) {
+			lang.set("ticket.full_info.comments.comment_header", "&3Comments:");
 		}
 		if (!lang.contains("ticket.full_info.comments.message")) {
 			lang.set("ticket.full_info.comments.message",
-					"&b=> &f%commentOwner: &7%commentMessage");
+					"&b=> &f%ticketCommentOwner: &7%ticketCommentMessage");
 		}
 		if (!lang.contains("ticket.full_info.comments.none")) {
 			lang.set("ticket.full_info.comments.none",
 					"&bNo Comments To Display");
 		}
-		if (!lang.contains("ticket.full_info.order")) {
-			lang.set(
-					"ticket.full_info.order",
-					"%headerLine%newline%idLine%newline%ownerLine%newline%assigneeLine%newline%priorityLine%newline%messageLine%newline%statusLine%newline%commentHeader%newline%comments");
-		}
+
 		if (!lang.contains("ticket.open_ticket.player")) {
 			lang.set("ticket.open_ticket.player", "&3Your Open Tickets:");
 		}
@@ -103,8 +100,9 @@ public class Language {
 			lang.set("ticket.open_ticket.staff", "&3Open Tickets:");
 		}
 		if (!lang.contains("ticket.priority.coding")) {
-			lang.set("ticket.priority.coding",
-					"&7[&1lowest&7, &9low&7, &emedium&7, &chigh&7, &4highest&7]");
+			lang.set(
+					"ticket.priority.coding",
+					"&7[%priorityColorLowestlowest&7, %priorityColorLowlow&7, %priorityColorMediummedium&7, %priorityColorHighhigh&7, %priorityColorHighesthighest&7]");
 		}
 		if (!lang.contains("ticket.priority.lowest")) {
 			lang.set("ticket.priority.lowest", "&1");
@@ -120,6 +118,9 @@ public class Language {
 		}
 		if (!lang.contains("ticket.priority.highest")) {
 			lang.set("ticket.priority.highest", "&4");
+		}
+		if (!lang.contains("ticket.log.close")) {
+			lang.set("ticket.log.close", "%player closed the ticket");
 		}
 		this.save();
 	}
@@ -141,23 +142,17 @@ public class Language {
 	}
 
 	public String getAutoStaffMessageSingular() {
-		return lang.getString("auto_staff_message.singular",
-				"&7There is &e %numTicket &7open ticket.");
+		return lang
+				.getString(
+						"auto_staff_message.singular",
+						"&7There is &e %numTicket &7open ticket. &7Please attend to it with &e\"/ticket\".");
 	}
 
 	public String getAutoStaffMessagePlural() {
-		return lang.getString("auto_staff_message.plural",
-				"&7There are &e %numTicket &7open tickets.");
-	}
-
-	public String getAutoStaffMessageAttendSingular() {
-		return lang.getString("auto_staff_message.attend.singular",
-				"&7Please attend to it with &e\"/ticket\".");
-	}
-
-	public String getAutoStaffMessageAttendPlural() {
-		return lang.getString("auto_staff_message.attend.plural",
-				"&7Please attend to them with &e\"/ticket\".");
+		return lang
+				.getString(
+						"auto_staff_message.plural",
+						"&7There are &e %numTicket &7open tickets. &7Please attend to them with &e\"/ticket\".");
 	}
 
 	public String getNotStaffMessage() {
@@ -184,52 +179,52 @@ public class Language {
 	}
 
 	public String getTicketFullInfoHeader() {
-		return lang
-				.getString("ticket.full_info.header", "&c--[Ticket Information]--");
+		return lang.getString("ticket.full_info.header_line",
+				"&c--[Ticket Information]--");
 	}
 
 	public String getTicketFullInfoId() {
-		return lang.getString("ticket.full_info.id", "&3Id: &b%ticketId");
+		return lang.getString("ticket.full_info.id_line", "&3Id: &b%ticketId");
 	}
 
 	public String getTicketFullInfoOwner() {
-		return lang.getString("ticket.full_info.owner",
+		return lang.getString("ticket.full_info.owner_line",
 				"&3Owner: &b%ticketOwner");
 	}
 
 	public String getTicketFullInfoAssignee() {
-		return lang.getString("ticket.full_info.assignee",
+		return lang.getString("ticket.full_info.assignee_line",
 				"&3Assigned To: &b%ticketAssignee");
 
 	}
 
 	public String getTicketFullInfoPriority() {
-		return lang.getString("ticket.full_info.priority",
+		return lang.getString("ticket.full_info.priority_line",
 				"&3Priority: %ticketPriorityColor%ticketPriority");
 
 	}
 
 	public String getTicketFullInfoMessage() {
-		return lang.getString("ticket.full_info.message",
+		return lang.getString("ticket.full_info.message_line",
 				"&3Situation: &b%ticketFullMessage");
 
 	}
 
 	public String getTicketFullInfoStatus() {
-		return lang.getString("ticket.full_info.status",
+		return lang.getString("ticket.full_info.status_line",
 				"&3Status: &b%ticketStatus");
 
 	}
 
 	public String getTicketFullInfoCommentHeader() {
-		return lang
-				.getString("ticket.full_info.comments.header", "&3Comments:");
+		return lang.getString("ticket.full_info.comments.comment_header",
+				"&3Comments:");
 
 	}
 
 	public String getTicketFullInfoCommentMessage() {
 		return lang.getString("ticket.full_info.comments.message",
-				"&b=> &f%commentOwner: &7%commentMessage");
+				"&b=> &f%ticketCommentOwner: &7%ticketCommentMessage");
 
 	}
 
@@ -243,22 +238,21 @@ public class Language {
 		return lang
 				.getString(
 						"ticket.full_info.order",
-						"%headerLine%newline%idLine%newline%ownerLine%newline%assigneeLine%newline%priorityLine%newline%messageLine%newline%statusLine%newline%commentHeader%newline%comments");
+						"%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");
 
 	}
 
 	public String getTicketFullInfo() {
 		return this
 				.getTicketFullInfoOrder()
-				.replaceAll("%headerLine", this.getTicketFullInfoHeader())
-				.replaceAll("%idLine", this.getTicketFullInfoId())
-				.replaceAll("%ownerLine", this.getTicketFullInfoOwner())
-				.replaceAll("%assigneeLine", this.getTicketFullInfoAssignee())
-
-				.replaceAll("%priorityLine", this.getTicketFullInfoPriority())
-				.replaceAll("%messageLine", this.getTicketFullInfoMessage())
-				.replaceAll("%statusLine", this.getTicketFullInfoStatus())
-				.replaceAll("%commentHeader",
+				.replaceAll("%header_line", this.getTicketFullInfoHeader())
+				.replaceAll("%id_line", this.getTicketFullInfoId())
+				.replaceAll("%owner_line", this.getTicketFullInfoOwner())
+				.replaceAll("%assignee_line", this.getTicketFullInfoAssignee())
+				.replaceAll("%priority_line", this.getTicketFullInfoPriority())
+				.replaceAll("%message_line", this.getTicketFullInfoMessage())
+				.replaceAll("%status_line", this.getTicketFullInfoStatus())
+				.replaceAll("%comment_header",
 						this.getTicketFullInfoCommentHeader());
 	}
 
@@ -282,13 +276,24 @@ public class Language {
 	}
 
 	public String getTicketColorCoding() {
-		return lang.getString(
-				"ticket.priority.coding",
-				"&7[" + this.getTicketPriorityLowestColor() + "lowest&7, "
-						+ this.getTicketPriorityLowColor() + "low&7, "
-						+ this.getTicketPriorityMediumColor() + "medium&7, "
-						+ this.getTicketPriorityHighColor() + "high&7, "
-						+ this.getTicketPriorityHighestColor() + "highest&7]");
+		String tmp = lang
+				.getString(
+						"ticket.priority.coding",
+						"&7[%priorityColorLowestlowest&7, %priorityColorLowlow&7, %priorityColorMediummedium&7, %priorityColorHighhigh&7, %priorityColorHighesthighest&7]");
+		tmp = tmp
+				.replaceAll("%priorityColorLowest",
+						this.getTicketPriorityLowestColor())
+				.replaceAll("%priorityColorLow",
+						this.getTicketPriorityLowColor())
+				.replaceAll("%priorityColorMedium",
+						this.getTicketPriorityMediumColor())
+				.replaceAll("%priorityColorHighest",
+						this.getTicketPriorityHighestColor())
+				.replaceAll("%priorityColorHigh",
+						this.getTicketPriorityHighColor());
+				
+		return tmp;
+
 	}
 
 	public String getTicketPriorityLowestColor() {
@@ -312,4 +317,75 @@ public class Language {
 	public String getTicketPriorityHighestColor() {
 		return lang.getString("ticket.priority.highest", "&4");
 	}
+
+	public String getClosedLog() {
+		return lang.getString("ticket.close.log", "Closed the ticket");
+	}
+
+	public String getClosedLogComment() {
+		return lang.getString("ticket.close.log.comment",
+				"Closed the ticket - %comment");
+	}
+
+	public String getClosedUser() {
+		return lang.getString("ticket.close.user",
+				"&fYou closed ticket &a#%ticketId");
+	}
+	
+	public String getClosedUserComment() {
+		return lang.getString("ticket.close.user.comment",
+				"&fYou closed ticket &a#%ticketId - %comment");
+	}
+
+	public String getClosedSelf() {
+		return lang.getString("ticket.close.self",
+				"&a%ticketOwner &fclosed ticket &a#%ticketId");
+	}
+	
+	public String getClosedSelfComment() {
+		return lang.getString("ticket.close.self.comment",
+				"&a%ticketOwner &fclosed ticket &a#%ticketId - %comment");
+	}
+
+
+	public String getClosedPlayer() {
+		return lang.getString("ticket.close.player",
+				"&a%player &fclosed your ticket &a#%ticketId");
+	}
+
+	public String getClosedPlayerComment() {
+		return lang.getString("ticket.close.player.comment",
+				"&a%player&f closed your ticket &a#%ticketId - %comment");
+	}
+
+	public String getClosedStaff() {
+		return lang.getString("ticket.close.staff",
+				"&a%player&f closed ticket &a#%ticketId");
+	}
+
+	public String getClosedStaffComment() {
+		return lang.getString("ticket.close.staff.comment",
+				"&a%player&f closed ticket &a#%ticketId - %comment");
+	}
+	
+	public String getReopenLog() {
+		return lang.getString("ticket.reopen.log",
+				"Reopened ticket");
+	}
+	
+	public String getReopenStaff() {
+		return lang.getString("ticket.reopen.staff",
+				"&a%player &freopened ticket &a#%ticketId");
+	}
+	
+	public String getReopenUser() {
+		return lang.getString("ticket.reopen.user",
+				"&a%player &freopened ticket &a#%ticketId");
+	}
+	
+	public String getReopenError() {
+		return lang.getString("ticket.reopen.error",
+				"&cOnly staff can reopen tickets");
+	}
+
 }

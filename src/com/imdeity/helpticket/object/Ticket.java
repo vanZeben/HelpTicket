@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.imdeity.helpticket.HelpTicket;
+import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.StringMgmt;
 
@@ -39,6 +40,7 @@ public class Ticket {
 		setStatus(status);
 		setHasRead(hasRead);
 		setPriority(priority);
+		this.getLogFromDB();
 	}
 
 	public Ticket(String owner, String world, double x, double y, double z,
@@ -52,6 +54,7 @@ public class Ticket {
 		setStatus(status);
 		setHasRead(hasRead);
 		setPriority(priority);
+		this.getLogFromDB();
 	}
 
 	public Ticket() {
@@ -67,11 +70,6 @@ public class Ticket {
 
 	public void setInfo(String info) {
 		this.info = info;
-	}
-
-	public String getHeader() {
-		return ChatTools.Gold + "#" + this.id + " " + ChatTools.White
-				+ this.owner + ": " + ChatTools.Gold + this.info;
 	}
 
 	public int getID() {
@@ -92,6 +90,10 @@ public class Ticket {
 
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
+		String sql = "UPDATE " + MySQLConnector.tableName("data")
+				+ " SET  `assignee` =  '" + this.getAssignee()
+				+ "' WHERE `id` = '" + this.getID() + "';";
+		HelpTicket.database.Write(sql);
 	}
 
 	public String getAssignee() {
@@ -114,12 +116,28 @@ public class Ticket {
 		return log;
 	}
 
+	public void getLogFromDB() {
+		String sql = "SELECT * FROM " + MySQLConnector.tableName("comments")
+				+ " WHERE" + "`ticket_id` = '" + this.getID() + "';";
+		HashMap<Integer, ArrayList<String>> query = HelpTicket.database
+				.Read(sql);
+		for (int i = 1; i <= query.size(); i++) {
+			String[] tmp = { query.get(i).get(3), query.get(i).get(4) };
+			log.add(tmp);
+		}
+	}
+
 	public void addLog(String player, String message) {
 		String moderator = (player != null ? player : "(Console)");
 		if (message.isEmpty())
 			return;
 		String[] tmp = { moderator, message };
 		log.add(tmp);
+		String sql = "INSERT INTO " + MySQLConnector.tableName("comments")
+				+ " (" + "`ticket_id`," + " `owner`," + " `commenter`,"
+				+ " `comment`" + ") VALUES (?,?,?,?);";
+		HelpTicket.database.Write(sql, this.getID(), this.getOwner(),
+				moderator, message);
 	}
 
 	public Boolean isOpen() {
@@ -128,6 +146,10 @@ public class Ticket {
 
 	public void setStatus(boolean open) {
 		this.status = open;
+		String sql = "UPDATE " + MySQLConnector.tableName("data")
+				+ " SET  `status` =  '" + (this.isOpen() ? 0 : 1)
+				+ "' WHERE `id` = '" + this.getID() + "';";
+		HelpTicket.database.Write(sql);
 	}
 
 	public void setLocation(String world, double x, double y, double z,
@@ -170,6 +192,9 @@ public class Ticket {
 
 	public void setHasRead(boolean hasRead) {
 		this.hasRead = hasRead;
+		String sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+				+ "`has_read` = ? WHERE `id` = " + this.getID() + ";";
+		HelpTicket.database.Write(sql, (this.hasRead ? 0 : 1));
 	}
 
 	public String getPriority() {
@@ -207,12 +232,21 @@ public class Ticket {
 	}
 
 	public int getRawPriority() {
-
 		return priority;
 	}
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+		String sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+				+ "`priority` = '" + priority + "' WHERE `id` = "
+				+ this.getID() + ";";
+		HelpTicket.database.Write(sql);
+	}
+
+	public void setPriorityClose() {
+		String sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
+				+ "`priority` = '-1' WHERE `id` = " + this.getID() + ";";
+		HelpTicket.database.Write(sql);
 	}
 
 	public String getStatus() {
@@ -220,13 +254,13 @@ public class Ticket {
 	}
 
 	public String[] preformReplace(String replacer) {
-		replacer = replacer.replaceAll("%ticketId", this.getID() + "")
+		replacer = replacer
+				.replaceAll("%ticketId", this.getID() + "")
 				.replaceAll("%ticketOwner", this.getOwner())
+				.replaceAll("%ticketPriorityColor", this.getPriorityColor())
 				.replaceAll("%ticketPriority", this.getPriority())
-				.replaceAll("%ticketPriorityColor",
-						this.getPriorityColor())
 				.replaceAll("%ticketAssignee", this.getAssignee())
-				.replaceAll("%ticketFullMessage", this.getInfo())
+				.replaceAll("%ticketLongMessage", this.getInfo())
 				.replaceAll("%ticketShortMessage", this.getShortInfo())
 				.replaceAll("%ticketStatus", this.getStatus())
 				.replaceAll(
@@ -234,26 +268,27 @@ public class Ticket {
 						(log.isEmpty() ? "No Comments" : log.size()
 								+ (log.size() == 1 ? " Comment" : " Comments")))
 				.replaceAll("%ticketWorld", this.getWorld());
-		if (replacer.contains("%comments")) {
-			String[] ticketComments = replacer.split("%comments");
+		if (replacer.contains("%ticket_comments")) {
+			String[] ticketComments = replacer.split("%ticket_comments");
 			for (int i = 0; i < ticketComments.length; i++) {
 				if (i == 0) {
 					if (this.getLog().size() >= 1) {
 						for (String[] s : this.getLog()) {
 							ticketComments[i] += HelpTicket.plugin.language
 									.getTicketFullInfoCommentMessage()
-									.replaceAll("%commentOwner", s[0])
-									.replaceAll("%commentMessage", s[1])
-									+ "\n";
+									.replaceAll("%ticketCommentOwner", s[0])
+									.replaceAll("%ticketCommentMessage", s[1])
+									+ "%newline";
 						}
 					} else {
 						ticketComments[i] += HelpTicket.plugin.language
-								.getTicketFullInfoNoCommentMessage() + "\n";
+								.getTicketFullInfoNoCommentMessage()
+								+ "%newline";
 					}
 				}
 			}
 			replacer = StringMgmt.join(ticketComments);
 		}
-		return replacer.split("\n");
+		return replacer.split("%newline");
 	}
 }

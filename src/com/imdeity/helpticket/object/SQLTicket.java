@@ -54,7 +54,6 @@ public class SQLTicket {
 
 		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
 				assignee, status, hasRead, priority);
-		getComments(tmp);
 		return tmp;
 	}
 
@@ -105,7 +104,6 @@ public class SQLTicket {
 
 		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
 				assignee, status, hasRead, priority);
-		getComments(tmp);
 		return tmp;
 	}
 
@@ -254,8 +252,6 @@ public class SQLTicket {
 				priority = Integer.parseInt(out.get(1).get(13));
 				Ticket t = new Ticket(id, owner, world, x, y, z, pitch, yaw,
 						info, assignee, status, hasRead, priority);
-				SQLTicket.getComments(t);
-				SQLTicket.setPriority(t);
 				tickets.add(t);
 			} catch (NumberFormatException ex) {
 				System.out
@@ -310,71 +306,6 @@ public class SQLTicket {
 		return true;
 	}
 
-	public static String updateTicket(Ticket ticket, String... variable) {
-		String sql = "";
-		if (variable[0].equalsIgnoreCase("assignee")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data")
-					+ " SET  `assignee` =  '" + ticket.getAssignee()
-					+ "' WHERE `id` = '" + ticket.getID() + "';";
-			HelpTicket.database.Write(sql);
-			return ticket.getAssignee() + " was assigned to ticket "
-					+ ticket.getID();
-		} else if (variable[0].equalsIgnoreCase("status")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data")
-					+ " SET  `status` =  '" + (ticket.isOpen() ? 0 : 1)
-					+ "' WHERE `id` = '" + ticket.getID() + "';";
-			HelpTicket.database.Write(sql);
-
-			return !ticket.isOpen() ? "Closed Ticket #" + ticket.getID()
-					: "Re-opened Ticket #" + ticket.getID();
-		} else if (variable[0].equalsIgnoreCase("log")) {
-			sql = "INSERT INTO " + MySQLConnector.tableName("comments") + " ("
-					+ "`ticket_id`," + " `owner`," + " `commenter`,"
-					+ " `comment`" + ") VALUES (?,?,?,?);";
-			if (ticket.getLog().size() >= 1) {
-				HelpTicket.database.Write(sql, ticket.getID(),
-						ticket.getOwner(), variable[1],
-						ticket.getLog().get(ticket.getLog().size() - 1)[1]);
-				return "Added a comment to ticket #" + ticket.getID();
-			} else
-				return "Nothing was changed.";
-		} else if (variable[0].equalsIgnoreCase("read")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-					+ "`has_read` = '0' WHERE `id` = " + ticket.getID() + ";";
-			HelpTicket.database.Write(sql);
-			return "";
-		} else if (variable[0].equalsIgnoreCase("notread")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-					+ "`has_read` = '1' WHERE `id` = " + ticket.getID() + ";";
-			HelpTicket.database.Write(sql);
-			return "";
-		} else if (variable[0].equalsIgnoreCase("priority")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-					+ "`priority` = '" + ticket.getRawPriority()
-					+ "' WHERE `id` = " + ticket.getID() + ";";
-			HelpTicket.database.Write(sql);
-			return "Priority was set to " + ticket.getPriority();
-		} else if (variable[0].equalsIgnoreCase("priorityclose")) {
-			sql = "UPDATE " + MySQLConnector.tableName("data") + " SET "
-					+ "`priority` = '-1' WHERE `id` = " + ticket.getID() + ";";
-			HelpTicket.database.Write(sql);
-			return "";
-		}
-		return "Nothing was changed.";
-	}
-
-	public static void getComments(Ticket ticket) {
-		String sql = "";
-
-		sql = "SELECT * FROM " + MySQLConnector.tableName("comments")
-				+ " WHERE" + "`ticket_id` = '" + ticket.getID() + "';";
-		HashMap<Integer, ArrayList<String>> query = HelpTicket.database
-				.Read(sql);
-
-		for (int i = 1; i <= query.size(); i++) {
-			ticket.addLog(query.get(i).get(3), query.get(i).get(4));
-		}
-	}
 
 	public static void setPriority(Ticket ticket) {
 		String sql = "";

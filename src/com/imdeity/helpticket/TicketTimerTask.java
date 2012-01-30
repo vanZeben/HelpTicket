@@ -26,25 +26,13 @@ public class TicketTimerTask extends TimerTask {
 			int size = SQLTicket.getAllOpenTickets().size();
 			if (size == 0) {
 			} else if (size == 1) {
-				ChatTools.formatAndSend(
-						plugin.language.getHeader()
-								+ plugin.language.getAutoStaffMessageSingular()
-										.replaceAll("{numTickets}", "" + size),
-						player);
-				ChatTools.formatAndSend(
-						plugin.language.getHeader()
-								+ plugin.language.getAutoStaffMessageAttendSingular(),
-						player);
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getAutoStaffMessageSingular()
+								.replaceAll("%numTickets", "" + size), player);
 			} else {
-				ChatTools.formatAndSend(
-						plugin.language.getHeader()
-								+ plugin.language.getAutoStaffMessagePlural()
-										.replaceAll("{numTickets}", "" + size),
-						player);
-				ChatTools.formatAndSend(
-						plugin.language.getHeader()
-								+ plugin.language.getAutoStaffMessageAttendPlural(),
-						player);
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getAutoStaffMessagePlural()
+								.replaceAll("%numTickets", "" + size), player);
 			}
 
 		}

@@ -166,7 +166,7 @@ public class ChatTools {
 		}
 		if (message.contains("<gray>") || message.contains("&7")) {
 			message = message.replaceAll("<gray>", "" + ChatColor.GRAY)
-					.replaceAll("&7", "" + ChatColor.DARK_GRAY);
+					.replaceAll("&7", "" + ChatColor.GRAY);
 		}
 		if (message.contains("<darkgray>") || message.contains("&8")) {
 			message = message
