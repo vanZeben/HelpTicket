@@ -427,18 +427,19 @@ public class HelpTicketCommand implements CommandExecutor {
 					ChatTools.formatAndSend(line, player);
 				}
 
-				plugin.informPlayer(
-						ticket.getOwner(),
-						"<white>"
-								+ ticket.getAssignee()
-								+ " <gray>is reviewing your Ticket <yellow>[ID #"
-								+ ticket.getID() + "]");
+				for (String line : ticket.preformReplace(plugin.language
+						.getTicketFullInfo().replaceAll("%player",
+								player.getName()))) {
+					plugin.informPlayer(ticket.getOwner(), line);
+				}
+
 			} else {
-				ChatTools.formatAndSend("<option>Ticket #" + ticket.getID()
-						+ " is closed.", "HelpTicket", player);
-				ChatTools.formatAndSend("<option>Please use \"/ticket view "
-						+ ticket.getID() + "\" to view the Ticket.",
-						"HelpTicket", player);
+				for (String line : ticket.preformReplace(plugin.language
+						.getTicketFullInfo())) {
+					ChatTools.formatAndSend(plugin.language.getHeader() + line,
+							player);
+				}
+				this.help(player);
 			}
 		} else {
 			help(player);
@@ -458,15 +459,18 @@ public class HelpTicketCommand implements CommandExecutor {
 
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null && assignee != null) {
-
 				ticket.setAssignee(assignee);
 
-				plugin.informPlayer(
-						ticket.getOwner(),
-						"<white>"
-								+ ticket.getAssignee()
-								+ " <gray>has been assigned to your Ticket <yellow>[ID #"
-								+ ticket.getID() + "]");
+				for (String line : ticket.preformReplace(plugin.language
+						.getAssignUser()
+						.replaceAll("%player", player.getName()))) {
+					plugin.informPlayer(ticket.getOwner(), line);
+				}
+				for (String line : ticket.preformReplace(plugin.language
+						.getAssignStaff().replaceAll("%player",
+								player.getName()))) {
+					plugin.informStaff(line);
+				}
 				if (ticket.isOpen()) {
 					Player tmp = plugin.getServer()
 							.getPlayer(ticket.getOwner());
@@ -486,8 +490,10 @@ public class HelpTicketCommand implements CommandExecutor {
 			String name = (split[1]);
 			ArrayList<Ticket> ticket = SQLTicket.getPlayersTickets(name);
 			if (!ticket.isEmpty()) {
-				player.sendMessage(ChatTools
-						.formatSitTitle(name + "'s Tickets"));
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getSearchTicketTitle()
+										.replaceAll("%player", name), player);
 				for (Ticket t : ticket) {
 					for (String line : t.preformReplace(plugin.language
 							.getTicketShortInfo())) {
@@ -496,9 +502,10 @@ public class HelpTicketCommand implements CommandExecutor {
 				}
 
 			} else
-				ChatTools.formatAndSend("<option><white>" + name
-						+ "<gray> hasn't submitted any tickets.", "HelpTicket",
-						player);
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getSearchInvalid()
+										.replaceAll("%player", name), player);
 		} else {
 			help(player);
 		}
@@ -525,18 +532,27 @@ public class HelpTicketCommand implements CommandExecutor {
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null) {
 				if (plugin.isStaff(player)) {
-
 					ticket.addLog(player.getName(), comment);
-					plugin.informPlayer(
-							ticket.getOwner(),
-							"<white>"
-									+ player.getName()
-									+ " <gray>commented on your ticket. <yellow>[ID #"
-									+ ticket.getID() + "]");
-
+					for (String line : ticket.preformReplace(plugin.language
+							.getTicketCommentUser()
+							.replaceAll("%player", player.getName())
+							.replaceAll("%comment", comment))) {
+						plugin.informPlayer(ticket.getOwner(), line);
+					}
+					for (String line : ticket.preformReplace(plugin.language
+							.getTicketCommentStaff()
+							.replaceAll("%player", player.getName())
+							.replaceAll("%comment", comment))) {
+						plugin.informStaff(line);
+					}
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
 					ticket.addLog(player.getName(), comment);
-
+					for (String line : ticket.preformReplace(plugin.language
+							.getTicketCommentStaff()
+							.replaceAll("%player", player.getName())
+							.replaceAll("%comment", comment))) {
+						plugin.informStaff(line);
+					}
 				}
 				if (ticket.isOpen()) {
 					Player tmp = plugin.getServer()
@@ -560,24 +576,24 @@ public class HelpTicketCommand implements CommandExecutor {
 				invalid(player);
 			}
 			if (priority > 4 || priority < 0) {
-				ChatTools.formatAndSend(
-						"<option><red>Priority can only be 0-4", "HelpTicket",
-						player);
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getTicketPriorityError(), player);
 				return;
 			}
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null) {
 				if (plugin.isStaff(player)) {
-
 					ticket.setPriority(priority);
-					plugin.informPlayer(
-							ticket.getOwner(),
-							"<white>" + player.getName()
-									+ " <gray>set your ticket to "
-									+ ticket.getPriority()
-									+ " priority. <yellow>[ID #"
-									+ ticket.getID() + "]");
-
+					for (String line : ticket.preformReplace(plugin.language
+							.getTicketPriorityUser().replaceAll("%player",
+									player.getName()))) {
+						plugin.informPlayer(ticket.getOwner(), line);
+					}
+					for (String line : ticket.preformReplace(plugin.language
+							.getTicketPriorityStaff().replaceAll("%player",
+									player.getName()))) {
+						plugin.informStaff(line);
+					}
 				}
 				if (ticket.isOpen()) {
 					Player tmp = plugin.getServer()
@@ -591,14 +607,15 @@ public class HelpTicketCommand implements CommandExecutor {
 	}
 
 	private void help(Player player) {
-		String msg = "Use \"/ticket ?\" for help";
-		ChatTools.formatAndSend("<option><yellow>" + msg, "HelpTicket", player);
+		ChatTools
+				.formatAndSend(
+						plugin.language.getHeader() + plugin.language.getHelp(),
+						player);
 	}
 
 	private void invalid(Player player) {
-		String msg = "Invalid Syntax!";
-		ChatTools.formatAndSend("<option><yellow>" + msg, "HelpTicket", player);
-		msg = "Use \"/ticket ?\" for help";
-		ChatTools.formatAndSend("<option><yellow>" + msg, "HelpTicket", player);
+		ChatTools.formatAndSend(
+				plugin.language.getHeader() + plugin.language.getHelpInvalid(),
+				player);
 	}
 }

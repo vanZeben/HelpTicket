@@ -1,6 +1,7 @@
 package com.imdeity.helpticket.object;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 
 import com.imdeity.helpticket.HelpTicket;
 import com.imdeity.helpticket.db.MySQLConnector;
-import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.StringMgmt;
 
 public class Ticket {
@@ -198,7 +198,7 @@ public class Ticket {
 	}
 
 	public String getPriority() {
-		switch (priority) {
+		switch (this.priority) {
 		case 0:
 			return "lowest";
 		case 1:
@@ -215,7 +215,7 @@ public class Ticket {
 	}
 
 	public String getPriorityColor() {
-		switch (priority) {
+		switch (this.priority) {
 		case 0:
 			return HelpTicket.plugin.language.getTicketPriorityLowestColor();
 		case 1:
