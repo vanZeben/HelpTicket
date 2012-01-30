@@ -105,7 +105,7 @@ public class ChatTools {
 		String center = ".[ " + "<yellow>" + title + "<gold>" + " ].";
 		String out = "<gold>" + line.substring(0, pivot - center.length() / 2);
 		out += center + line.substring(pivot + center.length() / 2);
-		out = formatMessage(out, "");
+		out = formatMessage(out);
 		return out;
 	}
 
@@ -119,7 +119,7 @@ public class ChatTools {
 			out += " " + "<aqua>" + subCommand;
 		if (help.length() > 0)
 			out += " " + "<gray>" + " : " + help;
-		out = formatMessage(out, "");
+		out = formatMessage(out);
 		return out;
 	}
 
@@ -129,17 +129,8 @@ public class ChatTools {
 		return line;
 	}
 
-	public static String formatMessage(String msg, String option) {
+	public static String formatMessage(String msg) {
 		String message = msg;
-
-		if (message.contains("<option>")) {
-			message = message.replaceAll("<option>",
-					("<gray>[<red>" + option + "<gray>] "));
-		}
-		if (message.contains("<subheader>")) {
-			message = message.replaceAll("<subheader>",
-					("<gray>[<red>*<gray>] "));
-		}
 
 		if (message.contains("<black>") || message.contains("&0")) {
 			message = message.replaceAll("<black>", "" + ChatColor.BLACK)
@@ -215,8 +206,21 @@ public class ChatTools {
 	}
 
 	public static void formatAndSend(String msg, String option, Player player) {
-		String message = formatMessage(msg, option);
+		String message = formatMessage(msg);
+		if (message.contains("<option>")) {
+			message = message.replaceAll("<option>",
+					("<gray>[<red>" + option + "<gray>] "));
+		}
+		if (message.contains("<subheader>")) {
+			message = message.replaceAll("<subheader>",
+					("<gray>[<red>*<gray>] "));
+		}
 
+		player.sendMessage(message);
+	}
+
+	public static void formatAndSend(String msg, Player player) {
+		String message = formatMessage(msg);
 		player.sendMessage(message);
 	}
 

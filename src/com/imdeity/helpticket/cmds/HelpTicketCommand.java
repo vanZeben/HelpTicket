@@ -17,9 +17,14 @@ import com.imdeity.helpticket.utils.ChatTools;
 public class HelpTicketCommand implements CommandExecutor {
 
 	private HelpTicket plugin;
-	private static final List<String> output = new ArrayList<String>();
 
-	static {
+	public HelpTicketCommand(HelpTicket instance) {
+		this.plugin = instance;
+
+	}
+
+	public void sendCommands(Player player) {
+		List<String> output = new ArrayList<String>();
 		output.add(ChatTools.formatTitle("/ticket"));
 		output.add(ChatTools.formatCommand("", "/ticket", "",
 				"Checks your open Ticket's"));
@@ -31,23 +36,22 @@ public class HelpTicketCommand implements CommandExecutor {
 				"comment [id] [message]", "Comments on a Ticket"));
 		output.add(ChatTools.formatCommand("", "/ticket", "close [id]",
 				"Closes a Ticket"));
-		output.add(ChatTools.formatCommand("Moderator", "/ticket",
-				"reopen [id]", "Reopen a closed ticket"));
-		output.add(ChatTools.formatCommand("Moderator", "/ticket", "port [id]",
-				"Teleport to a ticket"));
-		output.add(ChatTools.formatCommand("Moderator", "/ticket",
-				"assign [id] [player]",
-				"Assigns a ticket to the specified player."));
-		output.add(ChatTools.formatCommand("Moderator", "/ticket",
-				"priority [id] [level]", "Sets the priority of a ticket"));
-		output.add(ChatTools.formatCommand("Moderator", "/ticket",
-				"search [name]", "Searches a players past tickets"));
-
-	}
-
-	public HelpTicketCommand(HelpTicket instance) {
-		this.plugin = instance;
-
+		if (plugin.isStaff(player)) {
+			output.add(ChatTools.formatCommand("Moderator", "/ticket",
+					"reopen [id]", "Reopen a closed ticket"));
+			output.add(ChatTools.formatCommand("Moderator", "/ticket",
+					"port [id]", "Teleport to a ticket"));
+			output.add(ChatTools.formatCommand("Moderator", "/ticket",
+					"assign [id] [player]",
+					"Assigns a ticket to the specified player."));
+			output.add(ChatTools.formatCommand("Moderator", "/ticket",
+					"priority [id] [level]", "Sets the priority of a ticket"));
+			output.add(ChatTools.formatCommand("Moderator", "/ticket",
+					"search [name]", "Searches a players past tickets"));
+		}
+		for (String s : output) {
+			ChatTools.formatAndSend(s, player);
+		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd,
@@ -63,8 +67,7 @@ public class HelpTicketCommand implements CommandExecutor {
 			}
 		} else {
 			// Console
-			for (String line : output)
-				sender.sendMessage(ChatTools.strip(line));
+			plugin.out("Sorry you need to be in game to use that command");
 		}
 		return true;
 	}
@@ -85,38 +88,36 @@ public class HelpTicketCommand implements CommandExecutor {
 			reopenCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("help")
 				|| split[0].equalsIgnoreCase("?")) {
-			for (String s : output) {
-				ChatTools.formatAndSend(s, "", player);
-			}
+
 		} else if (split[0].equalsIgnoreCase("port")
 				|| split[0].equalsIgnoreCase("warp")
 				|| split[0].equalsIgnoreCase("tp")) {
 			if (plugin.isStaff(player)) {
 				portCommand(player, split);
 			} else {
-				warn(player,
-						"You need to be at least a moderator to perform this action");
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getNotStaffMessage(), player);
 			}
 		} else if (split[0].equalsIgnoreCase("assign")) {
 			if (plugin.isStaff(player)) {
 				assignCommand(player, split);
 			} else {
-				warn(player,
-						"You need to be at least a moderator to perform this action");
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getNotStaffMessage(), player);
 			}
 		} else if (split[0].equalsIgnoreCase("search")) {
 			if (plugin.isStaff(player)) {
 				searchCommand(player, split);
 			} else {
-				warn(player,
-						"You need to be at least a moderator to perform this action");
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getNotStaffMessage(), player);
 			}
 		} else if (split[0].equalsIgnoreCase("priority")) {
 			if (plugin.isStaff(player)) {
 				priorityCommand(player, split);
 			} else {
-				warn(player,
-						"You need to be at least a moderator to perform this action");
+				ChatTools.formatAndSend(plugin.language.getHeader()
+						+ plugin.language.getNotStaffMessage(), player);
 			}
 		}
 	}
@@ -138,20 +139,29 @@ public class HelpTicketCommand implements CommandExecutor {
 
 		SQLTicket.newTicket(t);
 
-		ChatTools.formatAndSend(
-				"<option>Your Ticket has been submitted. You can check it with \"/ticket view "
-						+ SQLTicket.getNewestTicketID(player.getName()) + "\"",
-				"HelpTicket", player);
+		ChatTools
+				.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language
+										.getTicketSubmittedPlayer()
+										.replaceAll(
+												"%ticketId",
+												""
+														+ SQLTicket
+																.getNewestTicketID(player
+																		.getName())),
+						player);
 
-		HelpTicket.informStaff("<white>" + player.getName()
-				+ "<gray> opened Ticket <yellow>#"
-				+ SQLTicket.getNewestTicketID(player.getName()));
+		plugin.informStaff(plugin.language
+				.getTicketSubmittedPlayer()
+				.replaceAll("%ticketId",
+						"" + SQLTicket.getNewestTicketID(player.getName()))
+				.replaceAll("%player", player.getName()));
 	}
 
 	public void viewCommand(Player player, String[] split) {
 		if (split.length == 2) {
 			int id = 0;
-			List<String> out = new ArrayList<String>();
 			Ticket ticket = null;
 			try {
 				id = Integer.parseInt(split[1]);
@@ -162,44 +172,29 @@ public class HelpTicketCommand implements CommandExecutor {
 				ticket = SQLTicket.getSpecificTicket(id, player.getName());
 
 				if (ticket == null) {
-					ChatTools.formatAndSend("<option>Ticket #" + id
-							+ " does not exist.", "HelpTicket", player);
+					ChatTools.formatAndSend(
+							plugin.language.getHeader()
+									+ plugin.language.getTicketNotExist()
+											.replaceAll("%ticketId",
+													"" + id), player);
 					return;
 				}
 			} else {
 				ticket = SQLTicket.getSpecificTicket(id);
 
 				if (ticket == null) {
-					ChatTools.formatAndSend("<option>Ticket #" + id
-							+ " does not exist.", "HelpTicket", player);
+					ChatTools.formatAndSend(
+							plugin.language.getHeader()
+									+ plugin.language.getTicketNotExist()
+											.replaceAll("%ticketId",
+													"" + id), player);
 					return;
 				}
 			}
-			out.add(ChatTools.formatSitTitle(ticket.getOwner()));
-			out.add(ChatTools.formatSituation("ID Number", "" + ticket.getID(),
-					""));
-			if (ticket.getRawPriority() != -1) {
-				out.add(ChatTools.formatSituation("Priority",
-						ticket.getPriority(), ""));
-			}
-			if (ticket.getAssignee() != null) {
-				out.add(ChatTools.formatSituation("Assigned To",
-						ticket.getAssignee(), ""));
-			}
-			out.add(ChatTools.formatSituation("Situation", ticket.getInfo(), ""));
-			out.add(ChatTools.formatSituation("Status",
-					(!ticket.isOpen() ? "Complete" : "Incomplete"), ""));
 
-			if (ticket.getLog().size() >= 1) {
-				out.add(ChatTools.formatSituation("Comments", "", ""));
-				for (String[] s : ticket.getLog()) {
-					out.add(ChatTools.formatComment(" ", s[0], s[1]));
-				}
-			} else
-				out.add(ChatTools.formatSituation("No Comments", "", ""));
-
-			for (String line : out) {
-				player.sendMessage(line);
+			for (String line : ticket.preformReplace(plugin.language
+					.getTicketFullInfo())) {
+				ChatTools.formatAndSend(line, player);
 			}
 			if (ticket.isOpen())
 				SQLTicket.updateTicket(ticket, "read");
@@ -210,26 +205,27 @@ public class HelpTicketCommand implements CommandExecutor {
 
 	public void viewAllCommand(Player player, String[] split) {
 		if (!plugin.isStaff(player)) {
-			player.sendMessage(ChatTools.formatSitTitle("Your Open Tickets"));
-			ChatTools
-					.formatAndSend(
-							"[<darkblue>lowest<white>, <blue>low<white>, <yellow>medium<white>, <red>high<white>, <darkred>highest<white>]",
-							"", player);
+			ChatTools.formatAndSend(plugin.language.getHeader()
+					+ plugin.language.getOpenTicketsMessagePlayer(), player);
+			ChatTools.formatAndSend(plugin.language.getTicketColorCoding(),
+					player);
 			for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
 				SQLTicket.getComments(t);
-				t.setPriority(SQLTicket.getPriority(t));
-				ChatTools.formatAndSend((t.getSentence(true)), "", player);
+				for (String line : t.preformReplace(plugin.language
+						.getTicketShortInfo())) {
+					ChatTools.formatAndSend(line, player);
+				}
 			}
 		} else {
-			player.sendMessage(ChatTools.formatSitTitle("Open Tickets"));
-			ChatTools
-					.formatAndSend(
-							"[<darkblue>lowest<white>, <blue>low<white>, <yellow>medium<white>, <red>high<white>, <darkred>highest<white>]",
-							"", player);
+			ChatTools.formatAndSend(plugin.language.getHeader()
+					+ plugin.language.getOpenTicketsMessageStaff(), player);
+			ChatTools.formatAndSend(plugin.language.getTicketColorCoding(),
+					player);
 			for (Ticket t : SQLTicket.getAllOpenTickets()) {
-				SQLTicket.getComments(t);
-				t.setPriority(SQLTicket.getPriority(t));
-				ChatTools.formatAndSend((t.getSentence(true)), "", player);
+				for (String line : t.preformReplace(plugin.language
+						.getTicketShortInfo())) {
+					ChatTools.formatAndSend(line, player);
+				}
 			}
 		}
 		help(player);
@@ -267,7 +263,7 @@ public class HelpTicketCommand implements CommandExecutor {
 							+ "]");
 
 					// Inform staff of close
-					HelpTicket.informStaff("" + player.getName()
+					plugin.informStaff("" + player.getName()
 							+ " closed Ticket [ID #" + ticket.getID() + "]");
 
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
@@ -278,7 +274,7 @@ public class HelpTicketCommand implements CommandExecutor {
 							"<option>"
 									+ SQLTicket.updateTicket(ticket, "status"),
 							"HelpTicket", player);
-					HelpTicket.informStaff("<white>" + player.getName()
+					plugin.informStaff("<white>" + player.getName()
 							+ " <gray> closed Ticket #<yellow>"
 							+ ticket.getID());
 				}
@@ -324,7 +320,7 @@ public class HelpTicketCommand implements CommandExecutor {
 									+ ticket.getID() + "] - " + comment);
 
 					// Inform staff of close
-					HelpTicket.informStaff("<white>" + player.getName()
+					plugin.informStaff("<white>" + player.getName()
 							+ " <gray>closed Ticket <yellow>[ID #"
 							+ ticket.getID() + "] - " + comment);
 				} else if (ticket.getOwner().equalsIgnoreCase(player.getName())) {
@@ -333,7 +329,7 @@ public class HelpTicketCommand implements CommandExecutor {
 							"<option>"
 									+ SQLTicket.updateTicket(ticket, "status"),
 							"HelpTicket", player);
-					HelpTicket.informStaff("<white>" + player.getName()
+					plugin.informStaff("<white>" + player.getName()
 							+ " <gray> closed Ticket #<yellow>"
 							+ ticket.getID());
 				}
@@ -372,7 +368,7 @@ public class HelpTicketCommand implements CommandExecutor {
 							"<option>"
 									+ SQLTicket.updateTicket(ticket, "status"),
 							"HelpTicket", player);
-					HelpTicket.informStaff("<white>" + player.getName()
+					plugin.informStaff("<white>" + player.getName()
 							+ " <gray> re-opened Ticket #<yellow>"
 							+ ticket.getID());
 					if (ticket.isOpen()) {
@@ -511,9 +507,10 @@ public class HelpTicketCommand implements CommandExecutor {
 				player.sendMessage(ChatTools
 						.formatSitTitle(name + "'s Tickets"));
 				for (Ticket t : ticket) {
-					SQLTicket.getComments(t);
-					t.setPriority(SQLTicket.getPriority(t));
-					ChatTools.formatAndSend((t.getSentence(true)), "", player);
+					for (String line : t.preformReplace(plugin.language
+							.getTicketShortInfo())) {
+						ChatTools.formatAndSend(line, player);
+					}
 				}
 
 			} else
@@ -623,10 +620,6 @@ public class HelpTicketCommand implements CommandExecutor {
 			}
 
 		}
-	}
-
-	private void warn(Player player, String msg) {
-		ChatTools.formatAndSend("<option><red>" + msg, "HelpTicket", player);
 	}
 
 	private void help(Player player) {

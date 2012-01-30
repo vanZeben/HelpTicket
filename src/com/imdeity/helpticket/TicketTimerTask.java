@@ -8,33 +8,47 @@ import org.bukkit.entity.Player;
 import com.imdeity.helpticket.object.SQLTicket;
 import com.imdeity.helpticket.utils.ChatTools;
 
-@SuppressWarnings("unused")
-public class TicketTimerTask extends TimerTask{
+public class TicketTimerTask extends TimerTask {
 
-    private HelpTicket plugin;
-    public TicketTimerTask(HelpTicket instance) {
-        plugin = instance;
-    }
-    
-    @Override
-    public void run() {
-       ArrayList<Player> staff = new ArrayList<Player>();
-       
-       staff = HelpTicket.getOnlineStaff();
-       
-       for(Player player : staff) {
-           int size = SQLTicket.getAllOpenTickets().size();
-           if (size == 0) { } else if (size == 1) {
-               ChatTools.formatAndSend("<option>There is <yellow>" + size + " <gray>open ticket.", "HelpTicket", player);
-               ChatTools.formatAndSend("<option>Please attend to it with \"/ticket\".", "HelpTicket", player);
-           } else {
-               ChatTools.formatAndSend("<option>There are <yellow>" + size + " <gray>open tickets.", "HelpTicket", player);
-               ChatTools.formatAndSend("<option>Please attend to them with \"/ticket\".", "HelpTicket", player);
-           }
-           
-       }
-        
-    }
+	private HelpTicket plugin;
+
+	public TicketTimerTask(HelpTicket instance) {
+		plugin = instance;
+	}
+
+	@Override
+	public void run() {
+		ArrayList<Player> staff = new ArrayList<Player>();
+
+		staff = HelpTicket.getOnlineStaff();
+
+		for (Player player : staff) {
+			int size = SQLTicket.getAllOpenTickets().size();
+			if (size == 0) {
+			} else if (size == 1) {
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getAutoStaffMessageSingular()
+										.replaceAll("{numTickets}", "" + size),
+						player);
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getAutoStaffMessageAttendSingular(),
+						player);
+			} else {
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getAutoStaffMessagePlural()
+										.replaceAll("{numTickets}", "" + size),
+						player);
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getAutoStaffMessageAttendPlural(),
+						player);
+			}
+
+		}
+
+	}
 
 }
-

@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.imdeity.helpticket.HelpTicket;
 import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.StringMgmt;
 
@@ -60,46 +61,12 @@ public class Ticket {
 		return info;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public String getShortInfo() {
+		return StringMgmt.maxLength(info, 30);
 	}
 
-	public String getSentence(boolean check) {
-		String out = "";
-		if (check) {
-			out = StringMgmt.maxLength(info, 30);
-		} else {
-			out = info;
-		}
-		String tmp = "<darkgray>[";
-		switch (priority) {
-		case 0:
-			tmp += "<darkblue>#" + this.id;
-			break;
-		case 1:
-			tmp += "<blue>#" + this.id;
-			break;
-		case 2:
-			tmp += "<yellow>#" + this.id;
-			break;
-		case 3:
-			tmp += "<red>#" + this.id;
-			break;
-		case 4:
-			tmp += "<darkred>#" + this.id;
-			break;
-		default:
-			tmp += "<yellow>#" + this.id;
-			break;
-		}
-		tmp += "<darkgray>]<white> "
-				+ this.owner
-				+ (assignee != null ? "<green> -> <white>" + this.assignee : "")
-				+ "<gray>: "
-				+ out
-				+ (log.isEmpty() ? "" : "<darkgray> (" + log.size()
-						+ (log.size() == 1 ? " Comment)" : " Comments)"));
-		return tmp;
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	public String getHeader() {
@@ -128,7 +95,11 @@ public class Ticket {
 	}
 
 	public String getAssignee() {
-		return assignee;
+		if (this.assignee == null || this.assignee.equalsIgnoreCase("")) {
+			return "None";
+		} else {
+			return assignee;
+		}
 	}
 
 	public String getWorld() {
@@ -213,8 +184,26 @@ public class Ticket {
 			return "high";
 		case 4:
 			return "highest";
+		default:
+			return "medium";
 		}
-		return "";
+	}
+
+	public String getPriorityColor() {
+		switch (priority) {
+		case 0:
+			return HelpTicket.plugin.language.getTicketPriorityLowestColor();
+		case 1:
+			return HelpTicket.plugin.language.getTicketPriorityLowColor();
+		case 2:
+			return HelpTicket.plugin.language.getTicketPriorityMediumColor();
+		case 3:
+			return HelpTicket.plugin.language.getTicketPriorityHighColor();
+		case 4:
+			return HelpTicket.plugin.language.getTicketPriorityHighestColor();
+		default:
+			return HelpTicket.plugin.language.getTicketPriorityMediumColor();
+		}
 	}
 
 	public int getRawPriority() {
@@ -224,5 +213,47 @@ public class Ticket {
 
 	public void setPriority(int priority) {
 		this.priority = priority;
+	}
+
+	public String getStatus() {
+		return !this.isOpen() ? "Complete" : "Incomplete";
+	}
+
+	public String[] preformReplace(String replacer) {
+		replacer = replacer.replaceAll("%ticketId", this.getID() + "")
+				.replaceAll("%ticketOwner", this.getOwner())
+				.replaceAll("%ticketPriority", this.getPriority())
+				.replaceAll("%ticketPriorityColor",
+						this.getPriorityColor())
+				.replaceAll("%ticketAssignee", this.getAssignee())
+				.replaceAll("%ticketFullMessage", this.getInfo())
+				.replaceAll("%ticketShortMessage", this.getShortInfo())
+				.replaceAll("%ticketStatus", this.getStatus())
+				.replaceAll(
+						"%ticketNumberComments",
+						(log.isEmpty() ? "No Comments" : log.size()
+								+ (log.size() == 1 ? " Comment" : " Comments")))
+				.replaceAll("%ticketWorld", this.getWorld());
+		if (replacer.contains("%comments")) {
+			String[] ticketComments = replacer.split("%comments");
+			for (int i = 0; i < ticketComments.length; i++) {
+				if (i == 0) {
+					if (this.getLog().size() >= 1) {
+						for (String[] s : this.getLog()) {
+							ticketComments[i] += HelpTicket.plugin.language
+									.getTicketFullInfoCommentMessage()
+									.replaceAll("%commentOwner", s[0])
+									.replaceAll("%commentMessage", s[1])
+									+ "\n";
+						}
+					} else {
+						ticketComments[i] += HelpTicket.plugin.language
+								.getTicketFullInfoNoCommentMessage() + "\n";
+					}
+				}
+			}
+			replacer = StringMgmt.join(ticketComments);
+		}
+		return replacer.split("\n");
 	}
 }

@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.imdeity.helpticket.cmds.HelpTicketCommand;
 import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.event.HelpTicketPlayerListener;
+import com.imdeity.helpticket.object.Language;
 import com.imdeity.helpticket.utils.ChatTools;
 import com.imdeity.helpticket.utils.FileMgmt;
 import com.imdeity.helpticket.utils.StringMgmt;
@@ -25,7 +26,8 @@ public class HelpTicket extends JavaPlugin {
 	public static final Logger logger = Logger.getLogger("minecraft");
 	public static MySQLConnector database = null;
 	public Mail mail = null;
-
+	public static HelpTicket plugin = null;
+	public Language language = null;
 	public static ArrayList<Player> staff = new ArrayList<Player>();
 	private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(
 			this);
@@ -47,6 +49,7 @@ public class HelpTicket extends JavaPlugin {
 		this.setupEvents();
 		this.setupCommands();
 		out("Enabled");
+		HelpTicket.plugin = this;
 	}
 
 	private void checkPlugins() {
@@ -61,6 +64,7 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		this.language.save();
 		this.toggleTimerTask();
 		out("Disabled");
 	}
@@ -70,7 +74,8 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void setupEvents() {
-		this.getServer().getPluginManager().registerEvents(playerListener, this);
+		this.getServer().getPluginManager()
+				.registerEvents(playerListener, this);
 	}
 
 	public void loadDatabase() {
@@ -94,6 +99,8 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void loadSettings() throws IOException {
+		this.language = new Language();
+		language.loadDefaults();
 		FileMgmt.checkFolders(new String[] { getRootFolder() });
 		HelpTicketSettings.loadConfig(
 				getRootFolder() + FileMgmt.fileSeparator() + "config.yml",
@@ -111,12 +118,12 @@ public class HelpTicket extends JavaPlugin {
 	public void informPlayer(String playerName, String msg) {
 		Player player = getServer().getPlayer(playerName);
 		if (player != null && player.isOnline()) {
-			ChatTools.formatAndSend("<option>" + msg, "HelpTicket", player);
+			ChatTools.formatAndSend(this.language.getHeader() + msg, player);
 		} else {
 			if (this.mail != null) {
 				try {
-
-					Mail.sendMailToPlayer("HelpTicketUpdate", playerName, msg);
+					Mail.sendMailToPlayer(this.language.getMailSender(),
+							playerName, msg);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -137,9 +144,9 @@ public class HelpTicket extends JavaPlugin {
 		HelpTicket.staff.remove(player);
 	}
 
-	public static void informStaff(String msg) {
+	public void informStaff(String msg) {
 		for (Player player : getOnlineStaff()) {
-			ChatTools.formatAndSend("<option>" + msg, "HelpTicket", player);
+			ChatTools.formatAndSend(this.language.getHeader() + msg, player);
 		}
 	}
 
