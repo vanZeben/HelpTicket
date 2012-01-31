@@ -154,7 +154,7 @@ public class HelpTicketCommand implements CommandExecutor {
 						player);
 
 		plugin.informStaff(plugin.language
-				.getTicketSubmittedPlayer()
+				.getTicketSubmittedStaff()
 				.replaceAll("%ticketId",
 						"" + SQLTicket.getNewestTicketID(player.getName()))
 				.replaceAll("%player", player.getName()));
