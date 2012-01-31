@@ -48,7 +48,7 @@ public class HelpTicketCommand implements CommandExecutor {
 					"set-priority [id] [level]",
 					"Sets the priority of a ticket"));
 			output.add(ChatTools.formatCommand("Moderator", "/ticket",
-					"search [name]", "Searches a players past tickets"));
+					"search [-a] [name]", "Searches a players past tickets"));
 		}
 		for (String s : output) {
 			ChatTools.formatAndSend(s, player);
@@ -485,7 +485,6 @@ public class HelpTicketCommand implements CommandExecutor {
 
 	public void searchCommand(Player player, String[] split) {
 		if (split.length == 2) {
-
 			String name = (split[1]);
 			ArrayList<Ticket> ticket = SQLTicket.getPlayersTickets(name);
 			if (!ticket.isEmpty()) {
@@ -505,6 +504,37 @@ public class HelpTicketCommand implements CommandExecutor {
 						plugin.language.getHeader()
 								+ plugin.language.getSearchInvalid()
 										.replaceAll("%player", name), player);
+		} else if (split.length == 3 && split[1].equalsIgnoreCase("-a")) {
+			String name = (split[2]);
+			ArrayList<Ticket> ticket = SQLTicket
+					.getPlayersAssignedTickets(name);
+			if (!ticket.isEmpty()) {
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getSearchTicketTitle()
+										.replaceAll("%player", name), player);
+				for (Ticket t : ticket) {
+					for (String line : t.preformReplace(plugin.language
+							.getTicketShortInfo())) {
+						ChatTools.formatAndSend(line, player);
+					}
+				}
+				int i = SQLTicket.getNumAssigned(name);
+				if (i == 1) {
+					ChatTools.formatAndSend(plugin.language.getHeader() + "&b"
+							+ name + " &fhas closed &b" + i + " &fticket",
+							player);
+				} else {
+					ChatTools.formatAndSend(plugin.language.getHeader() + "&b"
+							+ name + " &fhas closed &b" + i + " &ftickets",
+							player);
+				}
+			} else
+				ChatTools.formatAndSend(
+						plugin.language.getHeader()
+								+ plugin.language.getSearchInvalid()
+										.replaceAll("%player", name), player);
+
 		} else {
 			help(player);
 		}
