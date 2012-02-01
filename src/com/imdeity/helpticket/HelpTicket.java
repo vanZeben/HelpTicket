@@ -83,7 +83,7 @@ public class HelpTicket extends JavaPlugin {
 		this.config = new Settings();
 		config.loadDefaults();
 	}
-	
+
 	public void loadDatabase() {
 		database = new MySQLConnector();
 		database.validataDatabaseTables();
@@ -101,6 +101,7 @@ public class HelpTicket extends JavaPlugin {
 			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * this.config.getNotifyDelay()));
 		}
 	}
+
 	public String getRootFolder() {
 		if (this != null)
 			return this.getDataFolder().getPath();
@@ -159,6 +160,16 @@ public class HelpTicket extends JavaPlugin {
 			return false;
 		}
 		if (this.getServer().getPlayer(playerName).hasPermission("helpticket.mod") || this.getServer().getPlayer(playerName).hasPermission("helpticket.admin") || this.getServer().getPlayer(playerName).isOp()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isAdmin(Player player) {
+		if (player == null) {
+			return false;
+		}
+		if (player.hasPermission("helpticket.admin") || player.isOp()) {
 			return true;
 		}
 		return false;

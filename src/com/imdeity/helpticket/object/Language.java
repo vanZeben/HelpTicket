@@ -195,8 +195,11 @@ public class Language {
 		if (!lang.contains("ticket.comment.number.format.plural")) {
 			lang.set("ticket.comment.number.format.plural", " [%num Comments]");
 		}
-		if (!lang.contains("ticket.assign.format")) {
-			lang.set("ticket.assign.format", " -> %assignee");
+		if (!lang.contains("ticket.assign.format.none")) {
+			lang.set("ticket.assign.format.none", "");
+		}
+		if (!lang.contains("ticket.assign.format.assigned")) {
+			lang.set("ticket.assign.format.assigned", " -> %assignee");
 		}
 
 		this.save();
@@ -471,7 +474,15 @@ public class Language {
 		return lang.getString("ticket.comment.number.format.plural");
 	}
 
-	public String getTicketAssignFormat() {
-		return lang.getString("ticket.assign.format");
+	public String getTicketAssignFormatNone() {
+		return lang.getString("ticket.assign.format.none");
+	}
+
+	public String getTicketAssignFormatAssigned() {
+		return lang.getString("ticket.assign.format.assigned");
+	}
+
+	public void setString(String path, String value) {
+		lang.set(path, value);
 	}
 }

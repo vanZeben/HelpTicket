@@ -36,6 +36,9 @@ public class HelpTicketCommand implements CommandExecutor {
 			output.add(ChatTools.formatCommand("Moderator", "/ticket", "assign [id] [player]", "Assigns a ticket to the specified player."));
 			output.add(ChatTools.formatCommand("Moderator", "/ticket", "set-priority [id] [level]", "Sets the priority of a ticket"));
 			output.add(ChatTools.formatCommand("Moderator", "/ticket", "search [-a] [name]", "Searches a players past tickets"));
+			if (plugin.isAdmin(player)) {
+				output.add(ChatTools.formatCommand("Admin", "/ticket", "set", "Sets language file options"));
+			}
 		}
 		for (String s : output) {
 			ChatTools.formatAndSend(s, player);
@@ -56,7 +59,6 @@ public class HelpTicketCommand implements CommandExecutor {
 	}
 
 	private void parseCommand(Player player, String[] split) {
-
 		if (split.length == 0) {
 			viewAllCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("new") || split[0].equalsIgnoreCase("n") || split[0].equalsIgnoreCase("create")) {
@@ -79,6 +81,10 @@ public class HelpTicketCommand implements CommandExecutor {
 			searchCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("set-priority") || split[0].equalsIgnoreCase("sp")) {
 			priorityCommand(player, split);
+		} else if (split[0].equalsIgnoreCase("set-language") || split[0].equalsIgnoreCase("sl")) {
+			this.setLanguageCommand(player, split);
+		} else {
+			help(player);
 		}
 	}
 
@@ -489,6 +495,23 @@ public class HelpTicketCommand implements CommandExecutor {
 					return;
 				}
 			}
+		}
+	}
+
+	public void setLanguageCommand(Player player, String[] split) {
+		if (split.length == 3) {
+			String path = split[1];
+			String value = split[2];
+			if (plugin.isAdmin(player)) {
+				plugin.language.setString(path, value);
+				plugin.language.save();
+				ChatTools.formatAndSend(plugin.language.getHeader() + "Set language varible of " + path + " to " + value, player);
+			} else {
+				this.playerNotStaff(player);
+				return;
+			}
+		} else {
+
 		}
 	}
 

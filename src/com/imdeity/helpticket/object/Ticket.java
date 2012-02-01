@@ -100,9 +100,9 @@ public class Ticket {
 
 	public String getAssignee() {
 		if (this.assignee == null || this.assignee.equalsIgnoreCase("")) {
-			return "";
+			return HelpTicket.plugin.language.getTicketAssignFormatNone();
 		} else {
-			return HelpTicket.plugin.language.getTicketAssignFormat().replaceAll("%assignee", this.assignee);
+			return HelpTicket.plugin.language.getTicketAssignFormatAssigned().replaceAll("%assignee", this.assignee);
 		}
 	}
 
