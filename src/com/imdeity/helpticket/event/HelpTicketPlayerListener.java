@@ -26,24 +26,16 @@ public class HelpTicketPlayerListener implements Listener {
 			int size = SQLTicket.getAllOpenTickets().size();
 			if (size == 0) {
 			} else if (size == 1) {
-				ChatTools.formatAndSend(plugin.language.getHeader()
-						+ plugin.language.getAutoStaffMessageSingular()
-								.replaceAll("%numTickets", "" + size), player);
+				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getAutoStaffMessageSingular().replaceAll("%numTickets", "" + size), player);
 			} else {
-				ChatTools.formatAndSend(plugin.language.getHeader()
-						+ plugin.language.getAutoStaffMessagePlural()
-								.replaceAll("%numTickets", "" + size), player);
+				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getAutoStaffMessagePlural().replaceAll("%numTickets", "" + size), player);
 			}
 			plugin.addToStaff(player);
 		}
 		for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
 			if (!t.getHasRead()) {
-				for (String line : t.preformReplace(plugin.language
-						.getUpdateMessage())) {
-					ChatTools.formatAndSend(plugin.language.getHeader() + line,
-							player);
-				}
-
+				String line = t.preformReplaceSingle(plugin.language.getUpdateMessage());
+				ChatTools.formatAndSend(plugin.language.getHeader() + line, player);
 			}
 		}
 

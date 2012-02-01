@@ -29,8 +29,7 @@ public class HelpTicket extends JavaPlugin {
 	public static HelpTicket plugin = null;
 	public Language language = null;
 	public static ArrayList<Player> staff = new ArrayList<Player>();
-	private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(
-			this);
+	private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(this);
 	private static int taskId = -1;
 
 	public void onEnable() {
@@ -74,8 +73,7 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void setupEvents() {
-		this.getServer().getPluginManager()
-				.registerEvents(playerListener, this);
+		this.getServer().getPluginManager().registerEvents(playerListener, this);
 	}
 
 	public void loadDatabase() {
@@ -92,9 +90,7 @@ public class HelpTicket extends JavaPlugin {
 		if (taskId != -1) {
 			getServer().getScheduler().cancelTask(taskId);
 		} else {
-			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(
-					this, new TicketTimerTask(this), 0,
-					(20 * 60 * HelpTicketSettings.getNotificationTimer()));
+			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * HelpTicketSettings.getNotificationTimer()));
 		}
 	}
 
@@ -102,9 +98,7 @@ public class HelpTicket extends JavaPlugin {
 		this.language = new Language();
 		language.loadDefaults();
 		FileMgmt.checkFolders(new String[] { getRootFolder() });
-		HelpTicketSettings.loadConfig(
-				getRootFolder() + FileMgmt.fileSeparator() + "config.yml",
-				"/config.yml");
+		HelpTicketSettings.loadConfig(getRootFolder() + FileMgmt.fileSeparator() + "config.yml", "/config.yml");
 
 	}
 
@@ -115,21 +109,22 @@ public class HelpTicket extends JavaPlugin {
 			return "";
 	}
 
-	public void informPlayer(String playerName, String msg) {
-		Player player = getServer().getPlayer(playerName);
-		if (player != null && player.isOnline()) {
-			ChatTools.formatAndSend(this.language.getHeader() + msg, player);
-		} else {
-			if (this.mail != null) {
-				try {
-					Mail.sendMailToPlayer(this.language.getMailSender(),
-							playerName, msg);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+	public void sendMailToPlayer(String playerName, String msg) {
+		if (this.mail != null) {
+			try {
+				Mail.sendMailToPlayer(this.language.getMailSender(), playerName, msg);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		return;
+	}
+
+	public void sendPlayerMessage(String playerName, String msg) {
+		Player player = getServer().getPlayer(playerName);
+		if (player != null && player.isOnline()) {
+			ChatTools.formatAndSend(this.language.getHeader() + msg, player);
+		}
 	}
 
 	public static ArrayList<Player> getOnlineStaff() {
@@ -155,9 +150,7 @@ public class HelpTicket extends JavaPlugin {
 			return false;
 		}
 		if (HelpTicketSettings.isUsingPermissions()) {
-			if (player.hasPermission("helpticket.mod")
-					|| player.hasPermission("helpticket.admin")
-					|| player.isOp()) {
+			if (player.hasPermission("helpticket.mod") || player.hasPermission("helpticket.admin") || player.isOp()) {
 				return true;
 			}
 		} else {
@@ -173,11 +166,7 @@ public class HelpTicket extends JavaPlugin {
 		}
 		if (HelpTicketSettings.isUsingPermissions()) {
 
-			if (this.getServer().getPlayer(playerName)
-					.hasPermission("helpticket.mod")
-					|| this.getServer().getPlayer(playerName)
-							.hasPermission("helpticket.admin")
-					|| this.getServer().getPlayer(playerName).isOp()) {
+			if (this.getServer().getPlayer(playerName).hasPermission("helpticket.mod") || this.getServer().getPlayer(playerName).hasPermission("helpticket.admin") || this.getServer().getPlayer(playerName).isOp()) {
 				return true;
 			}
 		} else {
