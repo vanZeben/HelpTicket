@@ -32,7 +32,7 @@ public class HelpTicketPlayerListener implements Listener {
 			}
 			plugin.addToStaff(player);
 		}
-		for (Ticket t : SQLTicket.getPlayersOpenTickets(player.getName())) {
+		for (Ticket t : SQLTicket.getPlayersTickets(player.getName())) {
 			if (!t.getHasRead()) {
 				String line = t.preformReplaceSingle(plugin.language.getUpdateMessage());
 				ChatTools.formatAndSend(plugin.language.getHeader() + line, player);

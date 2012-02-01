@@ -25,8 +25,7 @@ public class SQLTicket {
 		boolean hasRead = false;
 		int priority;
 
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `id` = '" + id + "';";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `id` = '" + id + "';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 
@@ -52,8 +51,7 @@ public class SQLTicket {
 			return null;
 		}
 
-		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
-				assignee, status, hasRead, priority);
+		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority);
 		return tmp;
 	}
 
@@ -74,9 +72,7 @@ public class SQLTicket {
 		boolean hasRead = false;
 		int priority;
 
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `id` = '" + id + "' && `owner` = '" + playerName
-				+ "';";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `id` = '" + id + "' && `owner` = '" + playerName + "';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 
@@ -102,8 +98,7 @@ public class SQLTicket {
 			return null;
 		}
 
-		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info,
-				assignee, status, hasRead, priority);
+		Ticket tmp = new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority);
 		return tmp;
 	}
 
@@ -125,8 +120,7 @@ public class SQLTicket {
 		boolean hasRead = false;
 		int priority;
 
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `owner` = '" + playerName + "' && `status` = '0';";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `owner` = '" + playerName + "' && `status` = '0';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 		for (int i = 1; i <= out.size(); i++) {
@@ -141,16 +135,12 @@ public class SQLTicket {
 				yaw = Float.parseFloat(out.get(i).get(7));
 				info = out.get(i).get(8);
 				assignee = out.get(i).get(9);
-				status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false
-						: true);
-				hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false
-						: true);
+				status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false : true);
+				hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false : true);
 				priority = Integer.parseInt(out.get(i).get(13));
-				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-						info, assignee, status, hasRead, priority));
+				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority));
 			} catch (NumberFormatException ex) {
-				System.out
-						.println("[HelpTicket] Input Mismatch on id of " + id);
+				System.out.println("[HelpTicket] Input Mismatch on id of " + id);
 				ex.printStackTrace();
 				return null;
 			}
@@ -177,8 +167,7 @@ public class SQLTicket {
 		boolean hasRead = false;
 		int priority;
 
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `owner` = '" + playerName + "';";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `owner` = '" + playerName + "';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 		for (int i = 1; i <= out.size(); i++) {
@@ -193,16 +182,12 @@ public class SQLTicket {
 				yaw = Float.parseFloat(out.get(i).get(7));
 				info = out.get(i).get(8);
 				assignee = out.get(i).get(9);
-				status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false
-						: true);
-				hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false
-						: true);
+				status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false : true);
+				hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false : true);
 				priority = Integer.parseInt(out.get(i).get(13));
-				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-						info, assignee, status, hasRead, priority));
+				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority));
 			} catch (NumberFormatException ex) {
-				System.out
-						.println("[HelpTicket] Input Mismatch on id of " + id);
+				System.out.println("[HelpTicket] Input Mismatch on id of " + id);
 				ex.printStackTrace();
 				return null;
 			}
@@ -214,8 +199,7 @@ public class SQLTicket {
 	public static ArrayList<Ticket> getPlayersAssignedTickets(String playerName) {
 		String sql = "";
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `assignee` = '" + playerName + "';";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `assignee` = '" + playerName + "';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 		for (int i = 1; i <= out.size(); i++) {
@@ -230,13 +214,10 @@ public class SQLTicket {
 				float yaw = Float.parseFloat(out.get(i).get(7));
 				String info = out.get(i).get(8);
 				String assignee = out.get(i).get(9);
-				boolean status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false
-						: true);
-				boolean hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false
-						: true);
+				boolean status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false : true);
+				boolean hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false : true);
 				int priority = Integer.parseInt(out.get(i).get(13));
-				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw,
-						info, assignee, status, hasRead, priority));
+				tickets.add(new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority));
 			} catch (NumberFormatException ex) {
 				System.out.println("[HelpTicket] Input Mismatch on id");
 				ex.printStackTrace();
@@ -250,18 +231,15 @@ public class SQLTicket {
 	}
 
 	public static int getNumAssigned(String playerName) {
-		String sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `assignee` = '" + playerName + "';";
+		String sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `assignee` = '" + playerName + "';";
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 		return out.size();
 	}
 
 	public static ArrayList<Ticket> getAllOpenTickets() {
 		String sql = "";
+		sql = "SELECT * FROM " + MySQLConnector.tableName("data") + " WHERE `status` = '0';";
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
-
-		sql = "SELECT * FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `status` = '0';";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 		for (int i = 1; i <= out.size(); i++) {
@@ -276,13 +254,10 @@ public class SQLTicket {
 				float yaw = Float.parseFloat(out.get(i).get(7));
 				String info = out.get(i).get(8);
 				String assignee = out.get(i).get(9);
-				boolean status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false
-						: true);
-				boolean hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false
-						: true);
+				boolean status = (Integer.parseInt(out.get(i).get(10)) == 1 ? false : true);
+				boolean hasRead = (Integer.parseInt(out.get(i).get(11)) == 1 ? false : true);
 				int priority = Integer.parseInt(out.get(i).get(13));
-				Ticket t = new Ticket(id, owner, world, x, y, z, pitch, yaw,
-						info, assignee, status, hasRead, priority);
+				Ticket t = new Ticket(id, owner, world, x, y, z, pitch, yaw, info, assignee, status, hasRead, priority);
 				tickets.add(t);
 			} catch (NumberFormatException ex) {
 				System.out.println("[HelpTicket] Input Mismatch on id of " + i);
@@ -291,12 +266,17 @@ public class SQLTicket {
 			}
 		}
 		ArrayList<Ticket> reorderedTickets = new ArrayList<Ticket>();
-		for (int i = 0; i < 5; i++) {
+		outerloop: for (int i = 0; i < 5; i++) {
 			for (int tId = 0; tId < tickets.size(); tId++) {
 				if (tickets.get(tId).getRawPriority() == i) {
 					reorderedTickets.add(tickets.get(tId));
 					tickets.remove(tId);
+					tId--;
 				}
+				if (tickets.isEmpty()) {
+					break outerloop;
+				}
+
 			}
 		}
 		return reorderedTickets;
@@ -308,9 +288,7 @@ public class SQLTicket {
 		int id = 0;
 		String owner = playerName;
 
-		sql = "SELECT `id` FROM " + MySQLConnector.tableName("data")
-				+ " WHERE `owner` = '" + owner
-				+ "' ORDER BY `id` DESC LIMIT 1;";
+		sql = "SELECT `id` FROM " + MySQLConnector.tableName("data") + " WHERE `owner` = '" + owner + "' ORDER BY `id` DESC LIMIT 1;";
 
 		HashMap<Integer, ArrayList<String>> out = HelpTicket.database.Read(sql);
 
@@ -332,15 +310,9 @@ public class SQLTicket {
 	public static boolean newTicket(Ticket ticket) {
 		String sql = "";
 
-		sql = "INSERT INTO " + MySQLConnector.tableName("data") + " ("
-				+ "`owner`," + " `world`," + " `x_coord`," + " `y_coord`,"
-				+ " `z_coord`," + " `pitch`," + " `yaw`," + " `status`,"
-				+ " `info`, " + " `creation_time`,"
-				+ "`priority` ) VALUES (?,?,?,?,?,?,?,?,?, NOW(), 2);";
+		sql = "INSERT INTO " + MySQLConnector.tableName("data") + " (" + "`owner`," + " `world`," + " `x_coord`," + " `y_coord`," + " `z_coord`," + " `pitch`," + " `yaw`," + " `status`," + " `info`, " + " `creation_time`," + "`priority` ) VALUES (?,?,?,?,?,?,?,?,?, NOW(), 2);";
 
-		HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(),
-				ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(),
-				ticket.getYaw(), 0, ticket.getInfo());
+		HelpTicket.database.Write(sql, ticket.getOwner(), ticket.getWorld(), ticket.getX(), ticket.getY(), ticket.getZ(), ticket.getPitch(), ticket.getYaw(), 0, ticket.getInfo());
 		return true;
 	}
 

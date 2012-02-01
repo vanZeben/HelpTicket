@@ -470,9 +470,9 @@ public class HelpTicketCommand implements CommandExecutor {
 
 	private void informPlayerOfChange(Ticket ticket) {
 		Player tmp = plugin.getServer().getPlayer(ticket.getOwner());
-		if (tmp != null && !tmp.isOnline()) {
+		if (tmp == null || (tmp != null && !tmp.isOnline())) {
 			ticket.setHasRead(false);
-			plugin.sendMailToPlayer(tmp.getName(), ticket.preformReplaceSingle(plugin.language.getUpdateMessage()));
+			plugin.sendMailToPlayer(ticket.getOwner(), ticket.preformReplaceSingle(plugin.language.getUpdateMessage()));
 		}
 	}
 
