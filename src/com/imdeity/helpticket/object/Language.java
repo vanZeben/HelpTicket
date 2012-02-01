@@ -71,7 +71,6 @@ public class Language {
 		if (!lang.contains("ticket.full_info.comments.none")) {
 			lang.set("ticket.full_info.comments.none", "&bNo Comments To Display");
 		}
-
 		if (!lang.contains("ticket.open_ticket.player")) {
 			lang.set("ticket.open_ticket.player", "&3Your Open Tickets:");
 		}
@@ -105,35 +104,35 @@ public class Language {
 		if (!lang.contains("ticket.priority.staff")) {
 			lang.set("ticket.priority.staff", "&b%player &f set the priority of ticket %ticketId to %ticketPriority");
 		}
-		if (!lang.contains("ticket.log.close")) {
+		if (!lang.contains("ticket.close.log.nocomment")) {
 			lang.set("ticket.log.close", "%player closed the ticket");
 		}
 		if (!lang.contains("ticket.close.log.comment")) {
-			lang.getString("ticket.close.log.comment", "Closed the ticket - %comment");
+			lang.set("ticket.close.log.comment", "Closed the ticket - %comment");
 		}
 		if (!lang.contains("ticket.close.user")) {
-			lang.getString("ticket.close.user", "&fYou closed ticket &a#%ticketId");
+			lang.set("ticket.close.user", "&fYou closed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.user.comment")) {
-			lang.getString("ticket.close.user.comment", "&fYou closed ticket &a#%ticketId - %comment");
+			lang.set("ticket.close.user.comment", "&fYou closed ticket &a#%ticketId - %comment");
 		}
 		if (!lang.contains("ticket.close.self")) {
-			lang.getString("ticket.close.self", "&a%ticketOwner &fclosed ticket &a#%ticketId");
+			lang.set("ticket.close.self", "&a%ticketOwner &fclosed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.self.comment")) {
-			lang.getString("ticket.close.self.comment", "&a%ticketOwner &fclosed ticket &a#%ticketId - %comment");
+			lang.set("ticket.close.self.comment", "&a%ticketOwner &fclosed ticket &a#%ticketId - %comment");
 		}
 		if (!lang.contains("ticket.close.player")) {
-			lang.getString("ticket.close.player", "&a%player &fclosed your ticket &a#%ticketId");
+			lang.set("ticket.close.player", "&a%player &fclosed your ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.player.comment")) {
-			lang.getString("ticket.close.player.comment", "&a%player&f closed your ticket &a#%ticketId - %comment");
+			lang.set("ticket.close.player.comment", "&a%player&f closed your ticket &a#%ticketId - %comment");
 		}
 		if (!lang.contains("ticket.close.staff")) {
-			lang.getString("ticket.close.staff", "&a%player&f closed ticket &a#%ticketId");
+			lang.set("ticket.close.staff", "&a%player&f closed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.staff.comment")) {
-			lang.getString("ticket.close.staff.comment", "&a%player&f closed ticket &a#%ticketId - %comment");
+			lang.set("ticket.close.staff.comment", "&a%player&f closed ticket &a#%ticketId - %comment");
 		}
 		if (!lang.contains("ticket.reopen.log")) {
 			lang.set("ticket.reopen.log", "Reopened ticket");
@@ -335,7 +334,7 @@ public class Language {
 	}
 
 	public String getClosedLog() {
-		return lang.getString("ticket.close.log");
+		return lang.getString("ticket.close.log.nocomment");
 	}
 
 	public String getClosedLogComment() {

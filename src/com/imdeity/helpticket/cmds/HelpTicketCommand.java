@@ -162,7 +162,6 @@ public class HelpTicketCommand implements CommandExecutor {
 	public void closeCommand(Player player, String[] split) {
 		if (split.length == 2) {
 			int id = 0;
-
 			try {
 				id = Integer.parseInt(split[1]);
 			} catch (NumberFormatException ex) {
@@ -179,7 +178,6 @@ public class HelpTicketCommand implements CommandExecutor {
 					return;
 				}
 				if (plugin.isStaff(player) && !ticket.getOwner().equalsIgnoreCase(player.getName())) {
-
 					ticket.setAssignee(player.getName());
 					ticket.addLog(player.getName(), plugin.language.getClosedLog());
 					ticket.setStatus(false);
