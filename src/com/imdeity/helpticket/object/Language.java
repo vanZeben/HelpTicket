@@ -184,6 +184,9 @@ public class Language {
 		if (!lang.contains("ticket.updated")) {
 			lang.set("ticket.updated", "&fTicket %ticketId has been updated.");
 		}
+		if (!lang.contains("ticket.min_word_message")) {
+			lang.set("ticket.min_word_message", "&cSorry but can you please explain your issue more.");
+		}
 
 		this.save();
 	}
@@ -197,87 +200,79 @@ public class Language {
 	}
 
 	public String getHeader() {
-		return lang.getString("header", "&7[&cHelpTicket&7] ");
+		return lang.getString("header");
 	}
 
 	public String getMailSender() {
-		return lang.getString("mail_sender", "HelpTicketUpdate ");
+		return lang.getString("mail_sender");
 	}
 
 	public String getAutoStaffMessageSingular() {
-		return lang.getString("auto_staff_message.singular", "&7There is &e %numTickets &7open ticket. &7Please attend to it with &e\"/ticket\".");
+		return lang.getString("auto_staff_message.singular");
 	}
 
 	public String getAutoStaffMessagePlural() {
-		return lang.getString("auto_staff_message.plural", "&7There are &e %numTickets &7open tickets. &7Please attend to them with &e\"/ticket\".");
+		return lang.getString("auto_staff_message.plural");
 	}
 
 	public String getNotStaffMessage() {
-		return lang.getString("not_staff", "&cYou need to be at least a moderator to perform this action");
+		return lang.getString("not_staff");
 	}
 
 	public String getTicketSubmittedPlayer() {
-		return lang.getString("ticket.submitted.player", "&aYour Ticket has been submitted. You can check it with &b\"/ticket view %ticketId\"");
+		return lang.getString("ticket.submitted.player");
 	}
 
 	public String getTicketSubmittedStaff() {
-		return lang.getString("ticket.submitted.staff", "&c%player has opened a new ticket &7[%ticketId]&c. Please attend to it");
+		return lang.getString("ticket.submitted.staff");
 	}
 
 	public String getTicketNotExist() {
-		return lang.getString("ticket.not_exist", "&cTicket #%ticketId does not exist");
+		return lang.getString("ticket.not_exist");
 	}
 
 	public String getTicketFullInfoHeader() {
-		return lang.getString("ticket.full_info.header_line", "&c--[Ticket Information]--");
+		return lang.getString("ticket.full_info.header_line");
 	}
 
 	public String getTicketFullInfoId() {
-		return lang.getString("ticket.full_info.id_line", "&3Id: &b%ticketId");
+		return lang.getString("ticket.full_info.id_line");
 	}
 
 	public String getTicketFullInfoOwner() {
-		return lang.getString("ticket.full_info.owner_line", "&3Owner: &b%ticketOwner");
+		return lang.getString("ticket.full_info.owner_line");
 	}
 
 	public String getTicketFullInfoAssignee() {
-		return lang.getString("ticket.full_info.assignee_line", "&3Assigned To: &b%ticketAssignee");
-
+		return lang.getString("ticket.full_info.assignee_line");
 	}
 
 	public String getTicketFullInfoPriority() {
-		return lang.getString("ticket.full_info.priority_line", "&3Priority: %ticketPriorityColor%ticketPriority");
-
+		return lang.getString("ticket.full_info.priority_line");
 	}
 
 	public String getTicketFullInfoMessage() {
-		return lang.getString("ticket.full_info.message_line", "&3Situation: &b%ticketFullMessage");
-
+		return lang.getString("ticket.full_info.message_line");
 	}
 
 	public String getTicketFullInfoStatus() {
-		return lang.getString("ticket.full_info.status_line", "&3Status: &b%ticketStatus");
-
+		return lang.getString("ticket.full_info.status_line");
 	}
 
 	public String getTicketFullInfoCommentHeader() {
-		return lang.getString("ticket.full_info.comments.comment_header", "&3Comments:");
-
+		return lang.getString("ticket.full_info.comments.comment_header");
 	}
 
 	public String getTicketFullInfoCommentMessage() {
-		return lang.getString("ticket.full_info.comments.message", "&b=> &f%ticketCommentOwner: &7%ticketCommentMessage");
-
+		return lang.getString("ticket.full_info.comments.message");
 	}
 
 	public String getTicketFullInfoNoCommentMessage() {
-		return lang.getString("ticket.full_info.comments.none", "&bNo Comments To Display");
-
+		return lang.getString("ticket.full_info.comments.none");
 	}
 
 	public String getTicketFullInfoOrder() {
-		return lang.getString("ticket.full_info.order", "%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");
-
+		return lang.getString("ticket.full_info.order");
 	}
 
 	public String getTicketFullInfo() {
@@ -285,22 +280,20 @@ public class Language {
 	}
 
 	public String getTicketShortInfo() {
-		return lang.getString("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner -> %ticketAssignee&f: %ticketShortMessage &7[%ticketNumberComments]");
-
+		return lang.getString("ticket.short_info");
 	}
 
 	public String getOpenTicketsMessagePlayer() {
-		return lang.getString("ticket.open_ticket.player", "&3Your Open Tickets:");
-
+		return lang.getString("ticket.open_ticket.player");
 	}
 
 	public String getOpenTicketsMessageStaff() {
-		return lang.getString("ticket.open_ticket.staff", "&3Open Tickets:");
+		return lang.getString("ticket.open_ticket.staff");
 
 	}
 
 	public String getTicketColorCoding() {
-		String tmp = lang.getString("ticket.priority.coding", "&7[%priorityColorLowestlowest&7, %priorityColorLowlow&7, %priorityColorMediummedium&7, %priorityColorHighhigh&7, %priorityColorHighesthighest&7]");
+		String tmp = lang.getString("ticket.priority.coding");
 		tmp = tmp.replaceAll("%priorityColorLowest", this.getTicketPriorityLowestColor()).replaceAll("%priorityColorLow", this.getTicketPriorityLowColor()).replaceAll("%priorityColorMedium", this.getTicketPriorityMediumColor()).replaceAll("%priorityColorHighest", this.getTicketPriorityHighestColor()).replaceAll("%priorityColorHigh", this.getTicketPriorityHighColor());
 
 		return tmp;
@@ -308,154 +301,150 @@ public class Language {
 	}
 
 	public String getTicketPriorityLowestColor() {
-		return lang.getString("ticket.priority.lowest", "&1");
+		return lang.getString("ticket.priority.lowest");
 	}
 
 	public String getTicketPriorityLowColor() {
-		return lang.getString("ticket.priority.low", "&9");
+		return lang.getString("ticket.priority.low");
 	}
 
 	public String getTicketPriorityMediumColor() {
-		return lang.getString("ticket.priority.medium", "&e");
-
+		return lang.getString("ticket.priority.medium");
 	}
 
 	public String getTicketPriorityHighColor() {
-		return lang.getString("ticket.priority.high", "&c");
-
+		return lang.getString("ticket.priority.high");
 	}
 
 	public String getTicketPriorityHighestColor() {
-		return lang.getString("ticket.priority.highest", "&4");
+		return lang.getString("ticket.priority.highest");
 	}
 
 	public String getClosedLog() {
-		return lang.getString("ticket.close.log", "Closed the ticket");
+		return lang.getString("ticket.close.log");
 	}
 
 	public String getClosedLogComment() {
-		return lang.getString("ticket.close.log.comment", "Closed the ticket - %comment");
+		return lang.getString("ticket.close.log.comment");
 	}
 
 	public String getClosedUser() {
-		return lang.getString("ticket.close.user", "&fYou closed ticket &a#%ticketId");
+		return lang.getString("ticket.close.user");
 	}
 
 	public String getClosedUserComment() {
-		return lang.getString("ticket.close.user.comment", "&fYou closed ticket &a#%ticketId - %comment");
+		return lang.getString("ticket.close.user.comment");
 	}
 
 	public String getClosedSelf() {
-		return lang.getString("ticket.close.self", "&a%ticketOwner &fclosed ticket &a#%ticketId");
+		return lang.getString("ticket.close.self");
 	}
 
 	public String getClosedSelfComment() {
-		return lang.getString("ticket.close.self.comment", "&a%ticketOwner &fclosed ticket &a#%ticketId - %comment");
+		return lang.getString("ticket.close.self.comment");
 	}
 
 	public String getClosedPlayer() {
-		return lang.getString("ticket.close.player", "&a%player &fclosed your ticket &a#%ticketId");
+		return lang.getString("ticket.close.player");
 	}
 
 	public String getClosedPlayerComment() {
-		return lang.getString("ticket.close.player.comment", "&a%player&f closed your ticket &a#%ticketId - %comment");
+		return lang.getString("ticket.close.player.comment");
 	}
 
 	public String getClosedStaff() {
-		return lang.getString("ticket.close.staff", "&a%player&f closed ticket &a#%ticketId");
-
+		return lang.getString("ticket.close.staff");
 	}
 
 	public String getClosedStaffComment() {
-		return lang.getString("ticket.close.staff.comment", "&a%player&f closed ticket &a#%ticketId - %comment");
+		return lang.getString("ticket.close.staff.comment");
 	}
 
 	public String getReopenLog() {
-		return lang.getString("ticket.reopen.log", "Reopened ticket");
-
+		return lang.getString("ticket.reopen.log");
 	}
 
 	public String getReopenStaff() {
-		return lang.getString("ticket.reopen.staff", "&a%player &freopened ticket &a#%ticketId");
-
+		return lang.getString("ticket.reopen.staff");
 	}
 
 	public String getReopenUser() {
-		return lang.getString("ticket.reopen.user", "&a%player &freopened ticket &a#%ticketId");
-
+		return lang.getString("ticket.reopen.user");
 	}
 
 	public String getReopenError() {
-		return lang.getString("ticket.reopen.error", "&cOnly staff can reopen tickets");
-
+		return lang.getString("ticket.reopen.error");
 	}
 
 	public String getReviewingTicket() {
-		return lang.getString("ticket.port.review", "&b%player &fis reviewing your ticket &7[%ticketId]");
-
+		return lang.getString("ticket.port.review");
 	}
 
 	public String getTicketClosed() {
-		return lang.getString("ticket.is_closed", "&cThat ticket is closed");
+		return lang.getString("ticket.is_closed");
 	}
 
 	public String getTicketIsOpen() {
-		return lang.getString("ticket.is_already_open", "&cThat ticket is already open.");
+		return lang.getString("ticket.is_already_open");
 	}
 
 	public String getAssignUser() {
-		return lang.getString("ticket.assign.user", "&b%ticketAssignee has been assigned to your ticket &7[%ticketId]");
+		return lang.getString("ticket.assign.user");
 
 	}
 
 	public String getAssignStaff() {
-		return lang.getString("ticket.assign.staff", "&b%ticketAssignee has been assigned to ticket %ticketId by %player");
+		return lang.getString("ticket.assign.staff");
 
 	}
 
 	public String getSearchTicketTitle() {
-		return lang.getString("ticket.search.title", "&3%player's tickets");
+		return lang.getString("ticket.search.title");
 
 	}
 
 	public String getSearchInvalid() {
-		return lang.getString("ticket.search.invalid", "&c%player has no tickets");
+		return lang.getString("ticket.search.invalid");
 
 	}
 
 	public String getTicketCommentUser() {
-		return lang.getString("ticket.comment.user", "&b%player &fcommented on ticket %ticketId - %comment");
+		return lang.getString("ticket.comment.user");
 
 	}
 
 	public String getTicketCommentStaff() {
-		return lang.getString("ticket.comment.staff", "&b%player &fcommented on ticket %ticketId - %comment");
+		return lang.getString("ticket.comment.staff");
 
 	}
 
 	public String getTicketPriorityError() {
-		return lang.getString("ticket.priority.error", "&cPriority can only be from 0-4");
+		return lang.getString("ticket.priority.error");
 
 	}
 
 	public String getTicketPriorityUser() {
-		return lang.getString("ticket.priority.user", "&b%player &f set the priority of ticket %ticketId to %ticketPriority");
+		return lang.getString("ticket.priority.user");
 
 	}
 
 	public String getTicketPriorityStaff() {
-		return lang.getString("ticket.priority.staff", "&b%player &f set the priority of ticket %ticketId to %ticketPriority");
+		return lang.getString("ticket.priority.staff");
 	}
 
 	public String getHelp() {
-		return lang.getString("help.help", "&eUse \"/ticket ?\" for help");
+		return lang.getString("help.help");
 	}
 
 	public String getHelpInvalid() {
-		return lang.getString("help.invalid", "&eInvalid syntax! Use \"/ticket ?\" for help");
+		return lang.getString("help.invalid");
 	}
 
 	public String getUpdateMessage() {
-		return lang.getString("ticket.updated", "&fTicket %ticketId has been updated.");
+		return lang.getString("ticket.updated");
+	}
+
+	public String getTicketMinWordMessage() {
+		return lang.getString("ticket.min_word_message");
 	}
 }

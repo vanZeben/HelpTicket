@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.imdeity.helpticket.HelpTicket;
-import com.imdeity.helpticket.HelpTicketSettings;
 import com.imdeity.helpticket.object.SQLTicket;
 import com.imdeity.helpticket.object.Ticket;
 import com.imdeity.helpticket.utils.ChatTools;
@@ -46,11 +45,7 @@ public class HelpTicketCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			if (HelpTicketSettings.isUsingPermissions()) {
-				if (player.hasPermission("helpticket.help") || player.isOp()) {
-					parseCommand(player, args);
-				}
-			} else {
+			if (player.hasPermission("helpticket.help") || player.isOp()) {
 				parseCommand(player, args);
 			}
 		} else {
@@ -89,6 +84,10 @@ public class HelpTicketCommand implements CommandExecutor {
 
 	public void newCommand(Player player, String[] split) {
 		String message = "";
+		if (split.length - 1 <= plugin.config.getMinWordCount()) {
+			ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getTicketMinWordMessage().replaceAll("%numWords", plugin.config.getMinWordCount() + ""), player);
+			return;
+		}
 		for (int i = 1; i < split.length; i++) {
 			if (i == 1)
 				message += split[i];

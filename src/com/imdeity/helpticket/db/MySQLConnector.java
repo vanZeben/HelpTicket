@@ -30,12 +30,12 @@ public class MySQLConnector {
         // make the connection
         try {
             conn = DriverManager.getConnection("jdbc:mysql://"
-                    + HelpTicketSettings.getMySQLServerAddress() + ":"
-                    + HelpTicketSettings.getMySQLServerPort() + "/"
-                    + HelpTicketSettings.getMySQLDatabaseName() + "?user="
-                    + HelpTicketSettings.getMySQLDatabaseUsername()
+                    + HelpTicket.plugin.config.getMySQLServerAddress() + ":"
+                    + HelpTicket.plugin.config.getMySQLServerPort() + "/"
+                    + HelpTicket.plugin.config.getMySQLDatabaseName() + "?user="
+                    + HelpTicket.plugin.config.getMySQLDatabaseUsername()
                     + "&password="
-                    + HelpTicketSettings.getMySQLDatabasePassword());
+                    + HelpTicket.plugin.config.getMySQLDatabasePassword());
             System.out.println("[HelpTicket] Connection Sucessful");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -80,12 +80,12 @@ public class MySQLConnector {
         plugin.out("Reconnecting to MySQL...");
         try {
             conn = DriverManager.getConnection("jdbc:mysql://"
-                    + HelpTicketSettings.getMySQLServerAddress() + ":"
-                    + HelpTicketSettings.getMySQLServerPort() + "/"
-                    + HelpTicketSettings.getMySQLDatabaseName() + "?user="
-                    + HelpTicketSettings.getMySQLDatabaseUsername()
+                    + HelpTicket.plugin.config.getMySQLServerAddress() + ":"
+                    + HelpTicket.plugin.config.getMySQLServerPort() + "/"
+                    + HelpTicket.plugin.config.getMySQLDatabaseName() + "?user="
+                    + HelpTicket.plugin.config.getMySQLDatabaseUsername()
                     + "&password="
-                    + HelpTicketSettings.getMySQLDatabasePassword());
+                    + HelpTicket.plugin.config.getMySQLDatabasePassword());
             plugin.out("Connection success!");
         } catch (SQLException ex) {
             plugin.out("Connection to MySQL failed! Check status of MySQL server!");
@@ -191,8 +191,8 @@ public class MySQLConnector {
 
     public static String tableName(String nameOfTable) {
         return (String.format("`%s`.`%s`",
-                HelpTicketSettings.getMySQLDatabaseName(),
-                HelpTicketSettings.getMySQLTablePrefix() + nameOfTable));
+                HelpTicket.plugin.config.getMySQLDatabaseName(),
+                HelpTicket.plugin.config.getMySQLDatabaseTablePrefix() + nameOfTable));
     }
 
     // read query

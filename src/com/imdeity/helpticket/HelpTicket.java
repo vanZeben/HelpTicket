@@ -16,8 +16,8 @@ import com.imdeity.helpticket.cmds.HelpTicketCommand;
 import com.imdeity.helpticket.db.MySQLConnector;
 import com.imdeity.helpticket.event.HelpTicketPlayerListener;
 import com.imdeity.helpticket.object.Language;
+import com.imdeity.helpticket.object.Settings;
 import com.imdeity.helpticket.utils.ChatTools;
-import com.imdeity.helpticket.utils.FileMgmt;
 import com.imdeity.helpticket.utils.StringMgmt;
 import com.imdeity.mail.Mail;
 
@@ -28,6 +28,7 @@ public class HelpTicket extends JavaPlugin {
 	public Mail mail = null;
 	public static HelpTicket plugin = null;
 	public Language language = null;
+	public Settings config = null;
 	public static ArrayList<Player> staff = new ArrayList<Player>();
 	private HelpTicketPlayerListener playerListener = new HelpTicketPlayerListener(this);
 	private static int taskId = -1;
@@ -90,16 +91,16 @@ public class HelpTicket extends JavaPlugin {
 		if (taskId != -1) {
 			getServer().getScheduler().cancelTask(taskId);
 		} else {
-			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * HelpTicketSettings.getNotificationTimer()));
+			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * this.config.getNotifyDelay()));
 		}
 	}
 
 	public void loadSettings() throws IOException {
 		this.language = new Language();
 		language.loadDefaults();
-		FileMgmt.checkFolders(new String[] { getRootFolder() });
-		HelpTicketSettings.loadConfig(getRootFolder() + FileMgmt.fileSeparator() + "config.yml", "/config.yml");
 
+		this.config = new Settings();
+		config.loadDefaults();
 	}
 
 	public String getRootFolder() {
@@ -149,13 +150,8 @@ public class HelpTicket extends JavaPlugin {
 		if (player == null) {
 			return false;
 		}
-		if (HelpTicketSettings.isUsingPermissions()) {
-			if (player.hasPermission("helpticket.mod") || player.hasPermission("helpticket.admin") || player.isOp()) {
-				return true;
-			}
-		} else {
-			if (player.isOp())
-				return true;
+		if (player.hasPermission("helpticket.mod") || player.hasPermission("helpticket.admin") || player.isOp()) {
+			return true;
 		}
 		return false;
 	}
@@ -164,14 +160,8 @@ public class HelpTicket extends JavaPlugin {
 		if (this.getServer().getPlayer(playerName) == null) {
 			return false;
 		}
-		if (HelpTicketSettings.isUsingPermissions()) {
-
-			if (this.getServer().getPlayer(playerName).hasPermission("helpticket.mod") || this.getServer().getPlayer(playerName).hasPermission("helpticket.admin") || this.getServer().getPlayer(playerName).isOp()) {
-				return true;
-			}
-		} else {
-			if ((this.getServer().getPlayer(playerName)).isOp())
-				return true;
+		if (this.getServer().getPlayer(playerName).hasPermission("helpticket.mod") || this.getServer().getPlayer(playerName).hasPermission("helpticket.admin") || this.getServer().getPlayer(playerName).isOp()) {
+			return true;
 		}
 		return false;
 	}
