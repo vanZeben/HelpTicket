@@ -64,47 +64,30 @@ public class HelpTicketCommand implements CommandExecutor {
 
 		if (split.length == 0) {
 			viewAllCommand(player, split);
-		} else if (split[0].equalsIgnoreCase("new")) {
+		} else if (split[0].equalsIgnoreCase("new") || split[0].equalsIgnoreCase("n") || split[0].equalsIgnoreCase("create")) {
 			newCommand(player, split);
-		} else if (split[0].equalsIgnoreCase("view")) {
+		} else if (split[0].equalsIgnoreCase("view") || split[0].equalsIgnoreCase("v")) {
 			viewCommand(player, split);
-		} else if (split[0].equalsIgnoreCase("comment")) {
+		} else if (split[0].equalsIgnoreCase("comment") || split[0].equalsIgnoreCase("cmt")) {
 			commentCommand(player, split);
-		} else if (split[0].equalsIgnoreCase("close")) {
+		} else if (split[0].equalsIgnoreCase("close") || split[0].equalsIgnoreCase("c")) {
 			closeCommand(player, split);
-		} else if (split[0].equalsIgnoreCase("reopen")) {
+		} else if (split[0].equalsIgnoreCase("reopen") || split[0].equalsIgnoreCase("ro")) {
 			reopenCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("?")) {
 			sendCommands(player);
-		} else if (split[0].equalsIgnoreCase("port") || split[0].equalsIgnoreCase("warp") || split[0].equalsIgnoreCase("tp")) {
-			if (plugin.isStaff(player)) {
-				portCommand(player, split);
-			} else {
-				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getNotStaffMessage(), player);
-			}
-		} else if (split[0].equalsIgnoreCase("assign")) {
-			if (plugin.isStaff(player)) {
-				assignCommand(player, split);
-			} else {
-				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getNotStaffMessage(), player);
-			}
-		} else if (split[0].equalsIgnoreCase("search")) {
-			if (plugin.isStaff(player)) {
-				searchCommand(player, split);
-			} else {
-				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getNotStaffMessage(), player);
-			}
-		} else if (split[0].equalsIgnoreCase("set-priority")) {
-			if (plugin.isStaff(player)) {
-				priorityCommand(player, split);
-			} else {
-				ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getNotStaffMessage(), player);
-			}
+		} else if (split[0].equalsIgnoreCase("port") || split[0].equalsIgnoreCase("tp") || split[0].equalsIgnoreCase("teleport") || split[0].equalsIgnoreCase("warp")) {
+			portCommand(player, split);
+		} else if (split[0].equalsIgnoreCase("assign") || split[0].equalsIgnoreCase("a")) {
+			assignCommand(player, split);
+		} else if (split[0].equalsIgnoreCase("search") || split[0].equalsIgnoreCase("s")) {
+			searchCommand(player, split);
+		} else if (split[0].equalsIgnoreCase("set-priority") || split[0].equalsIgnoreCase("sp")) {
+			priorityCommand(player, split);
 		}
 	}
 
 	public void newCommand(Player player, String[] split) {
-
 		String message = "";
 		for (int i = 1; i < split.length; i++) {
 			if (i == 1)
@@ -112,13 +95,9 @@ public class HelpTicketCommand implements CommandExecutor {
 			else
 				message += " " + split[i];
 		}
-
 		Ticket t = new Ticket(player.getName(), player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getLocation().getPitch(), player.getLocation().getYaw(), message, "", true, false, 0);
-
 		SQLTicket.newTicket(t);
-
 		ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getTicketSubmittedPlayer().replaceAll("%ticketId", "" + SQLTicket.getNewestTicketID(player.getName())), player);
-
 		plugin.informStaff(plugin.language.getTicketSubmittedStaff().replaceAll("%ticketId", "" + SQLTicket.getNewestTicketID(player.getName())).replaceAll("%player", player.getName()));
 	}
 
@@ -133,7 +112,6 @@ public class HelpTicketCommand implements CommandExecutor {
 			}
 			if (!plugin.isStaff(player)) {
 				ticket = SQLTicket.getSpecificTicket(id, player.getName());
-
 				if (ticket == null) {
 					ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getTicketNotExist().replaceAll("%ticketId", "" + id), player);
 					return;
@@ -188,6 +166,13 @@ public class HelpTicketCommand implements CommandExecutor {
 
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null) {
+				if (!ticket.isOpen()) {
+					for (String line : ticket.preformReplace(plugin.language.getTicketClosed())) {
+						ChatTools.formatAndSend(plugin.language.getHeader() + line, player);
+					}
+					this.help(player);
+					return;
+				}
 				if (plugin.isStaff(player) && !ticket.getOwner().equalsIgnoreCase(player.getName())) {
 
 					ticket.setAssignee(player.getName());
@@ -211,6 +196,9 @@ public class HelpTicketCommand implements CommandExecutor {
 					for (String s : ticket.preformReplace(plugin.language.getClosedSelf().replaceAll("%player", player.getName()))) {
 						plugin.informStaff(s);
 					}
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
 			} else
 				help(player);
@@ -252,6 +240,9 @@ public class HelpTicketCommand implements CommandExecutor {
 					for (String s : ticket.preformReplace(plugin.language.getClosedSelfComment().replaceAll("%comment", comment).replaceAll("%player", player.getName()))) {
 						plugin.informStaff(s);
 					}
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
 			} else
 				help(player);
@@ -273,6 +264,13 @@ public class HelpTicketCommand implements CommandExecutor {
 
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null) {
+				if (ticket.isOpen()) {
+					for (String line : ticket.preformReplace(plugin.language.getTicketIsOpen())) {
+						ChatTools.formatAndSend(plugin.language.getHeader() + line, player);
+					}
+					this.help(player);
+					return;
+				}
 				if (plugin.isStaff(player)) {
 					ticket.addLog(player.getName(), plugin.language.getReopenLog());
 					ticket.setStatus(true);
@@ -284,7 +282,8 @@ public class HelpTicketCommand implements CommandExecutor {
 					}
 					this.informPlayerOfChange(ticket);
 				} else {
-					plugin.sendPlayerMessage(player.getName(), plugin.language.getReopenError());
+					this.playerNotStaff(player);
+					return;
 				}
 			} else
 				help(player);
@@ -308,19 +307,23 @@ public class HelpTicketCommand implements CommandExecutor {
 				return;
 			}
 			if (ticket.isOpen()) {
-				player.teleport(ticket.getLocation(plugin.getWorld(ticket.getWorld())));
-				ticket.setAssignee(player.getName());
+				if (plugin.isStaff(player)) {
+					player.teleport(ticket.getLocation(plugin.getWorld(ticket.getWorld())));
+					ticket.setAssignee(player.getName());
 
-				for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo())) {
-					ChatTools.formatAndSend(line, player);
+					for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo())) {
+						ChatTools.formatAndSend(line, player);
+					}
+
+					for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo().replaceAll("%player", player.getName()))) {
+						plugin.sendPlayerMessage(ticket.getOwner(), line);
+					}
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
-
-				for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo().replaceAll("%player", player.getName()))) {
-					plugin.sendPlayerMessage(ticket.getOwner(), line);
-				}
-
 			} else {
-				for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo())) {
+				for (String line : ticket.preformReplace(plugin.language.getTicketClosed())) {
 					ChatTools.formatAndSend(plugin.language.getHeader() + line, player);
 				}
 				this.help(player);
@@ -342,16 +345,30 @@ public class HelpTicketCommand implements CommandExecutor {
 			}
 
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
-			if (ticket != null && assignee != null) {
-				ticket.setAssignee(assignee);
+			if (ticket != null) {
+				if (plugin.isStaff(player)) {
+					if (!ticket.isOpen()) {
+						for (String line : ticket.preformReplace(plugin.language.getTicketClosed())) {
+							ChatTools.formatAndSend(plugin.language.getHeader() + line, player);
+						}
+						this.help(player);
+						return;
+					}
+					if (assignee != null) {
+						ticket.setAssignee(assignee);
 
-				for (String line : ticket.preformReplace(plugin.language.getAssignUser().replaceAll("%player", player.getName()))) {
-					plugin.sendPlayerMessage(ticket.getOwner(), line);
+						for (String line : ticket.preformReplace(plugin.language.getAssignUser().replaceAll("%player", player.getName()))) {
+							plugin.sendPlayerMessage(ticket.getOwner(), line);
+						}
+						for (String line : ticket.preformReplace(plugin.language.getAssignStaff().replaceAll("%player", player.getName()))) {
+							plugin.informStaff(line);
+						}
+						this.informPlayerOfChange(ticket);
+					}
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
-				for (String line : ticket.preformReplace(plugin.language.getAssignStaff().replaceAll("%player", player.getName()))) {
-					plugin.informStaff(line);
-				}
-				this.informPlayerOfChange(ticket);
 			} else
 				help(player);
 		} else {
@@ -360,6 +377,10 @@ public class HelpTicketCommand implements CommandExecutor {
 	}
 
 	public void searchCommand(Player player, String[] split) {
+		if (!plugin.isStaff(player)) {
+			this.playerNotStaff(player);
+			return;
+		}
 		if (split.length == 2) {
 			String name = (split[1]);
 			ArrayList<Ticket> ticket = SQLTicket.getPlayersTickets(name);
@@ -414,7 +435,6 @@ public class HelpTicketCommand implements CommandExecutor {
 				else
 					comment += " " + split[i];
 			}
-
 			Ticket ticket = SQLTicket.getSpecificTicket(id);
 			if (ticket != null) {
 				if (plugin.isStaff(player)) {
@@ -431,6 +451,9 @@ public class HelpTicketCommand implements CommandExecutor {
 					for (String line : ticket.preformReplace(plugin.language.getTicketCommentStaff().replaceAll("%player", player.getName()).replaceAll("%comment", comment))) {
 						plugin.informStaff(line);
 					}
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
 			}
 
@@ -461,10 +484,12 @@ public class HelpTicketCommand implements CommandExecutor {
 					for (String line : ticket.preformReplace(plugin.language.getTicketPriorityStaff().replaceAll("%player", player.getName()))) {
 						plugin.informStaff(line);
 					}
+					this.informPlayerOfChange(ticket);
+				} else {
+					this.playerNotStaff(player);
+					return;
 				}
-				this.informPlayerOfChange(ticket);
 			}
-
 		}
 	}
 
@@ -474,6 +499,11 @@ public class HelpTicketCommand implements CommandExecutor {
 			ticket.setHasRead(false);
 			plugin.sendMailToPlayer(ticket.getOwner(), ticket.preformReplaceSingle(plugin.language.getUpdateMessage()));
 		}
+	}
+
+	private void playerNotStaff(Player player) {
+		ChatTools.formatAndSend(plugin.language.getHeader() + plugin.language.getNotStaffMessage(), player);
+		this.help(player);
 	}
 
 	private void help(Player player) {
