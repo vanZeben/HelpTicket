@@ -36,13 +36,12 @@ public class Language {
 			lang.set("ticket.not_exist", "&cTicket #%ticketId does not exist");
 		}
 		if (!lang.contains("ticket.short_info")) {
-			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner -> %ticketAssignee&f: &7%ticketShortMessage &8[%ticketNumberComments]");
+			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner%ticketAssignee&f: &7%ticketShortMessage&8%ticketNumberComments");
 		}
 		if (!lang.contains("ticket.full_info.order")) {
 			lang.set("ticket.full_info.order", "%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");
 		}
 		if (!lang.contains("ticket.full_info.header_line")) {
-
 			lang.set("ticket.full_info.header_line", "&c--[Ticket Information]--");
 		}
 		if (!lang.contains("ticket.full_info.id_line")) {
@@ -186,6 +185,18 @@ public class Language {
 		}
 		if (!lang.contains("ticket.min_word_message")) {
 			lang.set("ticket.min_word_message", "&cSorry but can you please explain your issue more.");
+		}
+		if (!lang.contains("ticket.comment.number.format.none")) {
+			lang.set("ticket.comment.number.format.none", "");
+		}
+		if (!lang.contains("ticket.comment.number.format.singular")) {
+			lang.set("ticket.comment.number.format.singular", " [%num Comment]");
+		}
+		if (!lang.contains("ticket.comment.number.format.plural")) {
+			lang.set("ticket.comment.number.format.plural", " [%num Comments]");
+		}
+		if (!lang.contains("ticket.assign.format")) {
+			lang.set("ticket.assign.format", " -> %assignee");
 		}
 
 		this.save();
@@ -446,5 +457,21 @@ public class Language {
 
 	public String getTicketMinWordMessage() {
 		return lang.getString("ticket.min_word_message");
+	}
+
+	public String getTicketCommentNumberFormatNone() {
+		return lang.getString("ticket.comment.number.format.none");
+	}
+
+	public String getTicketCommentNumberFormatSingle() {
+		return lang.getString("ticket.comment.number.format.singular");
+	}
+
+	public String getTicketCommentNumberFormatPlural() {
+		return lang.getString("ticket.comment.number.format.plural");
+	}
+
+	public String getTicketAssignFormat() {
+		return lang.getString("ticket.assign.format");
 	}
 }
