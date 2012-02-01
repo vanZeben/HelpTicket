@@ -498,7 +498,7 @@ public class HelpTicketCommand implements CommandExecutor {
 	}
 
 	public void setLanguageCommand(Player player, String[] split) {
-		if (split.length < 3) {
+		if (split.length > 3) {
 			String path = split[1];
 			String value = "";
 			for (int i = 2; i < split.length; i++) {
