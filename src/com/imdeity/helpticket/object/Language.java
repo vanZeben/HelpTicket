@@ -36,7 +36,7 @@ public class Language {
 			lang.set("ticket.not_exist", "&cTicket #%ticketId does not exist");
 		}
 		if (!lang.contains("ticket.short_info")) {
-			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner%ticketAssignee&f: &7%ticketShortMessage&8%ticketNumberComments");
+			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner%ticketAssigneeFull&f: &7%ticketShortMessage&8%ticketNumberComments");
 		}
 		if (!lang.contains("ticket.full_info.order")) {
 			lang.set("ticket.full_info.order", "%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");
@@ -51,7 +51,7 @@ public class Language {
 			lang.set("ticket.full_info.owner_line", "&3Owner: &b%ticketOwner");
 		}
 		if (!lang.contains("ticket.full_info.assignee_line")) {
-			lang.set("ticket.full_info.assignee_line", "&3Assigned To: &b%ticketAssignee");
+			lang.set("ticket.full_info.assignee_line", "&3Assigned To: &b%ticketAssigneeName");
 		}
 		if (!lang.contains("ticket.full_info.priority_line")) {
 			lang.set("ticket.full_info.priority_line", "&3Priority: &b%ticketPriority");
@@ -157,10 +157,10 @@ public class Language {
 			lang.set("ticket.is_already_open", "&cThat ticket is already open.");
 		}
 		if (!lang.contains("ticket.assign.user")) {
-			lang.set("ticket.assign.user", "&b%ticketAssignee has been assigned to your ticket &7[%ticketId]");
+			lang.set("ticket.assign.user", "&b%ticketAssigneeName has been assigned to your ticket &7[%ticketId]");
 		}
 		if (!lang.contains("ticket.assign.staff")) {
-			lang.set("ticket.assign.staff", "&b%ticketAssignee has been assigned to ticket %ticketId by %player");
+			lang.set("ticket.assign.staff", "&b%ticketAssigneeName has been assigned to ticket %ticketId by %player");
 		}
 		if (!lang.contains("ticket.search.title")) {
 			lang.set("ticket.search.title", "&3%player's tickets");

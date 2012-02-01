@@ -94,8 +94,16 @@ public class Ticket {
 
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
-		String sql = "UPDATE " + MySQLConnector.tableName("data") + " SET  `assignee` =  '" + this.getAssignee() + "' WHERE `id` = '" + this.getID() + "';";
+		String sql = "UPDATE " + MySQLConnector.tableName("data") + " SET  `assignee` =  '" + assignee + "' WHERE `id` = '" + this.getID() + "';";
 		HelpTicket.database.Write(sql);
+	}
+
+	public String getUnformattedAssignee() {
+		if (this.assignee == null || this.assignee.equalsIgnoreCase("")) {
+			return "";
+		} else {
+			return this.assignee;
+		}
 	}
 
 	public String getAssignee() {
@@ -244,8 +252,8 @@ public class Ticket {
 	}
 
 	public String[] preformReplace(String replacer) {
-		replacer = replacer.replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssignee", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus()).replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + ""))))
-				.replaceAll("%ticketWorld", this.getWorld());
+		replacer = replacer.replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
+				.replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + "")))).replaceAll("%ticketWorld", this.getWorld());
 		if (replacer.contains("%ticket_comments")) {
 			String[] ticketComments = replacer.split("%ticket_comments");
 			for (int i = 0; i < ticketComments.length; i++) {
@@ -265,8 +273,8 @@ public class Ticket {
 	}
 
 	public String preformReplaceSingle(String replacer) {
-		replacer = replacer.replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssignee", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus()).replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + ""))))
-				.replaceAll("%ticketWorld", this.getWorld());
+		replacer = replacer.replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
+				.replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + "")))).replaceAll("%ticketWorld", this.getWorld());
 		return replacer;
 	}
 }

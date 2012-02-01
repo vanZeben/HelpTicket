@@ -361,7 +361,6 @@ public class HelpTicketCommand implements CommandExecutor {
 					}
 					if (assignee != null) {
 						ticket.setAssignee(assignee);
-
 						for (String line : ticket.preformReplace(plugin.language.getAssignUser().replaceAll("%player", player.getName()))) {
 							plugin.sendPlayerMessage(ticket.getOwner(), line);
 						}
@@ -499,9 +498,15 @@ public class HelpTicketCommand implements CommandExecutor {
 	}
 
 	public void setLanguageCommand(Player player, String[] split) {
-		if (split.length == 3) {
+		if (split.length < 3) {
 			String path = split[1];
-			String value = split[2];
+			String value = "";
+			for (int i = 2; i < split.length; i++) {
+				if (i == 2)
+					value = split[i];
+				else
+					value += " " + split[i];
+			}
 			if (plugin.isAdmin(player)) {
 				plugin.language.setString(path, value);
 				plugin.language.save();
