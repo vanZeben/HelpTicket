@@ -36,7 +36,7 @@ public class Language {
 			lang.set("ticket.not_exist", "&cTicket #%ticketId does not exist");
 		}
 		if (!lang.contains("ticket.short_info")) {
-			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner -> %ticketAssignee&f: &7%ticketShortMessage &7[%ticketNumberComments]");
+			lang.set("ticket.short_info", "%ticketPriorityColor[%ticketId] &f%ticketOwner -> %ticketAssignee&f: &7%ticketShortMessage &8[%ticketNumberComments]");
 		}
 		if (!lang.contains("ticket.full_info.order")) {
 			lang.set("ticket.full_info.order", "%header_line%newline%id_line%newline%owner_line%newline%assignee_line%newline%priority_line%newline%message_line%newline%status_line%newline%comment_header%newline%ticket_comments");

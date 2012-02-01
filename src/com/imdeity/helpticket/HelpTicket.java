@@ -34,7 +34,7 @@ public class HelpTicket extends JavaPlugin {
 	private static int taskId = -1;
 
 	public void onEnable() {
-
+		HelpTicket.plugin = this;
 		try {
 			this.checkPlugins();
 			this.loadSettings();
@@ -49,7 +49,6 @@ public class HelpTicket extends JavaPlugin {
 		this.setupEvents();
 		this.setupCommands();
 		out("Enabled");
-		HelpTicket.plugin = this;
 	}
 
 	private void checkPlugins() {
@@ -77,8 +76,16 @@ public class HelpTicket extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(playerListener, this);
 	}
 
+	public void loadSettings() throws IOException {
+		this.language = new Language();
+		language.loadDefaults();
+
+		this.config = new Settings();
+		config.loadDefaults();
+	}
+	
 	public void loadDatabase() {
-		database = new MySQLConnector(this);
+		database = new MySQLConnector();
 		database.validataDatabaseTables();
 	}
 
@@ -94,15 +101,6 @@ public class HelpTicket extends JavaPlugin {
 			taskId = getServer().getScheduler().scheduleAsyncRepeatingTask(this, new TicketTimerTask(this), 0, (20 * 60 * this.config.getNotifyDelay()));
 		}
 	}
-
-	public void loadSettings() throws IOException {
-		this.language = new Language();
-		language.loadDefaults();
-
-		this.config = new Settings();
-		config.loadDefaults();
-	}
-
 	public String getRootFolder() {
 		if (this != null)
 			return this.getDataFolder().getPath();
