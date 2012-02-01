@@ -63,7 +63,6 @@ public class HelpTicket extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		this.language.save();
 		this.toggleTimerTask();
 		out("Disabled");
 	}
