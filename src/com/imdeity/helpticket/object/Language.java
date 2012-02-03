@@ -105,7 +105,7 @@ public class Language {
 			lang.set("ticket.priority.staff", "&b%player &f set the priority of ticket %ticketId to %ticketPriority");
 		}
 		if (!lang.contains("ticket.close.log.nocomment")) {
-			lang.set("ticket.log.close", "%player closed the ticket");
+			lang.set("ticket.close.log.nocomment", "%player closed the ticket");
 		}
 		if (!lang.contains("ticket.close.log.comment")) {
 			lang.set("ticket.close.log.comment", "Closed the ticket - %comment");

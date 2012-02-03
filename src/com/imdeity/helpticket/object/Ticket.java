@@ -137,7 +137,7 @@ public class Ticket {
 
 	public void addLog(String player, String message) {
 		String moderator = (player != null ? player : "(Console)");
-		if (message != null && message.isEmpty())
+		if (message == null || message.isEmpty())
 			return;
 		String[] tmp = { moderator, message };
 		log.add(tmp);
