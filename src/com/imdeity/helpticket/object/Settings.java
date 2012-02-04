@@ -20,7 +20,7 @@ public class Settings {
 		if (!config.contains("mysql.server.port"))
 			config.set("mysql.server.port", 3306);
 		if (!config.contains("mysql.database.name"))
-			config.set("mysql.server.database.name", "kingdoms");
+			config.set("mysql.database.name", "kingdoms");
 		if (!config.contains("mysql.database.username"))
 			config.set("mysql.database.username", "root");
 		if (!config.contains("mysql.database.password"))

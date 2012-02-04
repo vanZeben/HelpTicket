@@ -110,26 +110,26 @@ public class Language {
 		if (!lang.contains("ticket.close.log.comment")) {
 			lang.set("ticket.close.log.comment", "Closed the ticket - %comment");
 		}
-		if (!lang.contains("ticket.close.user")) {
-			lang.set("ticket.close.user", "&fYou closed ticket &a#%ticketId");
+		if (!lang.contains("ticket.close.user.nocomment")) {
+			lang.set("ticket.close.user.nocomment", "&fYou closed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.user.comment")) {
 			lang.set("ticket.close.user.comment", "&fYou closed ticket &a#%ticketId - %comment");
 		}
-		if (!lang.contains("ticket.close.self")) {
-			lang.set("ticket.close.self", "&a%ticketOwner &fclosed ticket &a#%ticketId");
+		if (!lang.contains("ticket.close.self.nocomment")) {
+			lang.set("ticket.close.self.nocomment", "&a%ticketOwner &fclosed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.self.comment")) {
 			lang.set("ticket.close.self.comment", "&a%ticketOwner &fclosed ticket &a#%ticketId - %comment");
 		}
-		if (!lang.contains("ticket.close.player")) {
-			lang.set("ticket.close.player", "&a%player &fclosed your ticket &a#%ticketId");
+		if (!lang.contains("ticket.close.player.nocomment")) {
+			lang.set("ticket.close.player.nocomment", "&a%player &fclosed your ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.player.comment")) {
 			lang.set("ticket.close.player.comment", "&a%player&f closed your ticket &a#%ticketId - %comment");
 		}
-		if (!lang.contains("ticket.close.staff")) {
-			lang.set("ticket.close.staff", "&a%player&f closed ticket &a#%ticketId");
+		if (!lang.contains("ticket.close.staff.nocomment")) {
+			lang.set("ticket.close.staff.nocomment", "&a%player&f closed ticket &a#%ticketId");
 		}
 		if (!lang.contains("ticket.close.staff.comment")) {
 			lang.set("ticket.close.staff.comment", "&a%player&f closed ticket &a#%ticketId - %comment");
@@ -342,7 +342,7 @@ public class Language {
 	}
 
 	public String getClosedUser() {
-		return lang.getString("ticket.close.user");
+		return lang.getString("ticket.close.user.nocomment");
 	}
 
 	public String getClosedUserComment() {
@@ -350,7 +350,7 @@ public class Language {
 	}
 
 	public String getClosedSelf() {
-		return lang.getString("ticket.close.self");
+		return lang.getString("ticket.close.self.nocomment");
 	}
 
 	public String getClosedSelfComment() {
@@ -358,7 +358,7 @@ public class Language {
 	}
 
 	public String getClosedPlayer() {
-		return lang.getString("ticket.close.player");
+		return lang.getString("ticket.close.player.nocomment");
 	}
 
 	public String getClosedPlayerComment() {
@@ -366,7 +366,7 @@ public class Language {
 	}
 
 	public String getClosedStaff() {
-		return lang.getString("ticket.close.staff");
+		return lang.getString("ticket.close.staff.nocomment");
 	}
 
 	public String getClosedStaffComment() {
