@@ -141,8 +141,7 @@ public class HelpTicketCommand implements CommandExecutor {
 			for (String line : ticket.preformReplace(plugin.language.getTicketFullInfo())) {
 				ChatTools.formatAndSend(line, player);
 			}
-			if (ticket.isOpen())
-				ticket.setHasRead(true);
+			ticket.setHasRead(true);
 		} else {
 			help(player);
 		}
