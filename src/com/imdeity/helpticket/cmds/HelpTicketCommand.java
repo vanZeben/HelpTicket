@@ -62,25 +62,35 @@ public class HelpTicketCommand implements CommandExecutor {
 		if (split.length == 0) {
 			viewAllCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("new") || split[0].equalsIgnoreCase("n") || split[0].equalsIgnoreCase("create")) {
-			newCommand(player, split);
+			if (player.hasPermission("helpticket.help.new") || player.hasPermission("helpticket.mod.new") || player.hasPermission("helpticket.admin.new"))
+				newCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("view") || split[0].equalsIgnoreCase("v")) {
-			viewCommand(player, split);
+			if (player.hasPermission("helpticket.help.view") || player.hasPermission("helpticket.mod.view") || player.hasPermission("helpticket.admin.view"))
+				viewCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("comment") || split[0].equalsIgnoreCase("cmt")) {
-			commentCommand(player, split);
+			if (player.hasPermission("helpticket.help.comment") || player.hasPermission("helpticket.mod.comment") || player.hasPermission("helpticket.admin.comment"))
+				commentCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("close") || split[0].equalsIgnoreCase("c")) {
-			closeCommand(player, split);
+			if (player.hasPermission("helpticket.help.close") || player.hasPermission("helpticket.mod.close") || player.hasPermission("helpticket.admin.close"))
+				closeCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("reopen") || split[0].equalsIgnoreCase("ro")) {
-			reopenCommand(player, split);
+			if (player.hasPermission("helpticket.mod.reopen") || player.hasPermission("helpticket.admin.reopen"))
+				reopenCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("?")) {
-			sendCommands(player);
+			if (player.hasPermission("helpticket.help.help") || player.hasPermission("helpticket.mod.help") || player.hasPermission("helpticket.admin.help"))
+				sendCommands(player);
 		} else if (split[0].equalsIgnoreCase("port") || split[0].equalsIgnoreCase("tp") || split[0].equalsIgnoreCase("teleport") || split[0].equalsIgnoreCase("warp")) {
-			portCommand(player, split);
+			if (player.hasPermission("helpticket.mod.teleport") || player.hasPermission("helpticket.admin.teleport"))
+				portCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("assign") || split[0].equalsIgnoreCase("a")) {
-			assignCommand(player, split);
+			if (player.hasPermission("helpticket.mod.assign") || player.hasPermission("helpticket.admin.assign"))
+				assignCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("search") || split[0].equalsIgnoreCase("s")) {
-			searchCommand(player, split);
+			if (player.hasPermission("helpticket.mod.search") || player.hasPermission("helpticket.admin.search"))
+				searchCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("set-priority") || split[0].equalsIgnoreCase("sp")) {
-			priorityCommand(player, split);
+			if (player.hasPermission("helpticket.mod.priority") || player.hasPermission("helpticket.admin.priority"))
+				priorityCommand(player, split);
 		} else if (split[0].equalsIgnoreCase("set-language") || split[0].equalsIgnoreCase("sl")) {
 			this.setLanguageCommand(player, split);
 		} else {
@@ -156,7 +166,6 @@ public class HelpTicketCommand implements CommandExecutor {
 				}
 			}
 		}
-		help(player);
 	}
 
 	public void closeCommand(Player player, String[] split) {
@@ -468,7 +477,7 @@ public class HelpTicketCommand implements CommandExecutor {
 			int priority = 0;
 			try {
 				id = Integer.parseInt(split[1]);
-				priority = Integer.parseInt(split[2]);
+				priority = (split[2].equalsIgnoreCase("lowest") ? 0 : (split[2].equalsIgnoreCase("low") ? 1 : (split[2].equalsIgnoreCase("medium") ? 2 : (split[2].equalsIgnoreCase("high") ? 3 : (split[2].equalsIgnoreCase("highest") ? 4 : Integer.parseInt(split[2]))))));
 			} catch (NumberFormatException ex) {
 				invalid(player);
 			}
