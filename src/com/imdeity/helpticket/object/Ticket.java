@@ -65,11 +65,11 @@ public class Ticket {
 	}
 
 	public String getInfo() {
-		return info.replaceAll("$", "\\$");
+		return info.replaceAll("$", "");
 	}
 
 	public String getShortInfo() {
-		return StringMgmt.maxLength(info.replaceAll("$", "\\$"), 30);
+		return StringMgmt.maxLength(info.replaceAll("$", ""), 30);
 	}
 
 	public void setInfo(String info) {
@@ -102,7 +102,7 @@ public class Ticket {
 		if (this.assignee == null || this.assignee.equalsIgnoreCase("")) {
 			return "";
 		} else {
-			return this.assignee.replaceAll("$", "\\$");
+			return this.assignee.replaceAll("$", "");
 		}
 	}
 
@@ -115,7 +115,7 @@ public class Ticket {
 	}
 
 	public String getWorld() {
-		return world.replaceAll("$", "\\$");
+		return world.replaceAll("$", "");
 	}
 
 	public void setWorld(Player player) {
@@ -130,7 +130,7 @@ public class Ticket {
 		String sql = "SELECT * FROM " + MySQLConnector.tableName("comments") + " WHERE" + "`ticket_id` = '" + this.getID() + "';";
 		HashMap<Integer, ArrayList<String>> query = HelpTicket.database.Read(sql);
 		for (int i = 1; i <= query.size(); i++) {
-			String[] tmp = { query.get(i).get(3).replaceAll("$", "\\$"), query.get(i).get(4).replaceAll("$", "\\$") };
+			String[] tmp = { query.get(i).get(3).replaceAll("$", ""), query.get(i).get(4).replaceAll("$", "") };
 			log.add(tmp);
 		}
 	}
@@ -139,7 +139,7 @@ public class Ticket {
 		String moderator = (player != null ? player : "(Console)");
 		if (message == null || message.isEmpty())
 			return;
-		String[] tmp = { moderator.replaceAll("$", "\\$"), message.replaceAll("$", "\\$") };
+		String[] tmp = { moderator.replaceAll("$", ""), message.replaceAll("$", "") };
 		log.add(tmp);
 		String sql = "INSERT INTO " + MySQLConnector.tableName("comments") + " (" + "`ticket_id`," + " `owner`," + " `commenter`," + " `comment`" + ") VALUES (?,?,?,?);";
 		HelpTicket.database.Write(sql, this.getID(), this.getOwner(), moderator, message);
@@ -252,7 +252,7 @@ public class Ticket {
 	}
 
 	public String[] preformReplace(String replacer) {
-		replacer = replacer.replaceAll("$", "\\$").replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
+		replacer = replacer.replaceAll("$", "").replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
 				.replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + "")))).replaceAll("%ticketWorld", this.getWorld());
 		if (replacer.contains("%ticket_comments")) {
 			String[] ticketComments = replacer.split("%ticket_comments");
@@ -273,7 +273,7 @@ public class Ticket {
 	}
 
 	public String preformReplaceSingle(String replacer) {
-		replacer = replacer.replaceAll("$", "\\$").replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
+		replacer = replacer.replaceAll("$", "").replaceAll("%ticketId", this.getID() + "").replaceAll("%ticketOwner", this.getOwner()).replaceAll("%ticketPriorityColor", this.getPriorityColor()).replaceAll("%ticketPriority", this.getPriority()).replaceAll("%ticketAssigneeName", this.getUnformattedAssignee()).replaceAll("%ticketAssigneeFull", this.getAssignee()).replaceAll("%ticketLongMessage", this.getInfo()).replaceAll("%ticketShortMessage", this.getShortInfo()).replaceAll("%ticketStatus", this.getStatus())
 				.replaceAll("%ticketNumberComments", (log.isEmpty() ? HelpTicket.plugin.language.getTicketCommentNumberFormatNone() : (log.size() == 1 ? HelpTicket.plugin.language.getTicketCommentNumberFormatSingle().replaceAll("%num", log.size() + "") : HelpTicket.plugin.language.getTicketCommentNumberFormatPlural().replaceAll("%num", log.size() + "")))).replaceAll("%ticketWorld", this.getWorld());
 		return replacer;
 	}
