@@ -28,13 +28,13 @@ public class HelpTicketMain extends DeityPlugin {
         this.language.addDefaultLanguageValue("helpticket.commands.create.success", "Your ticket has been submitted");
         this.language.addDefaultLanguageValue("helpticket.commands.create.fail", "Instead of resubmitting that ticket. Please use &6/ticket info %ticket_id%");
         this.language.addDefaultLanguageValue("helpticket.commands.select.success", "You have selected ticket %ticket_id%");
-        this.language.addDefaultLanguageValue("helpticket.commands.select.fail", "Ticket %ticketId% does not exist");
+        this.language.addDefaultLanguageValue("helpticket.commands.select.fail", "Ticket %ticket_id% does not exist");
         this.language.addDefaultLanguageValue("helpticket.commands.info.fail.session_invalid", "Before you can use this command you first must &c/ticket select [ticket-id]");
         this.language.addDefaultLanguageValue("helpticket.commands.info.fail.ticket_invalid", "Ticket %ticket_id% does not exist");
         this.language.addDefaultLanguageValue("helpticket.commands.priority.fail.priority_too_high", "This ticket already has the manimum priority");
         this.language.addDefaultLanguageValue("helpticket.commands.priority.fail.priority_too_low", "This ticket already has the lowest priority");
         this.language.addDefaultLanguageValue("helpticket.commands.priority.success", "Ticket %ticket_id%'s priority was changed to %ticket_priority%");
-        this.language.addDefaultLanguageValue("helpticket.commands.assign.success", "Ticket %ticket_id% was assigned to %assignee%");
+        this.language.addDefaultLanguageValue("helpticket.commands.assign.success", "Ticket %ticket_id% was assigned to %ticket_assignee%");
         this.language.addDefaultLanguageValue("helpticket.commands.close.success", "Ticket %ticket_id% was closed");
         this.language.addDefaultLanguageValue("helpticket.commands.comment.success", "Ticket %ticket_id% had a comment added to it");
     }
@@ -80,19 +80,19 @@ public class HelpTicketMain extends DeityPlugin {
     }
     
     public static String getTicketsTableName() {
-        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket_", "tickets");
+        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket2_", "tickets");
     }
     
     public static String getTicketCommentsTableName() {
-        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket_", "comments");
+        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket2_", "comments");
     }
     
     public static String getTicketLocationsTableName() {
-        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket_", "locations");
+        return DeityAPI.getAPI().getDataAPI().getMySQL().tableName("helpticket2_", "locations");
     }
     
     public static boolean isAdmin(Player player) {
-        return (player.hasPermission("HelpTicket.admin")) || (player.isOp());
+        return (player.hasPermission("helpticket.admin.assign") || player.hasPermission("helpticket.admin.tp") || player.hasPermission("helpticket.admin.priority") || player.isOp());
     }
     
     public static void replaceAndSend(Player player, String node, Ticket ticket) {

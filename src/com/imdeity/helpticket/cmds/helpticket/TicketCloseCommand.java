@@ -29,7 +29,7 @@ public class TicketCloseCommand extends DeityCommandReceiver {
             return true;
         }
         Ticket ticket = PlayerSession.getPlayerSession(player.getName()).getTicket();
-        if ((ticket.getOwner().equalsIgnoreCase(player.getName())) && (HelpTicketMain.isAdmin(player))) {
+        if (!ticket.getOwner().equalsIgnoreCase(player.getName()) && !HelpTicketMain.isAdmin(player)) {
             PlayerSession.removePlayerSession(player.getName());
             HelpTicketMain.plugin.chat.sendPlayerMessage(player, HelpTicketMain.plugin.language.getNode("helpticket.commands.select.fail").replaceAll("%ticketId%", Matcher.quoteReplacement(ticket.getId() + "")));
             return true;
