@@ -17,7 +17,7 @@ public class HelpTicketListener extends DeityListener {
         Player player = event.getPlayer();
         if (player != null) {
             String loginMessage = HelpTicketMain.plugin.language.getNode("helpticket.login_message");
-            if ((loginMessage != null) && (!loginMessage.isEmpty()) && (!loginMessage.equals(""))) for (Ticket ticket : TicketManager.getTicketFromPlayer(player.getName()))
+            if ((loginMessage != null) && (!loginMessage.isEmpty()) && (!loginMessage.equals(""))) for (Ticket ticket : TicketManager.getAllTicketsFromPlayer(player.getName()))
                 if (ticket.getReadStatus() == ReadStatusType.UNREAD) HelpTicketMain.replaceAndSend(player, "helpticket.login_message", ticket);
         }
     }

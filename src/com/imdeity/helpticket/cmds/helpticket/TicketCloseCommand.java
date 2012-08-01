@@ -1,11 +1,10 @@
 package com.imdeity.helpticket.cmds.helpticket;
 
-import java.util.regex.Matcher;
-
 import org.bukkit.entity.Player;
 
 import com.imdeity.deityapi.DeityAPI;
 import com.imdeity.deityapi.api.DeityCommandReceiver;
+import com.imdeity.helpticket.HelpTicketLanguageHelper;
 import com.imdeity.helpticket.HelpTicketMain;
 import com.imdeity.helpticket.enums.OpenStatusType;
 import com.imdeity.helpticket.enums.ReadStatusType;
@@ -25,13 +24,13 @@ public class TicketCloseCommand extends DeityCommandReceiver {
             reason = "Closed the ticket";
         }
         if (PlayerSession.getPlayerSession(player.getName()) == null) {
-            HelpTicketMain.plugin.chat.sendPlayerMessage(player, HelpTicketMain.plugin.language.getNode("helpticket.commands.info.fail.session_invalid"));
+            HelpTicketMain.plugin.chat.sendPlayerMessage(player, HelpTicketMain.plugin.language.getNode(HelpTicketLanguageHelper.TICKET_INFO_FAIL_SESSION_INVALID));
             return true;
         }
         Ticket ticket = PlayerSession.getPlayerSession(player.getName()).getTicket();
         if (!ticket.getOwner().equalsIgnoreCase(player.getName()) && !HelpTicketMain.isAdmin(player)) {
             PlayerSession.removePlayerSession(player.getName());
-            HelpTicketMain.plugin.chat.sendPlayerMessage(player, HelpTicketMain.plugin.language.getNode("helpticket.commands.select.fail").replaceAll("%ticketId%", Matcher.quoteReplacement(ticket.getId() + "")));
+            HelpTicketMain.replaceAndSend(player, HelpTicketLanguageHelper.TICKET_INFO_FAIL_TICKET_INVALID, ticket);
             return true;
         }
         ticket.setOpenStatus(OpenStatusType.CLOSED);
@@ -41,9 +40,9 @@ public class TicketCloseCommand extends DeityCommandReceiver {
         ticket.addComment(player.getName(), reason);
         ticket.save();
         TicketManager.closeTicket(ticket);
-        HelpTicketMain.replaceAndSend(player, "helpticket.commands.close.success", ticket);
+        HelpTicketMain.replaceAndSend(player, HelpTicketLanguageHelper.TICKET_CLOSE_SUCCESS, ticket);
         if ((!player.getName().equalsIgnoreCase(ticket.getOwner())) && (ticket.getPlayerOwner() != null) && (ticket.getPlayerOwner().isOnline())) {
-            HelpTicketMain.replaceAndSend(ticket.getPlayerOwner(), "helpticket.commands.close.success", ticket);
+            HelpTicketMain.replaceAndSend(ticket.getPlayerOwner(), HelpTicketLanguageHelper.TICKET_NEW_UPDATE, ticket);
         }
         return true;
     }

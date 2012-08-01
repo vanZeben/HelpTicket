@@ -146,14 +146,6 @@ public class Ticket {
         this.comments.add(TicketManager.addNewComment(this.id, commenter, comment));
     }
     
-    public void save() {
-        if (this.hasUpdated) {
-            String sql = "UPDATE " + HelpTicketMain.getTicketsTableName() + " SET owner = ?, location_id = ?, info = ?, assignee = ?, priority = ?, read_status = ?, open_status = ? WHERE id = ?;";
-            DeityAPI.getAPI().getDataAPI().getMySQL().write(sql, new Object[] { this.owner, Integer.valueOf(this.location.getId()), this.info, this.assignee, this.priority.name(), this.readStatus.name(), this.openStatus.name(), Integer.valueOf(this.id) });
-            this.hasUpdated = false;
-        }
-    }
-    
     public String showShortInfo() {
         return "&7[&8" + getId() + "&7] " + "[" + getPriority().name() + "] " + ((getPlayerOwner() != null) && (getPlayerOwner().isOnline()) ? "&a" : "&f") + this.owner + (this.assignee != null ? "&6 -> &e" + this.assignee : "") + "&7: &f"
                 + DeityAPI.getAPI().getUtilAPI().getStringUtils().maxLength(this.info, 25);
@@ -202,5 +194,18 @@ public class Ticket {
     
     public String getFormattedCreationDate() {
         return DeityAPI.getAPI().getUtilAPI().getTimeUtils().getFriendlyDate(this.creationDate, true);
+    }
+
+    public void save() {
+        if (this.hasUpdated) {
+            String sql = "UPDATE " + HelpTicketMain.getTicketsTableName() + " SET owner = ?, location_id = ?, info = ?, assignee = ?, priority = ?, read_status = ?, open_status = ? WHERE id = ?;";
+            DeityAPI.getAPI().getDataAPI().getMySQL().write(sql, this.owner, this.location.getId(), this.info, this.assignee, this.priority.name(), this.readStatus.name(), this.openStatus.name(), this.id);
+            this.hasUpdated = false;
+        }
+    }
+
+    public void remove() {
+        String sql = "DELETE FROM " + HelpTicketMain.getTicketsTableName() + " WHERE id = ?;";
+        DeityAPI.getAPI().getDataAPI().getMySQL().write(sql, id);
     }
 }

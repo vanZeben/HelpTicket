@@ -214,8 +214,10 @@ public class TicketManager {
                 break;
             }
         }
-        tickets.get(OpenStatusType.OPEN).remove(ticketId);
-        tickets.get(OpenStatusType.CLOSED).add(ticket);
+        if (ticketId != -1) {
+            tickets.get(OpenStatusType.OPEN).remove(ticketId);
+            tickets.get(OpenStatusType.CLOSED).add(ticket);
+        }
     }
     
     public static List<Ticket> getAllTicketType(OpenStatusType type) {
@@ -234,7 +236,7 @@ public class TicketManager {
         return null;
     }
     
-    public static List<Ticket> getTicketFromPlayer(String name) {
+    public static List<Ticket> getAllTicketsFromPlayer(String name) {
         List<Ticket> playerTickets = new ArrayList<Ticket>();
         
         for (OpenStatusType ost : tickets.keySet()) {
@@ -256,5 +258,17 @@ public class TicketManager {
             }
         }
         return playerTickets;
+    }
+    
+    public static void removeAllTicketsFromPlayer(String player_name) {
+        List<Ticket> playerTickets = getAllTicketsFromPlayer(player_name);
+        for (Ticket t : playerTickets) {
+            t.remove();
+            for (OpenStatusType ost : tickets.keySet()) {
+                if (tickets.get(ost).contains(t)) {
+                    tickets.remove(t);
+                }
+            }
+        }
     }
 }

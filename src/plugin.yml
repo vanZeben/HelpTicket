@@ -1,9 +1,10 @@
 name: HelpTicket
 main: com.imdeity.helpticket.HelpTicketMain
-version: 12.07.22.1
+version: 12.08.01
 authors: [vanZeben, ImDeity]
 description: This plugin is used for players to log problems, requests and complaints.
 website: http://dev.bukkit.org/server-mods/helpticket
+depend: [DeityAPI]
 commands:
   Ticket:
         aliases: [pe]

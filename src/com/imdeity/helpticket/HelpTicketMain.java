@@ -24,19 +24,22 @@ public class HelpTicketMain extends DeityPlugin {
     }
     
     protected void initLanguage() {
-        this.language.addDefaultLanguageValue("helpticket.login_message", "Ticket %ticket_id% has been updated");
-        this.language.addDefaultLanguageValue("helpticket.commands.create.success", "Your ticket has been submitted");
-        this.language.addDefaultLanguageValue("helpticket.commands.create.fail", "Instead of resubmitting that ticket. Please use &6/ticket info %ticket_id%");
-        this.language.addDefaultLanguageValue("helpticket.commands.select.success", "You have selected ticket %ticket_id%");
-        this.language.addDefaultLanguageValue("helpticket.commands.select.fail", "Ticket %ticket_id% does not exist");
-        this.language.addDefaultLanguageValue("helpticket.commands.info.fail.session_invalid", "Before you can use this command you first must &c/ticket select [ticket-id]");
-        this.language.addDefaultLanguageValue("helpticket.commands.info.fail.ticket_invalid", "Ticket %ticket_id% does not exist");
-        this.language.addDefaultLanguageValue("helpticket.commands.priority.fail.priority_too_high", "This ticket already has the manimum priority");
-        this.language.addDefaultLanguageValue("helpticket.commands.priority.fail.priority_too_low", "This ticket already has the lowest priority");
-        this.language.addDefaultLanguageValue("helpticket.commands.priority.success", "Ticket %ticket_id%'s priority was changed to %ticket_priority%");
-        this.language.addDefaultLanguageValue("helpticket.commands.assign.success", "Ticket %ticket_id% was assigned to %ticket_assignee%");
-        this.language.addDefaultLanguageValue("helpticket.commands.close.success", "Ticket %ticket_id% was closed");
-        this.language.addDefaultLanguageValue("helpticket.commands.comment.success", "Ticket %ticket_id% had a comment added to it");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_LOGIN_MESSAGE, "Ticket %ticket_id% has been updated");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_SUCCESS, "Your ticket has been submitted");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_STAFF, "%ticket_owner% has opened a new ticket %ticket_info%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_FAIL, "Instead of resubmitting that ticket. Please use &6/ticket info %ticket_id%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_SELECT_SUCCESS, "You have selected ticket %ticket_id%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_SELECT_FAIL, "Ticket %ticket_id% does not exist");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_INFO_FAIL_SESSION_INVALID, "Before you can use this command you first must &c/ticket select [ticket-id]");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_INFO_FAIL_TICKET_INVALID, "Ticket %ticket_id% does not exist");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_PRIORITY_FAIL_TOO_HIGH, "This ticket already has the maximum priority");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_PRIORITY_FAIL_TOO_LOW, "This ticket already has the lowest priority");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_PRIORITY_SUCCESS, "Ticket %ticket_id%'s priority was changed to %ticket_priority%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_ASSIGN_SUCCESS, "Ticket %ticket_id% was assigned to %ticket_assignee%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CLOSE_SUCCESS, "Ticket %ticket_id% was closed");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_COMMENT_SUCCESS, "Ticket %ticket_id% had a comment added to it");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_NEW_UPDATE, "Ticket %ticket_id% has been updated");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_PURGE_SUCCESS, "Successfully purged %player% tickets");
     }
     
     protected void initCmds() {
