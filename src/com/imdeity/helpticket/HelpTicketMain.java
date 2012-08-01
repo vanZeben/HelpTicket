@@ -26,7 +26,7 @@ public class HelpTicketMain extends DeityPlugin {
     protected void initLanguage() {
         this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_LOGIN_MESSAGE, "Ticket %ticket_id% has been updated");
         this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_SUCCESS, "Your ticket has been submitted");
-        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_STAFF, "%ticket_owner% has opened a new ticket %ticket_info%");
+        this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_STAFF, "%ticket_owner% has opened a new ticket &6%ticket_info%");
         this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_CREATE_FAIL, "Instead of resubmitting that ticket. Please use &6/ticket info %ticket_id%");
         this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_SELECT_SUCCESS, "You have selected ticket %ticket_id%");
         this.language.addDefaultLanguageValue(HelpTicketLanguageHelper.TICKET_SELECT_FAIL, "Ticket %ticket_id% does not exist");

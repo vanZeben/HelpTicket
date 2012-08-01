@@ -265,8 +265,15 @@ public class TicketManager {
         for (Ticket t : playerTickets) {
             t.remove();
             for (OpenStatusType ost : tickets.keySet()) {
-                if (tickets.get(ost).contains(t)) {
-                    tickets.remove(t);
+                List<Integer> tmpTickets = new ArrayList<Integer>();
+                for (int i = 0; i < tickets.get(ost).size(); i++) {
+                    Ticket ticket = tickets.get(ost).get(i);
+                    if (t.getId() == ticket.getId()) {
+                        tmpTickets.add(i);
+                    }
+                }
+                for (int i : tmpTickets) {
+                    tickets.get(ost).remove(i);
                 }
             }
         }
