@@ -16,11 +16,6 @@ public class HelpTicketMain extends DeityPlugin {
     private final TicketCommandHandler ticketCommandHandler = new TicketCommandHandler("HelpTicket");
     
     protected void initConfig() {
-        this.config.addDefaultConfigValue("helpticket.mysql.server.address", "localhost");
-        this.config.addDefaultConfigValue("helpticket.mysql.server.port", Integer.valueOf(3306));
-        this.config.addDefaultConfigValue("helpticket.mysql.database.password", "root");
-        this.config.addDefaultConfigValue("helpticket.mysql.database.username", "root");
-        this.config.addDefaultConfigValue("helpticket.mysql.database.name", "kingdoms");
     }
     
     protected void initLanguage() {

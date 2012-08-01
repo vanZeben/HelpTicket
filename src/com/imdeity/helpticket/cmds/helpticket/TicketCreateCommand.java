@@ -36,7 +36,7 @@ public class TicketCreateCommand extends DeityCommandReceiver {
             if (ticket == null) {
                 ticket = TicketManager.addNewTicket(this.player.getName(), this.player.getLocation(), this.info);
                 PlayerSession.addPlayerSession(player.getName(), ticket.getId());
-                HelpTicketMain.replaceAndSend(this.player, HelpTicketLanguageHelper.TICKET_CREATE_STAFF, ticket);
+                HelpTicketMain.replaceAndSend(this.player, HelpTicketLanguageHelper.TICKET_CREATE_SUCCESS, ticket);
                 for (Player p : HelpTicketMain.plugin.getServer().getOnlinePlayers()) {
                     if (HelpTicketMain.isAdmin(p) && !this.player.getName().equalsIgnoreCase(p.getName())) {
                         HelpTicketMain.replaceAndSend(p, HelpTicketLanguageHelper.TICKET_CREATE_STAFF, ticket);

@@ -52,6 +52,6 @@ public class TicketComment {
     }
     
     public String showInfo() {
-        return "&e" + getCommenter() + "&7: &e" + getComment() + "&e &7[" + DeityAPI.getAPI().getUtilAPI().getTimeUtils().timeApproxToDate(this.date) + "&7]";
+        return "&e" + getCommenter() + "&7: &e" + getComment() + "&e &7-" + DeityAPI.getAPI().getUtilAPI().getTimeUtils().timeApproxToDate(this.date);
     }
 }
