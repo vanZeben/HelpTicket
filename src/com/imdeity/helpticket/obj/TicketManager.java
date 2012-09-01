@@ -38,7 +38,8 @@ public class TicketManager {
                 int zCoord = query.getInteger(0, "z_coord").intValue();
                 int pitch = query.getInteger(0, "pitch").intValue();
                 int yaw = query.getInteger(0, "yaw").intValue();
-                TicketLocation location = new TicketLocation(id, HelpTicketMain.plugin.getServer().getWorld(world), xCoord, yCoord, zCoord, pitch, yaw);
+                TicketLocation location = new TicketLocation(id, HelpTicketMain.plugin.getServer().getWorld(world), xCoord, yCoord,
+                        zCoord, pitch, yaw);
                 ticketLocations.add(location);
                 return location;
             } catch (SQLDataException e) {
@@ -49,8 +50,16 @@ public class TicketManager {
     }
     
     public static TicketLocation getTicketLocation(Location location) {
-        String sql = "SELECT id FROM " + HelpTicketMain.getTicketLocationsTableName() + " WHERE world = ? AND x_coord = ? AND y_coord = ? AND z_coord = ?";
-        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL().readEnhanced(sql, new Object[] { location.getWorld().getName(), Integer.valueOf(location.getBlockX()), Integer.valueOf(location.getBlockY()), Integer.valueOf(location.getBlockZ()) });
+        String sql = "SELECT id FROM " + HelpTicketMain.getTicketLocationsTableName()
+                + " WHERE world = ? AND x_coord = ? AND y_coord = ? AND z_coord = ?";
+        DatabaseResults query = DeityAPI
+                .getAPI()
+                .getDataAPI()
+                .getMySQL()
+                .readEnhanced(
+                        sql,
+                        new Object[] { location.getWorld().getName(), Integer.valueOf(location.getBlockX()),
+                                Integer.valueOf(location.getBlockY()), Integer.valueOf(location.getBlockZ()) });
         if ((query != null) && (query.hasRows())) {
             try {
                 int id = query.getInteger(0, "id").intValue();
@@ -64,7 +73,8 @@ public class TicketManager {
     
     public static Ticket addNewTicket(String owner, Location location, String info) {
         String sql = "INSERT INTO " + HelpTicketMain.getTicketsTableName() + " (owner, location_id, info) VALUES (?,?,?);";
-        DeityAPI.getAPI().getDataAPI().getMySQL().write(sql, new Object[] { owner, Integer.valueOf(addNewTicketLocation(location).getId()), info });
+        DeityAPI.getAPI().getDataAPI().getMySQL()
+                .write(sql, new Object[] { owner, Integer.valueOf(addNewTicketLocation(location).getId()), info });
         return getTicket(owner, info);
     }
     
@@ -75,7 +85,8 @@ public class TicketManager {
             }
         }
         String sql = "SELECT * FROM " + HelpTicketMain.getTicketsTableName() + " WHERE id = ?;";
-        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL().readEnhanced(sql, new Object[] { Integer.valueOf(ticketId) });
+        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL()
+                .readEnhanced(sql, new Object[] { Integer.valueOf(ticketId) });
         if ((query != null) && (query.hasRows())) {
             try {
                 int id = query.getInteger(0, "id").intValue();
@@ -87,7 +98,8 @@ public class TicketManager {
                 OpenStatusType openStatus = OpenStatusType.getFromString(query.getString(0, "open_status"));
                 ReadStatusType readStatus = ReadStatusType.getFromString(query.getString(0, "read_status"));
                 Date creationDate = query.getDate(0, "creation_date");
-                Ticket ticket = new Ticket(id, owner, location, assignee, info, priority, openStatus, readStatus, creationDate, getTicketComments(id));
+                Ticket ticket = new Ticket(id, owner, location, assignee, info, priority, openStatus, readStatus, creationDate,
+                        getTicketComments(id));
                 tickets.get(openStatus).add(ticket);
                 return ticket;
             } catch (SQLException e) {
@@ -131,7 +143,8 @@ public class TicketManager {
                 OpenStatusType openStatus = OpenStatusType.getFromString(query.getString(i, "open_status"));
                 ReadStatusType readStatus = ReadStatusType.getFromString(query.getString(i, "read_status"));
                 Date creationDate = query.getDate(i, "creation_date");
-                Ticket ticket = new Ticket(id, owner, location, assignee, info, priority, openStatus, readStatus, creationDate, getTicketComments(id));
+                Ticket ticket = new Ticket(id, owner, location, assignee, info, priority, openStatus, readStatus, creationDate,
+                        getTicketComments(id));
                 tickets.get(openStatus).add(ticket);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -145,8 +158,10 @@ public class TicketManager {
     }
     
     public static TicketComment getTicketComment(int ticketId, String commenter, String comment) {
-        String sql = "SELECT id, date FROM " + HelpTicketMain.getTicketCommentsTableName() + " WHERE ticket_id = ? AND commenter = ? AND comment = ?;";
-        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL().readEnhanced(sql, new Object[] { Integer.valueOf(ticketId), commenter, comment });
+        String sql = "SELECT id, date FROM " + HelpTicketMain.getTicketCommentsTableName()
+                + " WHERE ticket_id = ? AND commenter = ? AND comment = ?;";
+        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL()
+                .readEnhanced(sql, new Object[] { Integer.valueOf(ticketId), commenter, comment });
         if ((query != null) && (query.hasRows())) {
             int id = -1;
             Date date = null;
@@ -169,7 +184,8 @@ public class TicketManager {
     public static List<TicketComment> getTicketComments(int ticketId) {
         if (ticketComments.containsKey(Integer.valueOf(ticketId))) return ticketComments.get(Integer.valueOf(ticketId));
         String sql = "SELECT * FROM " + HelpTicketMain.getTicketCommentsTableName() + " WHERE ticket_id = ?;";
-        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL().readEnhanced(sql, new Object[] { Integer.valueOf(ticketId) });
+        DatabaseResults query = DeityAPI.getAPI().getDataAPI().getMySQL()
+                .readEnhanced(sql, new Object[] { Integer.valueOf(ticketId) });
         if ((query != null) && (query.hasRows())) {
             for (int i = 0; i < query.rowCount(); i++) {
                 int id = 0;
@@ -197,9 +213,15 @@ public class TicketManager {
     
     public static TicketLocation addNewTicketLocation(Location location) {
         if (getTicketLocation(location) == null) {
-            String sql = "INSERT INTO " + HelpTicketMain.getTicketLocationsTableName() + " (world, x_coord, y_coord, z_coord, pitch, yaw) VALUES (?,?,?,?,?,?);";
-            DeityAPI.getAPI().getDataAPI().getMySQL()
-                    .write(sql, new Object[] { location.getWorld().getName(), Integer.valueOf(location.getBlockX()), Integer.valueOf(location.getBlockY()), Integer.valueOf(location.getBlockZ()), Integer.valueOf((int) location.getPitch()), Integer.valueOf((int) location.getYaw()) });
+            String sql = "INSERT INTO " + HelpTicketMain.getTicketLocationsTableName()
+                    + " (world, x_coord, y_coord, z_coord, pitch, yaw) VALUES (?,?,?,?,?,?);";
+            DeityAPI.getAPI()
+                    .getDataAPI()
+                    .getMySQL()
+                    .write(sql,
+                            new Object[] { location.getWorld().getName(), Integer.valueOf(location.getBlockX()),
+                                    Integer.valueOf(location.getBlockY()), Integer.valueOf(location.getBlockZ()),
+                                    Integer.valueOf((int) location.getPitch()), Integer.valueOf((int) location.getYaw()) });
         }
         return getTicketLocation(location);
     }
@@ -230,7 +252,9 @@ public class TicketManager {
         Date previousDay = currDay.getTime();
         for (OpenStatusType ost : tickets.keySet()) {
             for (Ticket ticket : tickets.get(ost)) {
-                if ((ticket.getOwner().equalsIgnoreCase(name)) && (DeityAPI.getAPI().getUtilAPI().getStringUtils().getLevenshteinDistance(info, ticket.getInfo()) <= 10) && (ticket.getCreationDate().after(previousDay))) return ticket;
+                if ((ticket.getOwner().equalsIgnoreCase(name))
+                        && (DeityAPI.getAPI().getUtilAPI().getStringUtils().getLevenshteinDistance(info, ticket.getInfo()) <= 10)
+                        && (ticket.getCreationDate().after(previousDay))) return ticket;
             }
         }
         return null;
@@ -249,11 +273,11 @@ public class TicketManager {
         return playerTickets;
     }
     
-    public static List<Ticket> getAllOpenTickets(String name, OpenStatusType type) {
+    public static List<Ticket> getAllTicketsFromPlayer(String player_name, OpenStatusType type) {
         List<Ticket> playerTickets = new ArrayList<Ticket>();
         
         for (Ticket ticket : tickets.get(type)) {
-            if (ticket.getOwner().equalsIgnoreCase(name)) {
+            if (ticket.getOwner().equalsIgnoreCase(player_name)) {
                 playerTickets.add(ticket);
             }
         }

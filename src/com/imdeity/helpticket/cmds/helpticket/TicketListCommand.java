@@ -48,7 +48,7 @@ public class TicketListCommand extends DeityCommandReceiver {
             for (Ticket ticket : TicketManager.getAllTicketType(type))
                 tickets.add(ticket);
         } else {
-            for (Ticket ticket : TicketManager.getAllOpenTickets(player.getName(), type)) {
+            for (Ticket ticket : TicketManager.getAllTicketsFromPlayer(player.getName(), type)) {
                 tickets.add(ticket);
             }
         }

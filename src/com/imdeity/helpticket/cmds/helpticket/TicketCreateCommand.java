@@ -4,8 +4,10 @@ import org.bukkit.entity.Player;
 
 import com.imdeity.deityapi.DeityAPI;
 import com.imdeity.deityapi.api.DeityCommandReceiver;
+import com.imdeity.helpticket.HelpTicketConfigHelper;
 import com.imdeity.helpticket.HelpTicketLanguageHelper;
 import com.imdeity.helpticket.HelpTicketMain;
+import com.imdeity.helpticket.enums.OpenStatusType;
 import com.imdeity.helpticket.obj.PlayerSession;
 import com.imdeity.helpticket.obj.Ticket;
 import com.imdeity.helpticket.obj.TicketManager;
@@ -16,6 +18,7 @@ public class TicketCreateCommand extends DeityCommandReceiver {
     }
     
     public boolean onPlayerRunCommand(Player player, String[] args) {
+        if (args.length < 1) return false;
         String info = DeityAPI.getAPI().getUtilAPI().getStringUtils().join(args);
         new CreateTicket(player, info);
         return true;
@@ -32,6 +35,13 @@ public class TicketCreateCommand extends DeityCommandReceiver {
         }
         
         public void run() {
+            if (TicketManager.getAllTicketsFromPlayer(player.getName(), OpenStatusType.OPEN).size() >= HelpTicketMain.plugin.config
+                    .getInt(HelpTicketConfigHelper.MAX_TICKETS_OPEN)) {
+                HelpTicketMain.plugin.chat.sendPlayerMessage(player,
+                        HelpTicketMain.plugin.language.getNode(HelpTicketLanguageHelper.TICKET_CREATE_MAX));
+                return;
+            }
+            
             Ticket ticket = TicketManager.getTicketFromPlayer(this.player.getName(), this.info);
             if (ticket == null) {
                 ticket = TicketManager.addNewTicket(this.player.getName(), this.player.getLocation(), this.info);

@@ -20,11 +20,10 @@ public class TicketCloseCommand extends DeityCommandReceiver {
     public boolean onPlayerRunCommand(Player player, String[] args) {
         String reason;
         if (args.length < 1) reason = "Closed the ticket - " + DeityAPI.getAPI().getUtilAPI().getStringUtils().join(args);
-        else {
-            reason = "Closed the ticket";
-        }
+        else reason = "Closed the ticket";
         if (PlayerSession.getPlayerSession(player.getName()) == null) {
-            HelpTicketMain.plugin.chat.sendPlayerMessage(player, HelpTicketMain.plugin.language.getNode(HelpTicketLanguageHelper.TICKET_INFO_FAIL_SESSION_INVALID));
+            HelpTicketMain.plugin.chat.sendPlayerMessage(player,
+                    HelpTicketMain.plugin.language.getNode(HelpTicketLanguageHelper.TICKET_INFO_FAIL_SESSION_INVALID));
             return true;
         }
         Ticket ticket = PlayerSession.getPlayerSession(player.getName()).getTicket();
@@ -41,7 +40,8 @@ public class TicketCloseCommand extends DeityCommandReceiver {
         ticket.save();
         TicketManager.closeTicket(ticket);
         HelpTicketMain.replaceAndSend(player, HelpTicketLanguageHelper.TICKET_CLOSE_SUCCESS, ticket);
-        if ((!player.getName().equalsIgnoreCase(ticket.getOwner())) && (ticket.getPlayerOwner() != null) && (ticket.getPlayerOwner().isOnline())) {
+        if ((!player.getName().equalsIgnoreCase(ticket.getOwner())) && (ticket.getPlayerOwner() != null)
+                && (ticket.getPlayerOwner().isOnline())) {
             HelpTicketMain.replaceAndSend(ticket.getPlayerOwner(), HelpTicketLanguageHelper.TICKET_NEW_UPDATE, ticket);
         }
         return true;

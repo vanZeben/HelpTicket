@@ -5,6 +5,7 @@ public class HelpTicketLanguageHelper {
     public static final String TICKET_CREATE_SUCCESS = "helpticket.commands.create.success";
     public static final String TICKET_CREATE_STAFF = "helpticket.commands.create.staff";
     public static final String TICKET_CREATE_FAIL = "helpticket.commands.create.fail";
+    public static final String TICKET_CREATE_MAX = "helpticket.commands.create.reached_max";
     public static final String TICKET_SELECT_SUCCESS = "helpticket.commands.select.success";
     public static final String TICKET_SELECT_FAIL = "helpticket.commands.select.fail";
     public static final String TICKET_INFO_FAIL_SESSION_INVALID = "helpticket.commands.info.fail.session_invalid";
