@@ -115,24 +115,23 @@ public class HelpTicketMain extends DeityPlugin {
                 || player.hasPermission("helpticket.admin.priority") || player.isOp());
     }
     
+    public static String replace(String node, Ticket ticket) {
+        return plugin.language.getNode(node).replaceAll("%ticket_id%", Matcher.quoteReplacement(ticket.getId() + ""))
+                .replaceAll("%ticket_owner%", Matcher.quoteReplacement(ticket.getOwner()))
+                .replaceAll("%ticket_assignee%", Matcher.quoteReplacement(ticket.getAssignee() == null ? "" : ticket.getAssignee()))
+                .replaceAll("%ticket_info%", Matcher.quoteReplacement(ticket.getInfo()))
+                .replaceAll("%ticket_priority%", Matcher.quoteReplacement(ticket.getPriority().name()))
+                .replaceAll("%ticket_open_status%", Matcher.quoteReplacement(ticket.getOpenStatus().name()))
+                .replaceAll("%ticket_read_status%", Matcher.quoteReplacement(ticket.getReadStatus().name()))
+                .replaceAll("%ticket_creation_date%", Matcher.quoteReplacement(ticket.getFormattedCreationDate()))
+                .replaceAll("%ticket_comments_number%", Matcher.quoteReplacement(ticket.getComments().size() + ""));
+    }
+    
     public static void replaceAndSend(Player player, String node, Ticket ticket) {
         if ((ticket == null) || (plugin.language.getNode(node) == null)) {
             plugin.chat.sendPlayerMessage(player, "An error has occured, Please consult an admin");
             return;
         }
-        plugin.chat.sendPlayerMessage(
-                player,
-                plugin.language
-                        .getNode(node)
-                        .replaceAll("%ticket_id%", Matcher.quoteReplacement(ticket.getId() + ""))
-                        .replaceAll("%ticket_owner%", Matcher.quoteReplacement(ticket.getOwner()))
-                        .replaceAll("%ticket_assignee%",
-                                Matcher.quoteReplacement(ticket.getAssignee() == null ? "" : ticket.getAssignee()))
-                        .replaceAll("%ticket_info%", Matcher.quoteReplacement(ticket.getInfo()))
-                        .replaceAll("%ticket_priority%", Matcher.quoteReplacement(ticket.getPriority().name()))
-                        .replaceAll("%ticket_open_status%", Matcher.quoteReplacement(ticket.getOpenStatus().name()))
-                        .replaceAll("%ticket_read_status%", Matcher.quoteReplacement(ticket.getReadStatus().name()))
-                        .replaceAll("%ticket_creation_date%", Matcher.quoteReplacement(ticket.getFormattedCreationDate()))
-                        .replaceAll("%ticket_comments_number%", Matcher.quoteReplacement(ticket.getComments().size() + "")));
+        plugin.chat.sendPlayerMessage(player, replace(node, ticket));
     }
 }
