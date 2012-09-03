@@ -25,7 +25,7 @@ public class TicketAssignCommand extends DeityCommandReceiver {
             HelpTicketMain.plugin.chat.outWarn("The Ticket with the id \"" + ticketId + "\" is invalid");
             return true;
         }
-        ticket.setAssignee(args[0]);
+        ticket.setAssignee(args[1]);
         ticket.setReadStatus(ReadStatusType.UNREAD);
         ticket.save();
         HelpTicketMain.plugin.chat.out(HelpTicketMain.replace(HelpTicketLanguageHelper.TICKET_ASSIGN_SUCCESS, ticket));
